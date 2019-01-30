@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.TeacherMapper">
+	<resultMap type="com.cdtu.model.Teacher" id="getTeacherBytIdAndtPassword">
+		<id column="t_id" property="tId"/>
+		<result column="t_name" property="tName"/>
+		<result column="sc_id" property="scId"/>
+		<result column="t_staff_room" property="tStaffRoom"/>
+		<result column="t_password" property="tPassword"/>
+	</resultMap>
+	<select id="getTeacherBytIdAndtPassword" parameterType="com.cdtu.model.Role" resultMap="getTeacherBytIdAndtPassword">
+  		SELECT * FROM TEACHER 
+   		WHERE T_ID =#{username,jdbcType=VARCHAR}
+   		AND T_PASSWORD =#{password,jdbcType=VARCHAR}
+  	</select>
+  	
+  	<select id="selectPasswordById" parameterType="java.lang.String" resultType="java.lang.String">
+  		SELECT t_password
+  		FROM teacher
+  		WHERE t_id = #{id}
+  	</select>
+  	<update id="updatatPasswordBytId" parameterType="com.cdtu.model.Role">
+		UPDATE TEACHER 
+		SET T_PASSWORD =#{newPassword,jdbcType=VARCHAR}
+	    WHERE T_ID=#{username,jdbcType=VARCHAR}
+	</update>
+</mapper>

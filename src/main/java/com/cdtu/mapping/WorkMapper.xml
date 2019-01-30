@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.WorkMapper" >
+	<resultMap id="BaseResultMap" type="com.cdtu.model.Work">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="pw_id" property="pwId" jdbcType="CHAR" />
+		<result column="w_time" property="wTime" jdbcType="DATE" />
+		<result column="w_context" property="wContext" jdbcType="VARCHAR" />
+		<result column="w_addr" property="wAddr" jdbcType="VARCHAR" />
+		<result column="w_problem" property="wProblem" jdbcType="VARCHAR" />
+		<result column="w_remark" property="wRemark" jdbcType="VARCHAR" />
+		<result column="s_w_state" property="sWState" jdbcType="BIT" />
+		<result column="s_id" property="sId" jdbcType="BIT" />
+	</resultMap>
+	
+ 	<!-- 李红兵start -->
+	<select id="selSubCon" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT student.s_id AS sId, student.s_name AS sName,
+		IF(student.s_id IN (SELECT work.s_id FROM work WHERE work.pw_id = publish_work.pw_id), 1, 0) AS submitted
+		FROM student_select_course, publish_work, student
+		WHERE publish_work.pw_id = #{pwId}
+		AND (publish_work.ct_id = student_select_course.ct_id 
+		OR publish_work.tsc_id = student_select_course.tsc_id)
+		AND student.s_id = student_select_course.s_id
+	</select>
+	
+	<select id ="selAllWorks" resultType="java.util.HashMap">
+		SELECT publish_work.pw_id AS pwId, publish_work.pw_name AS pwName, publish_work.pw_end AS pwEnd, publish_work.pw_state AS pwState,
+		#{sId} IN (SELECT work.s_id FROM work WHERE work.pw_id = publish_work.pw_id) AS submitted
+		FROM student_select_course, publish_work
+		WHERE student_select_course.s_id = #{sId}
+		AND ((publish_work.ct_id = #{cId} AND student_select_course.ct_id = #{cId})
+		OR (publish_work.tsc_id = #{cId} AND student_select_course.tsc_id = #{cId}))
+	</select>
+	<!-- 李红兵end -->
+	
+	<!-- 查询作业数量 by:黎睿-->
+	<select id="selectWorkCount" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM student,WORK,publish_work
+		WHERE student.s_id=work.s_id
+		AND publish_work.pw_id=work.pw_id
+		AND student.s_id=#{sId}
+		AND publish_work.pw_id=#{pwId}
+	</select>
+	<!-- 查询作业by:黎睿 -->
+	<select id="selectWork" resultMap="BaseResultMap">
+		SELECT work.*
+		FROM student,WORK,publish_work
+		WHERE student.s_id=work.s_id
+		AND publish_work.pw_id=work.pw_id
+		AND student.s_id=#{sId}
+		AND publish_work.pw_id=#{pwId}
+	</select>
+	<!-- 添加作业 by:黎睿-->
+	<insert id="insertWork" parameterType="com.cdtu.model.Work">
+		INSERT INTO WORK(id,pw_id,w_time,w_context,w_problem,s_id)
+		VALUES(#{id},#{pwId},#{wTime},#{wContext},#{wProblem},#{sId})
+	</insert>
+	<!-- 学生修改作业 by:黎睿-->
+	<update id="studentUpdateWork" parameterType="com.cdtu.model.Work">
+		UPDATE WORK
+		SET w_time=#{wTime},w_context=#{wContext},w_problem=#{wProblem}
+		WHERE pw_id=#{pwId} AND s_id=#{sId}
+	</update>
+	<!-- 教师批改作业 by:黎睿-->
+	<update id="teacherUpdateWork">
+		UPDATE WORK
+		SET w_remark=#{wRemark}
+		WHERE pw_id=#{pwId} AND s_id=#{sId}
+	</update>
+	<!-- 设置文件地址 by:黎睿-->
+	<update id="updateWorkFlieStudent">
+		UPDATE WORK
+		SET w_addr=#{wAddr}
+		WHERE pw_id=#{pwId} AND s_id=#{sId}
+	</update>
+	<!-- 获取文件地址 by:黎睿-->
+	<select id="selectWorkFlieStudent" resultType="java.lang.String">
+		SELECT work.w_addr
+		FROM student,WORK,publish_work
+		WHERE student.s_id=work.s_id
+		AND publish_work.pw_id=work.pw_id
+		AND student.s_id=#{sId}
+		AND publish_work.pw_id=#{pwId}
+	</select>
+	
+</mapper>

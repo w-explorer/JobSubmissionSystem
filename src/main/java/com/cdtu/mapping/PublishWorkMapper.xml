@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.PublishWorkMapper" >
+  <resultMap id="BaseResultMap" type="com.cdtu.model.PublishWork" >
+    <id column="pw_id" property="pwId" jdbcType="CHAR" />
+    <result column="tsc_id" property="tscId" jdbcType="INTEGER" />
+    <result column="ct_id" property="ctId" jdbcType="INTEGER" />
+    <result column="pw_end" property="pwEnd" jdbcType="DATE" />
+    <result column="pw_state" property="pwState" jdbcType="BIT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.cdtu.model.PublishWork" extends="BaseResultMap" >
+    <result column="pw_name" property="pwName" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    pw_id, tsc_id, ct_id, pw_end, pw_state
+  </sql>
+  <sql id="Blob_Column_List" >
+    pw_name
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.cdtu.model.PublishWorkExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from publish_work
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.cdtu.model.PublishWorkExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from publish_work
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from publish_work
+    where pw_id = #{pwId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from publish_work
+    where pw_id = #{pwId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cdtu.model.PublishWorkExample" >
+    delete from publish_work
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cdtu.model.PublishWork" >
+    insert into publish_work (pw_id, tsc_id, ct_id, 
+      pw_end, pw_state, pw_name
+      )
+    values (#{pwId,jdbcType=CHAR}, #{tscId,jdbcType=INTEGER}, #{ctId,jdbcType=INTEGER}, 
+      #{pwEnd,jdbcType=DATE}, #{pwState,jdbcType=BIT}, #{pwName,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cdtu.model.PublishWork" >
+    insert into publish_work
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pwId != null" >
+        pw_id,
+      </if>
+      <if test="tscId != null" >
+        tsc_id,
+      </if>
+      <if test="ctId != null" >
+        ct_id,
+      </if>
+      <if test="pwEnd != null" >
+        pw_end,
+      </if>
+      <if test="pwState != null" >
+        pw_state,
+      </if>
+      <if test="pwName != null" >
+        pw_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pwId != null" >
+        #{pwId,jdbcType=CHAR},
+      </if>
+      <if test="tscId != null" >
+        #{tscId,jdbcType=INTEGER},
+      </if>
+      <if test="ctId != null" >
+        #{ctId,jdbcType=INTEGER},
+      </if>
+      <if test="pwEnd != null" >
+        #{pwEnd,jdbcType=DATE},
+      </if>
+      <if test="pwState != null" >
+        #{pwState,jdbcType=BIT},
+      </if>
+      <if test="pwName != null" >
+        #{pwName,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cdtu.model.PublishWorkExample" resultType="java.lang.Integer" >
+    select count(*) from publish_work
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update publish_work
+    <set >
+      <if test="record.pwId != null" >
+        pw_id = #{record.pwId,jdbcType=CHAR},
+      </if>
+      <if test="record.tscId != null" >
+        tsc_id = #{record.tscId,jdbcType=INTEGER},
+      </if>
+      <if test="record.ctId != null" >
+        ct_id = #{record.ctId,jdbcType=INTEGER},
+      </if>
+      <if test="record.pwEnd != null" >
+        pw_end = #{record.pwEnd,jdbcType=DATE},
+      </if>
+      <if test="record.pwState != null" >
+        pw_state = #{record.pwState,jdbcType=BIT},
+      </if>
+      <if test="record.pwName != null" >
+        pw_name = #{record.pwName,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update publish_work
+    set pw_id = #{record.pwId,jdbcType=CHAR},
+      tsc_id = #{record.tscId,jdbcType=INTEGER},
+      ct_id = #{record.ctId,jdbcType=INTEGER},
+      pw_end = #{record.pwEnd,jdbcType=DATE},
+      pw_state = #{record.pwState,jdbcType=BIT},
+      pw_name = #{record.pwName,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update publish_work
+    set pw_id = #{record.pwId,jdbcType=CHAR},
+      tsc_id = #{record.tscId,jdbcType=INTEGER},
+      ct_id = #{record.ctId,jdbcType=INTEGER},
+      pw_end = #{record.pwEnd,jdbcType=DATE},
+      pw_state = #{record.pwState,jdbcType=BIT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cdtu.model.PublishWork" >
+    update publish_work
+    <set >
+      <if test="tscId != null" >
+        tsc_id = #{tscId,jdbcType=INTEGER},
+      </if>
+      <if test="ctId != null" >
+        ct_id = #{ctId,jdbcType=INTEGER},
+      </if>
+      <if test="pwEnd != null" >
+        pw_end = #{pwEnd,jdbcType=DATE},
+      </if>
+      <if test="pwState != null" >
+        pw_state = #{pwState,jdbcType=BIT},
+      </if>
+      <if test="pwName != null" >
+        pw_name = #{pwName,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where pw_id = #{pwId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cdtu.model.PublishWork" >
+    update publish_work
+    set tsc_id = #{tscId,jdbcType=INTEGER},
+      ct_id = #{ctId,jdbcType=INTEGER},
+      pw_end = #{pwEnd,jdbcType=DATE},
+      pw_state = #{pwState,jdbcType=BIT},
+      pw_name = #{pwName,jdbcType=LONGVARCHAR}
+    where pw_id = #{pwId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cdtu.model.PublishWork" >
+    update publish_work
+    set tsc_id = #{tscId,jdbcType=INTEGER},
+      ct_id = #{ctId,jdbcType=INTEGER},
+      pw_end = #{pwEnd,jdbcType=DATE},
+      pw_state = #{pwState,jdbcType=BIT}
+    where pw_id = #{pwId,jdbcType=CHAR}
+  </update>
+  
+  
+  <!-- 添加含有tscid的发布作业 by:黎睿-->
+	<insert id="insterBytscId" parameterType="com.cdtu.model.PublishWork">
+		INSERT INTO
+		publish_work(pw_id,tsc_id,pw_name,pw_end,pw_state)
+		VALUES(#{pwId},#{tscId},#{pwName},#{pwEnd},#{pwState})
+	</insert>
+	<!-- 添加含有ctid的发布作业 by:黎睿-->
+	<insert id="insterByctId" parameterType="com.cdtu.model.PublishWork">
+		INSERT INTO
+		publish_work(pw_id,ct_id,pw_name,pw_end,pw_state)
+		VALUES(#{pwId},#{ctId},#{pwName},#{pwEnd},#{pwState})
+	</insert>
+	<!-- 学生查询发布作业表通过tsc_id和s_id by:黎睿-->
+	<select id="selectStudentPublishWorkBytscId" resultMap="BaseResultMap">
+		SELECT
+		publish_work.*
+		FROM student,student_select_course,publish_work
+		WHERE
+		student.s_id=student_select_course.s_id
+		AND
+		student_select_course.tsc_id=publish_work.tsc_id
+		AND
+		student.s_id=#{sId}
+		AND student_select_course.tsc_id=#{tscId}
+		<if test="pwState!=null">
+			AND publish_work.pw_state=#{pwState}
+		</if>
+	</select>
+	<!-- 学生查询发布作业表通过ct_id和s_id by:黎睿-->
+	<select id="selectStudentPublishWorkByctId" resultMap="BaseResultMap">
+		SELECT
+		publish_work.*
+		FROM student,student_select_course,publish_work
+		WHERE
+		student.s_id=student_select_course.s_id
+		AND
+		student_select_course.tsc_id=publish_work.tsc_id
+		AND
+		student.s_id=#{sId}
+		AND student_select_course.tsc_id=#{ctId}
+		<if test="pwState!=null">
+			AND publish_work.pw_state=#{pwState}
+		</if>
+	</select>
+	<!-- 教师查询发布作业表通过tsc_id和s_id by:黎睿-->
+	<select id="selectTeacherPublishWorkBytscId" resultMap="BaseResultMap">
+		SELECT
+		publish_work.*
+		FROM teacher,teacher_select_course,publish_work
+		WHERE
+		teacher.t_id=teacher_select_course.t_id
+		AND
+		teacher_select_course.tsc_id=publish_work.tsc_id
+		AND
+		teacher_select_course.tsc_id=#{tscId}
+		<if test="pwState!=null">
+			AND publish_work.pw_state=#{pwState}
+		</if>
+	</select>
+	<!-- 教师查询发布作业表通过ct_id和s_id by:黎睿-->
+	<select id="selectTeacherPublishWorkByctId" resultMap="BaseResultMap">
+		SELECT
+		publish_work.*
+		FROM teacher,class_create,publish_work
+		WHERE
+		teacher.t_id=class_create.t_id
+		AND
+		class_create.ct_id=publish_work.ct_id
+		AND class_create.ct_id=#{ctId}
+		<if test="pwState!=null">
+			AND publish_work.pw_state=#{pwState}
+		</if>
+	</select>
+	<!-- ct_id查询作业数量 by:黎睿-->
+	<select id="selectCountBypwStateBytscId" resultType="java.lang.Integer">
+		SELECT
+		COUNT(*)
+		FROM teacher,teacher_select_course,publish_work
+		WHERE
+		teacher.t_id=teacher_select_course.t_id
+		AND
+		teacher_select_course.tsc_id=publish_work.tsc_id
+		AND
+		teacher_select_course.tsc_id=#{tscId}
+		<if test="pwState!=null">
+			AND publish_work.pw_state=#{pwState}
+		</if>
+	</select>
+	<!-- tsc_id查询作业数量 by:黎睿-->
+	<select id="selectCountBypwStateByctId" resultType="java.lang.Integer">
+		SELECT
+		COUNT(*)
+		FROM teacher,class_create,publish_work
+		WHERE
+		teacher.t_id=class_create.t_id
+		AND
+		class_create.ct_id=publish_work.ct_id
+		AND class_create.ct_id=#{ctId}
+		<if test="pwState!=null">
+			AND publish_work.pw_state=#{pwState}
+		</if>
+	</select>
+	<!-- 查询作业名字 by:黎睿-->
+	<select id="selectPwIdname" parameterType="String" resultType="String">
+		select pw_name from publish_work where pw_id=#{pwId}
+	</select>
+</mapper>

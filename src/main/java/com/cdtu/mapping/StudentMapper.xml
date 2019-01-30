@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.StudentMapper">
+<!-- 文成start -->
+
+	<resultMap type="com.cdtu.model.Student" id="getStudentBysIdAndsPassword">
+		<id column="s_id" property="sId"/>
+		<result column="s_name" property="sName"/> 
+		<result column="s_major" property="sMajor"/>
+		<result column="s_password" property="sPassword"/>
+	</resultMap>
+	<select id="getStudentBysIdAndsPassword" parameterType="com.cdtu.model.Role" 
+	resultMap="getStudentBysIdAndsPassword">
+		SELECT * FROM STUDENT
+		WHERE S_ID =#{username,jdbcType=VARCHAR}
+		AND S_PASSWORD =#{password,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectPasswordById" parameterType="java.lang.String" resultType="java.lang.String">
+  		SELECT s_password
+  		FROM student
+  		WHERE s_id = #{id}
+  	</select>
+  	
+	<update id="updatasPasswordBysId" parameterType="com.cdtu.model.Role">
+		UPDATE STUDENT 
+		SET S_PASSWORD =#{newPassword,jdbcType=VARCHAR}
+	    WHERE S_ID=#{username,jdbcType=VARCHAR}
+	</update>
+	<!-- 文成end -->
+	
+	
+	
+	<select id="selectStudentName" resultType="java.lang.String">
+		select s_name
+		from student
+		where s_id=#{id}
+	</select>
+	
+	
+</mapper>

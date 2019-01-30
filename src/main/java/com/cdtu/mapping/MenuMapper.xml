@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.MenuMapper" >
+  <resultMap id="BaseResultMap" type="com.cdtu.model.Menu" >
+    <id column="menu_id" property="menuId" jdbcType="INTEGER" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="perms" property="perms" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="DECIMAL" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <select id="selectByRoleName" parameterType="java.lang.String" resultMap="BaseResultMap">
+  
+  SELECT * FROM menu WHERE PERMS =#{roleName}
+  
+  </select>
+  
+  <select id="selectMenuByRole" resultMap="BaseResultMap">
+  SELECT * FROM menu WHERE perms =#{role} 
+  </select>
+  
+  <select id="selectMenuAll" resultMap="BaseResultMap">
+  	SELECT * FROM menu 
+  </select>
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.ClassCreateMapper">
+	<!-- 李红兵start -->
+	<select id="selectByCId" resultType="java.util.HashMap">
+		SELECT class_create.ct_id AS cId, class_create.ct_name AS cName, teacher.t_name AS tName, class_create.ct_img_src AS cImgSrc, class_create.ct_switch AS joinAble,
+		#{sId} IN (SELECT s_id FROM student_select_course WHERE ct_id = #{cId}) AS joined
+		FROM class_create, teacher
+		WHERE class_create.ct_id = #{cId}
+		AND teacher.t_id = class_create.t_id
+	</select>
+
+	<select id="countByCId" resultType="java.lang.Integer">
+		SELECT count(*) from
+		class_create
+		WHERE class_create.ct_id = #{cId}
+		LIMIT 1
+	</select>
+	<!-- 李红兵end -->
+	
+	
+	<!--教师增添课程 by:魏宇航-->
+	<insert id="insertClassCreate" parameterType="com.cdtu.model.ClassCreate">
+		insert into class_create(t_id,ct_name,ct_switch)
+		values(#{tId},#{ctName},#{ctSwitch})
+	</insert>
+	<!--教师查询课程 by:魏宇航-->
+	<resultMap type="com.cdtu.model.CourseWapper" id="ClassCreateList">
+		<result column="ct_id" property="id" jdbcType="INTEGER" />
+		<result column="ct_name" property="cName" />
+		<result column="t_name" property="tName" />
+		<result column="sc_name" property="scName" />
+		<result column="ct_img_src" property="cImgSrc" />
+		<result column="t_img_src" property="tImgSrc" />
+		<result column="tsc_id" property="tscId" />
+		
+		<result column="ct_switch" property="ctSwitch" />
+	</resultMap>
+	<select id="selectClassCreate" parameterType="String" resultMap="ClassCreateList">
+		SELECT class_create.ct_id,class_create.ct_name,class_create.ct_img_src,teacher.t_name,teacher.t_img_src,null as tsc_id,"未设置学院归属" as sc_name
+		FROM class_create,teacher 
+		WHERE class_create.t_id=#{id} 
+		AND
+		teacher.t_id=class_create.t_id
+	</select>
+	<!--教师修改课程 by:魏宇航-->
+	<update id="updateClassCreate" parameterType="com.cdtu.model.ClassCreate">
+		update class_create
+		<set>
+			<if test="tId != null">
+				t_id = #{tId},
+			</if>
+			<if test="ctName != null">
+				ct_name = #{ctName},
+			</if>
+			<if test="ctSwitch != null">
+				ct_switch = #{ctSwitch},
+			</if>
+		</set>
+		where ct_id=#{ctId}
+	</update>
+	<!--教师删除课程 by:魏宇航-->
+	<delete id="deleteClassCreate" parameterType="int">
+		delete from class_create
+		where ct_id=#{ctId}
+	</delete>
+</mapper>

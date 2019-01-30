@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.PublishEstimateMapper" >
+  <resultMap id="BaseResultMap" type="com.cdtu.model.PublishEstimate" >
+    <id column="ep_id" property="epId" jdbcType="CHAR" />
+    <result column="tsc_id" property="tscId" jdbcType="INTEGER" />
+    <result column="ct_id" property="ctId" jdbcType="INTEGER" />
+    <result column="ep_start_time" property="epStartTime" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ep_id, tsc_id, ct_id, ep_start_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.cdtu.model.PublishEstimateExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from publish_estimate
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from publish_estimate
+    where ep_id = #{epId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from publish_estimate
+    where ep_id = #{epId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cdtu.model.PublishEstimateExample" >
+    delete from publish_estimate
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cdtu.model.PublishEstimate" >
+    insert into publish_estimate (ep_id, tsc_id, ct_id, 
+      ep_start_time)
+    values (#{epId,jdbcType=CHAR}, #{tscId,jdbcType=INTEGER}, #{ctId,jdbcType=INTEGER}, 
+      #{epStartTime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cdtu.model.PublishEstimate" >
+    insert into publish_estimate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="epId != null" >
+        ep_id,
+      </if>
+      <if test="tscId != null" >
+        tsc_id,
+      </if>
+      <if test="ctId != null" >
+        ct_id,
+      </if>
+      <if test="epStartTime != null" >
+        ep_start_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="epId != null" >
+        #{epId,jdbcType=CHAR},
+      </if>
+      <if test="tscId != null" >
+        #{tscId,jdbcType=INTEGER},
+      </if>
+      <if test="ctId != null" >
+        #{ctId,jdbcType=INTEGER},
+      </if>
+      <if test="epStartTime != null" >
+        #{epStartTime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cdtu.model.PublishEstimateExample" resultType="java.lang.Integer" >
+    select count(*) from publish_estimate
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update publish_estimate
+    <set >
+      <if test="record.epId != null" >
+        ep_id = #{record.epId,jdbcType=CHAR},
+      </if>
+      <if test="record.tscId != null" >
+        tsc_id = #{record.tscId,jdbcType=INTEGER},
+      </if>
+      <if test="record.ctId != null" >
+        ct_id = #{record.ctId,jdbcType=INTEGER},
+      </if>
+      <if test="record.epStartTime != null" >
+        ep_start_time = #{record.epStartTime,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update publish_estimate
+    set ep_id = #{record.epId,jdbcType=CHAR},
+      tsc_id = #{record.tscId,jdbcType=INTEGER},
+      ct_id = #{record.ctId,jdbcType=INTEGER},
+      ep_start_time = #{record.epStartTime,jdbcType=DATE}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cdtu.model.PublishEstimate" >
+    update publish_estimate
+    <set >
+      <if test="tscId != null" >
+        tsc_id = #{tscId,jdbcType=INTEGER},
+      </if>
+      <if test="ctId != null" >
+        ct_id = #{ctId,jdbcType=INTEGER},
+      </if>
+      <if test="epStartTime != null" >
+        ep_start_time = #{epStartTime,jdbcType=DATE},
+      </if>
+    </set>
+    where ep_id = #{epId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cdtu.model.PublishEstimate" >
+    update publish_estimate
+    set tsc_id = #{tscId,jdbcType=INTEGER},
+      ct_id = #{ctId,jdbcType=INTEGER},
+      ep_start_time = #{epStartTime,jdbcType=DATE}
+    where ep_id = #{epId,jdbcType=CHAR}
+  </update>
+  
+  
+  <!-- 添加发布课程点评表 by:黎睿-->
+	<insert id="insertByTscId" parameterType="com.cdtu.model.PublishEstimate">
+		INSERT INTO
+		publish_estimate(ep_id,tsc_id,ep_start_time)
+		VALUES(#{epId},#{tscId},#{epStartTime})
+	</insert>
+	<!-- 添加发布创课点评表 by:黎睿-->
+	<insert id="insertByCtId" parameterType="com.cdtu.model.PublishEstimate">
+		INSERT INTO
+		publish_estimate(ep_id,ct_id,ep_start_time)
+		VALUES(#{epId},#{ctId},#{epStartTime})
+	</insert>
+	<!-- 查询发布点评表通过tsc_id和s_id by:黎睿-->
+	<select id="selectPublishEstimateBytscId" resultMap="BaseResultMap">
+		SELECT
+		publish_estimate.*
+		FROM student,student_select_course,publish_estimate
+		WHERE student.s_id=student_select_course.s_id
+		AND student_select_course.tsc_id=publish_estimate.tsc_id
+		AND student.s_id=#{sId}
+		AND student_select_course.tsc_id=#{tscId}
+		AND publish_estimate.ep_id NOT IN(SELECT estimate.ep_id
+		FROM student,student_select_course,publish_estimate,estimate
+		WHERE student.s_id=student_select_course.s_id
+		AND estimate.ep_id=publish_estimate.ep_id
+		AND student_select_course.tsc_id=publish_estimate.tsc_id
+		AND student.s_id=#{sId}
+		AND student_select_course.tsc_id=#{tscId})
+	</select>
+	<!-- 查询发布点评表通过ct_id和s_id by:黎睿-->
+	<select id="selectPublishEstimateByctId" resultMap="BaseResultMap">
+		SELECT
+		publish_estimate.*
+		FROM student,student_select_course,publish_estimate
+		WHERE student.s_id=student_select_course.s_id
+		AND student_select_course.ct_id=publish_estimate.ct_id
+		AND student.s_id=#{sId}
+		AND student_select_course.ct_id=#{ctId}
+		AND publish_estimate.ep_id NOT IN(SELECT estimate.ep_id
+		FROM student,student_select_course,publish_estimate,estimate
+		WHERE student.s_id=student_select_course.s_id
+		AND estimate.ep_id=publish_estimate.ep_id
+		AND student_select_course.ct_id=publish_estimate.ct_id
+		AND student.s_id=#{sId}
+		AND student_select_course.ct_id=#{ctId})
+	</select>
+</mapper>

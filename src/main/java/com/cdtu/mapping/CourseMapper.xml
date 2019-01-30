@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.CourseMapper" >
+  <resultMap id="BaseResultMap" type="com.cdtu.model.Course" >
+    <id column="c_id" property="cId" jdbcType="VARCHAR" />
+    <result column="sc_id" property="scId" jdbcType="CHAR" />
+    <result column="c_name" property="cName" jdbcType="VARCHAR" />
+    <result column="c_credit" property="cCredit" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    c_id, sc_id, c_name, c_credit
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.cdtu.model.CourseExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from course
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from course
+    where c_id = #{cId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from course
+    where c_id = #{cId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cdtu.model.CourseExample" >
+    delete from course
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cdtu.model.Course" >
+    insert into course (c_id, sc_id, c_name, 
+      c_credit)
+    values (#{cId,jdbcType=VARCHAR}, #{scId,jdbcType=CHAR}, #{cName,jdbcType=VARCHAR}, 
+      #{cCredit,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cdtu.model.Course" >
+    insert into course
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cId != null" >
+        c_id,
+      </if>
+      <if test="scId != null" >
+        sc_id,
+      </if>
+      <if test="cName != null" >
+        c_name,
+      </if>
+      <if test="cCredit != null" >
+        c_credit,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cId != null" >
+        #{cId,jdbcType=VARCHAR},
+      </if>
+      <if test="scId != null" >
+        #{scId,jdbcType=CHAR},
+      </if>
+      <if test="cName != null" >
+        #{cName,jdbcType=VARCHAR},
+      </if>
+      <if test="cCredit != null" >
+        #{cCredit,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cdtu.model.CourseExample" resultType="java.lang.Integer" >
+    select count(*) from course
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update course
+    <set >
+      <if test="record.cId != null" >
+        c_id = #{record.cId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.scId != null" >
+        sc_id = #{record.scId,jdbcType=CHAR},
+      </if>
+      <if test="record.cName != null" >
+        c_name = #{record.cName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cCredit != null" >
+        c_credit = #{record.cCredit,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update course
+    set c_id = #{record.cId,jdbcType=VARCHAR},
+      sc_id = #{record.scId,jdbcType=CHAR},
+      c_name = #{record.cName,jdbcType=VARCHAR},
+      c_credit = #{record.cCredit,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cdtu.model.Course" >
+    update course
+    <set >
+      <if test="scId != null" >
+        sc_id = #{scId,jdbcType=CHAR},
+      </if>
+      <if test="cName != null" >
+        c_name = #{cName,jdbcType=VARCHAR},
+      </if>
+      <if test="cCredit != null" >
+        c_credit = #{cCredit,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where c_id = #{cId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cdtu.model.Course" >
+    update course
+    set sc_id = #{scId,jdbcType=CHAR},
+      c_name = #{cName,jdbcType=VARCHAR},
+      c_credit = #{cCredit,jdbcType=DECIMAL}
+    where c_id = #{cId,jdbcType=VARCHAR}
+  </update>
+  
+   <!-- 教师查询非创建课程by:魏宇航  start-->
+   <resultMap type="com.cdtu.model.CourseWapper" id="courselist">
+  		<result column="c_id" property="id" jdbcType="INTEGER" />
+		<result column="c_name" property="cName" />
+		<result column="t_name" property="tName" />
+		<result column="sc_name" property="scName" />
+		<result column="c_img_src" property="cImgSrc" />
+		<result column="t_img_src" property="tImgSrc" />
+		<result column="tsc_id" property="tscId" />
+  </resultMap>
+	<select id="selectTeacherCourse" parameterType="String"
+		resultMap="courselist">
+		SELECT teacher_select_course.tsc_id,teacher.t_name,teacher.t_img_src,course.c_id,course.c_name,course.c_img_src,school.sc_name
+		 FROM
+		teacher_select_course,teacher,course,school
+		WHERE teacher_select_course.t_id=#{id}
+		AND teacher.t_id=teacher_select_course.t_id
+		AND course.c_id=teacher_select_course.c_id
+		AND school.sc_id=course.sc_id
+	</select> 
+	<!-- 教师查询非创建课程by:魏宇航  end-->
+</mapper>

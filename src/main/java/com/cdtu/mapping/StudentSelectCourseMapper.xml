@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.StudentSelectCourseMapper" >
+	<!-- 查询该课程学生 by:魏宇航  start-->
+	<resultMap id="studentlist" type="com.cdtu.model.CourseStudent">
+		<id column="s_id" property="sId" />
+		<result column="ct_id" property="ctId" />
+		<result column="s_name" property="sName" />
+		<result column="s_major" property="sMajor" />
+		<result column="tsc_id" property="tscId" />
+	</resultMap>
+	
+	<select id="selectCourseStudent" parameterType="com.cdtu.model.CourseWapper"
+		resultMap="studentlist">
+		SELECT student.*,student_select_course.* FROM
+		student,student_select_course WHERE
+		<if test="tscId!=null">
+			student_select_course.tsc_id=#{tscId} AND
+		</if>
+		<if test="ctId!=null">
+			student_select_course.ct_id=#{ctId} AND
+		</if>
+		student.s_id=student_select_course.s_id
+	</select>
+	<!-- 查询该课程学生 by:魏宇航  end-->
+	
+	<!-- 李红兵start -->
+	<insert id="insert">
+		INSERT INTO student_select_course (ct_id, s_id)
+		VALUES (#{cId}, #{sId})
+	</insert>
+
+	<select id="selectBySId" parameterType="java.lang.String" resultType="java.util.HashMap">
+		SELECT course.c_id AS cId, course.c_name AS cName, teacher.t_name AS tName, school.sc_name AS scName, course.c_img_src AS cImgSrc
+		FROM student_select_course, course, teacher, school, teacher_select_course
+		WHERE student_select_course.s_id = #{sId}
+		AND teacher_select_course.tsc_id = student_select_course.tsc_id
+		AND course.c_id = teacher_select_course.c_id
+		AND school.sc_id = course.sc_id
+		AND teacher.t_id = teacher_select_course.t_id
+		UNION
+		SELECT class_create.ct_id AS cId, class_create.ct_name AS cName, teacher.t_name AS tName, "未设置学院归属" AS scName, class_create.ct_img_src AS cImgSrc
+		FROM student_select_course, teacher, class_create
+		WHERE student_select_course.s_id = #{sId}
+		AND student_select_course.ct_id = class_create.ct_id
+		AND teacher.t_id = class_create.t_id
+	</select>
+	
+	<select id="countBySIdAndCId" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM student_select_course
+		WHERE student_select_course.s_id = #{sId}
+		AND student_select_course.ct_id = #{cId}
+		LIMIT 1
+	</select>
+	
+	<select id="countByPwId" parameterType = "java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM student_select_course, publish_work
+		WHERE publish_work.pw_id = #{pwId}
+		AND (publish_work.ct_id = student_select_course.ct_id
+		OR publish_work.tsc_id = student_select_course.tsc_id)
+	</select>
+	<!-- 李红兵end -->
+</mapper>

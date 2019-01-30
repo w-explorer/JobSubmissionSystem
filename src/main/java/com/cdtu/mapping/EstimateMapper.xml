@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.EstimateMapper" >
+  <resultMap id="BaseResultMap" type="com.cdtu.model.Estimate" >
+    <id column="e_id" property="eId" jdbcType="CHAR" />
+    <result column="ep_id" property="epId" jdbcType="CHAR" />
+    <result column="e_speed" property="eSpeed" jdbcType="CHAR" />
+    <result column="e_file" property="eFile" jdbcType="CHAR" />
+    <result column="e_suggest" property="eSuggest" jdbcType="VARCHAR" />
+    <result column="e_difficult" property="eDifficult" jdbcType="CHAR" />
+    <result column="s_e_state" property="sEState" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    e_id, ep_id, e_speed, e_file, e_suggest, e_difficult, s_e_state
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.cdtu.model.EstimateExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from estimate
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from estimate
+    where e_id = #{eId,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from estimate
+    where e_id = #{eId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cdtu.model.EstimateExample" >
+    delete from estimate
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cdtu.model.Estimate" >
+    insert into estimate (e_id, ep_id, e_speed, e_file, 
+      e_suggest, e_difficult, s_e_state
+      )
+    values (#{eId,jdbcType=CHAR}, #{epId,jdbcType=CHAR}, #{eSpeed,jdbcType=CHAR}, #{eFile,jdbcType=CHAR}, 
+      #{eSuggest,jdbcType=VARCHAR}, #{eDifficult,jdbcType=CHAR}, #{sEState,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cdtu.model.Estimate" >
+    insert into estimate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="eId != null" >
+        e_id,
+      </if>
+      <if test="epId != null" >
+        ep_id,
+      </if>
+      <if test="eSpeed != null" >
+        e_speed,
+      </if>
+      <if test="eFile != null" >
+        e_file,
+      </if>
+      <if test="eSuggest != null" >
+        e_suggest,
+      </if>
+      <if test="eDifficult != null" >
+        e_difficult,
+      </if>
+      <if test="sEState != null" >
+        s_e_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="eId != null" >
+        #{eId,jdbcType=CHAR},
+      </if>
+      <if test="epId != null" >
+        #{epId,jdbcType=CHAR},
+      </if>
+      <if test="eSpeed != null" >
+        #{eSpeed,jdbcType=CHAR},
+      </if>
+      <if test="eFile != null" >
+        #{eFile,jdbcType=CHAR},
+      </if>
+      <if test="eSuggest != null" >
+        #{eSuggest,jdbcType=VARCHAR},
+      </if>
+      <if test="eDifficult != null" >
+        #{eDifficult,jdbcType=CHAR},
+      </if>
+      <if test="sEState != null" >
+        #{sEState,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cdtu.model.EstimateExample" resultType="java.lang.Integer" >
+    select count(*) from estimate
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update estimate
+    <set >
+      <if test="record.eId != null" >
+        e_id = #{record.eId,jdbcType=CHAR},
+      </if>
+      <if test="record.epId != null" >
+        ep_id = #{record.epId,jdbcType=CHAR},
+      </if>
+      <if test="record.eSpeed != null" >
+        e_speed = #{record.eSpeed,jdbcType=CHAR},
+      </if>
+      <if test="record.eFile != null" >
+        e_file = #{record.eFile,jdbcType=CHAR},
+      </if>
+      <if test="record.eSuggest != null" >
+        e_suggest = #{record.eSuggest,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eDifficult != null" >
+        e_difficult = #{record.eDifficult,jdbcType=CHAR},
+      </if>
+      <if test="record.sEState != null" >
+        s_e_state = #{record.sEState,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update estimate
+    set e_id = #{record.eId,jdbcType=CHAR},
+      ep_id = #{record.epId,jdbcType=CHAR},
+      e_speed = #{record.eSpeed,jdbcType=CHAR},
+      e_file = #{record.eFile,jdbcType=CHAR},
+      e_suggest = #{record.eSuggest,jdbcType=VARCHAR},
+      e_difficult = #{record.eDifficult,jdbcType=CHAR},
+      s_e_state = #{record.sEState,jdbcType=BIT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cdtu.model.Estimate" >
+    update estimate
+    <set >
+      <if test="epId != null" >
+        ep_id = #{epId,jdbcType=CHAR},
+      </if>
+      <if test="eSpeed != null" >
+        e_speed = #{eSpeed,jdbcType=CHAR},
+      </if>
+      <if test="eFile != null" >
+        e_file = #{eFile,jdbcType=CHAR},
+      </if>
+      <if test="eSuggest != null" >
+        e_suggest = #{eSuggest,jdbcType=VARCHAR},
+      </if>
+      <if test="eDifficult != null" >
+        e_difficult = #{eDifficult,jdbcType=CHAR},
+      </if>
+      <if test="sEState != null" >
+        s_e_state = #{sEState,jdbcType=BIT},
+      </if>
+    </set>
+    where e_id = #{eId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cdtu.model.Estimate" >
+    update estimate
+    set ep_id = #{epId,jdbcType=CHAR},
+      e_speed = #{eSpeed,jdbcType=CHAR},
+      e_file = #{eFile,jdbcType=CHAR},
+      e_suggest = #{eSuggest,jdbcType=VARCHAR},
+      e_difficult = #{eDifficult,jdbcType=CHAR},
+      s_e_state = #{sEState,jdbcType=BIT}
+    where e_id = #{eId,jdbcType=CHAR}
+  </update>
+  
+   <!-- 添加点评信息 by:黎睿-->
+  <insert id="insertEstimate" parameterType="com.cdtu.model.Estimate">
+  		INSERT INTO estimate VALUES(#{eId},#{epId},#{eSpeed},#{eFile},#{eSuggest},#{eDifficult},#{sEState},#{sId})
+  </insert>
+</mapper>
