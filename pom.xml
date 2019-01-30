@@ -10,7 +10,7 @@
 
 	<!-- 用来设置版本号 -->
 	<properties>
-		<srping.version>4.0.2.RELEASE</srping.version>
+		<srping.version>4.3.17.RELEASE</srping.version>
 		<mybatis.version>3.2.8</mybatis.version>
 		<slf4j.version>1.7.12</slf4j.version>
 		<log4j.version>1.2.17</log4j.version>
@@ -145,7 +145,7 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.2.6</version>
+			<version>1.2.31</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
@@ -156,7 +156,7 @@
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-			<version>1.3.1</version>
+			<version>1.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
