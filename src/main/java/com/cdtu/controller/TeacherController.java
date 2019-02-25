@@ -298,11 +298,14 @@ public class TeacherController {
 		Integer status = this.teacherService.addWorkRemark(work);
 		if (status == 1) {
 			msg.put("status", 200);
-		} else {
-			if (status == -1) {
-				msg.put("status", 0);
-				msg.put("msg", "用户为空");
-			}
+		}
+		if (status == -1) {
+			msg.put("status", 0);
+			msg.put("msg", "输入值为空");
+		}
+		if(status==0){
+			msg.put("status", 0);
+			msg.put("msg", "学生未提交作业");
 		}
 		return msg;
 	}
