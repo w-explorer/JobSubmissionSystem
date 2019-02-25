@@ -38,20 +38,20 @@ public class UploadFileUtil {
 		} else {
 			String fileName = file.getOriginalFilename();
 	        String type = fileName.substring(fileName.lastIndexOf(".") + 1);
-			String realPath="F:/uploadFile/"+pwId+"/"+id+"/";
+			String realPath="F:"+File.separator+"uploadFile"+File.separator+pwId+File.separator+id+File.separator;
 			if(type.equals("png")||type.equals("jpg")||type.equals("gif")){
-				String path=realPath+"image/"+fileName;
+				String path=realPath+"image"+File.separator+fileName;
 				file.transferTo(createFile(path));
 				return path;
 			}
 			if(type.equals("rar")||type.equals("zip")||type.equals("7z")){
-				String path=realPath+"package/"+fileName;
+				String path=realPath+"package"+File.separator+fileName;
 				file.transferTo(createFile(path));
 				return path;
 	
 			}
 			if(type.equals("doc")||type.equals("docx")||type.equals("txt")){
-				String path=realPath+"file/"+fileName;
+				String path=realPath+"file"+File.separator+fileName;
 				file.transferTo(createFile(path));
 				return path;
 			}
