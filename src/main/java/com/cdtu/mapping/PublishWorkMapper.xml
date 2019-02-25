@@ -7,6 +7,7 @@
     <result column="ct_id" property="ctId" jdbcType="INTEGER" />
     <result column="pw_end" property="pwEnd" jdbcType="DATE" />
     <result column="pw_state" property="pwState" jdbcType="BIT" />
+    <result column="pw_name" property="pwName" jdbcType="LONGVARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.cdtu.model.PublishWork" extends="BaseResultMap" >
     <result column="pw_name" property="pwName" jdbcType="LONGVARCHAR" />

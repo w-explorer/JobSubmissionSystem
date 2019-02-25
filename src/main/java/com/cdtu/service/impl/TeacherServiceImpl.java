@@ -230,8 +230,13 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public Integer addWorkRemark(Work work) {
 		if(work!=null){
-			this.work.teacherUpdateWork(work.getsId(), work.getPwId(), work.getwRemark());
-			return 1;
+			if(this.work.selectWork(work.getsId(), work.getPwId())!=null){
+				this.work.teacherUpdateWork(work.getsId(), work.getPwId(), work.getwRemark());
+				return 1;
+			}
+			else{
+				return 0;
+			}
 		}else{
 			return -1;
 		}
