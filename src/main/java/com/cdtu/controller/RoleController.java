@@ -141,13 +141,6 @@ public class RoleController {
 		}
 		return map;
 	}
-
-	@RequestMapping(value = "/test.do")
-	@RequiresRoles({ "student" })
-	public void test() {
-		System.out.println("uuuuuuuuu");
-	}
-
 	@RequestMapping("/quit.do")
 	public @ResponseBody Map<String, Object> doQuitToLoginJsp(HttpServletRequest request, HttpServletResponse response) {
 		Subject subject = SecurityUtils.getSubject();

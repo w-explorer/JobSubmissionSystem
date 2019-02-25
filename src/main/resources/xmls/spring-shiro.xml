@@ -12,9 +12,9 @@
 		<!-- 注入安全管理器 -->
 		<property name="securityManager" ref="securityManager"></property>
 		<!-- 注入当前系统的登录页面 -->
-		<!--  <property name="loginUrl" value="/login.html" /> -->
+		<!-- <property name="loginUrl" value="/login.html" /> -->
 		<!-- 注入成功页面 -->
-		<!--  <property name="successUrl" value="/index.html" />  -->
+		<!-- <property name="successUrl" value="/index.html" /> -->
 		<!-- 注入权限不足提示页面 -->
 		<property name="unauthorizedUrl" value="/unauthorizedUrl.html" />
 		<!-- 注入URL拦截规则 -->
@@ -49,36 +49,17 @@
 		<property name="cacheManagerConfigFile" value="classpath:xmls/ehcache.xml" />
 	</bean>
 
-	<!--手动指定cookie-->
-    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-        <constructor-arg value="rememberMe"/>
-        
-        <property name="maxAge" value="604800"/>
-    </bean>
+	<!--手动指定cookie -->
+	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg value="rememberMe" />
 
-    <!-- rememberMe管理器 -->
-    <bean id="rememberMeManager"
-          class="org.apache.shiro.web.mgt.CookieRememberMeManager">
-        <!--注入自定义cookie(主要是设置寿命, 默认的一年太长)-->
-        <property name="cookie" ref="rememberMeCookie"/>
-    </bean>
-
-	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
-	<!-- 开启shiro注解 -->
-	<!-- 自动代理 -->
-	<bean id="defaultAdvisorAutoProxyCreator"
-		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
-		<!-- 强制使用cglib为Action创建代理对象 -->
-		<property name="proxyTargetClass" value="true"></property>
+		<property name="maxAge" value="604800" />
 	</bean>
 
-	<bean
-		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
-		depends-on="lifecycleBeanPostProcessor">
-		<property name="proxyTargetClass" value="true" />
+	<!-- rememberMe管理器 -->
+	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+		<!--注入自定义cookie(主要是设置寿命, 默认的一年太长) -->
+		<property name="cookie" ref="rememberMeCookie" />
 	</bean>
 
-	<!-- 切面类 -->
-	<bean
-		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor" />
 </beans>
