@@ -133,4 +133,11 @@ public interface TeacherService {
 	 * @return
 	 */
 	String selectStudentName(String id);
+	/**
+	 * 改变作业状态
+	 * @author weiyuhang
+	 * @param publishwork
+	 * @return
+	 */
+	int updatePublishwork(PublishWork publishwork);
 }

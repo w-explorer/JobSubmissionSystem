@@ -105,4 +105,11 @@ public interface PublishWorkMapper {
      * @return
      */
     String selectPwIdname(String pwId);
+    /**
+     * 改变作业状态
+     * @author weiyuhang
+     * @param pwId
+     * @return
+     */
+    void changePublishWork(PublishWork publishwork);
 }

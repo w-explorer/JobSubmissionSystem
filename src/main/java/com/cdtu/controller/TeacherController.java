@@ -394,5 +394,28 @@ public class TeacherController {
 		// return new
 		// ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),headers,HttpStatus.CREATED);
 	}
-
+	
+	/**
+	 * 
+	 *
+	 * @author WYH
+	 * @param sIds
+	 * @param pwId
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "changePublishWork.do", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> changePublishWork(@RequestBody PublishWork publishwork) {
+		Map<String, Object> msg = new HashMap<String, Object>();
+		
+			this.teacherService.updatePublishwork(publishwork);
+			
+			msg.put("status", 200);
+		
+			// TODO: handle exception
+			
+		
+		return msg;
+}
 }

@@ -375,4 +375,10 @@
 	<select id="selectPwIdname" parameterType="String" resultType="String">
 		select pw_name from publish_work where pw_id=#{pwId}
 	</select>
+	<update id="changePublishWork" parameterType="com.cdtu.model.PublishWork" >
+	 update publish_work
+	 set
+	 pw_state = #{pwState}
+     where pw_id = #{pwId}
+	</update>
 </mapper>

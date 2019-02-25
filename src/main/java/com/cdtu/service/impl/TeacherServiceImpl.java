@@ -276,5 +276,16 @@ public class TeacherServiceImpl implements TeacherService {
 	public String selectStudentName(String id){
 		return this.studentMapper.selectStudentName(id);
 	}
+	@Override
+	public int updatePublishwork(PublishWork publishwork) {
+		// TODO Auto-generated method stub
+		if(publishwork.getPwState()==false){
+			publishwork.setPwState(true);
+		}else{
+			publishwork.setPwState(false);
+		}
+		 this.publishWorkMapper.changePublishWork(publishwork);
+		 return 0;
+	}
 	
 }
