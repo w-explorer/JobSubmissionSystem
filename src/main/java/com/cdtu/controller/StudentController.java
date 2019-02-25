@@ -339,4 +339,5 @@ public class StudentController {
 		return data;
 
 	}
+
 }
