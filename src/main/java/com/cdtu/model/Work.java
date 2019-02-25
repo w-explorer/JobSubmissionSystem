@@ -1,6 +1,5 @@
 package com.cdtu.model;
 
-import java.util.Date;
 import java.util.List;
 
 public class Work {
@@ -8,7 +7,7 @@ public class Work {
 
 	private String pwId;
 
-	private Date wTime;
+	private String wTime;
 
 	private String wContext;
 
@@ -56,11 +55,13 @@ public class Work {
 		this.pwId = pwId == null ? null : pwId.trim();
 	}
 
-	public Date getwTime() {
+
+
+	public String getwTime() {
 		return wTime;
 	}
 
-	public void setwTime(Date wTime) {
+	public void setwTime(String wTime) {
 		this.wTime = wTime;
 	}
 
