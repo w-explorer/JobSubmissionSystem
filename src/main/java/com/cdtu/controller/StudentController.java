@@ -35,6 +35,7 @@ import com.cdtu.util.DownloadFile;
 import com.cdtu.util.UploadFileUtil;
 
 @Controller
+@RequiresRoles({"student"})
 @RequestMapping(value = "student")
 public class StudentController {
 	private @Resource(name = "workService") WorkService workService;
@@ -48,6 +49,7 @@ public class StudentController {
 	 * @author 李红兵
 	 */
 	@ResponseBody
+	@RequiresRoles({"student"})
 	@RequestMapping(value = "/queryCourse.do")
 	public Map<String, Object> doQueryCourse(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
@@ -74,6 +76,7 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/joinCourse.do")
+	@RequiresRoles({"student"})
 	public Map<String, Object> doJoinCourse(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -104,7 +107,7 @@ public class StudentController {
 	 * @author 李红兵
 	 */
 	@ResponseBody
-	@RequiresRoles({ "student" })
+	@RequiresRoles({"student"})
 	@RequestMapping(value = "/queryJoinedCourses.do")
 	public Map<String, Object> doQueryJoinedCourses() {
 		Map<String, Object> map = new HashMap<>();
@@ -125,6 +128,7 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/queryWorks.do")
+	@RequiresRoles({"student"})
 	public Map<String, Object> doQueryWorks(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -157,6 +161,7 @@ public class StudentController {
 	 * @return
 	 */
 	@RequestMapping("selectPE.do")
+	@RequiresRoles({"student"})
 	public @ResponseBody Map<String, Object> selectPE(@RequestBody StudentSelectCourse studentSelectCourse) {
 		Map<String, Object> msg = new HashMap<String, Object>();
 		List<PublishEstimate> publishEstimates = this.studentService.selectPublishEstimate(studentSelectCourse);
@@ -179,6 +184,7 @@ public class StudentController {
 	 * @return
 	 */
 	@RequestMapping("remarkOn.do")
+	@RequiresRoles({"student"})
 	public @ResponseBody Map<String, Object> remarkOn(@RequestBody Estimate estimate) {
 		Map<String, Object> msg = new HashMap<String, Object>();
 		Integer status = studentService.submitEvaluation(estimate);
@@ -201,6 +207,7 @@ public class StudentController {
 	 * @return
 	 */
 	@RequestMapping("selectPW.do")
+	@RequiresRoles({"student"})
 	public @ResponseBody Map<String, Object> selectPW(@RequestBody StudentSelectCourse studentSelectCourse) {
 		Map<String, Object> msg = this.studentService.selectPublishWork(studentSelectCourse);
 		if (msg == null) {
@@ -222,6 +229,7 @@ public class StudentController {
 	 * @return
 	 */
 	@RequestMapping("workOn.do")
+	@RequiresRoles({"student"})
 	public @ResponseBody Map<String, Object> workOn(@RequestBody Work work) {
 		Map<String, Object> msg = new HashMap<String, Object>();
 		Integer status = studentService.submitWork(work);
@@ -244,6 +252,7 @@ public class StudentController {
 	 * @return
 	 */
 	@RequestMapping(value = "queryStudentWork.do", method = RequestMethod.POST)
+	@RequiresRoles({"student"})
 	public @ResponseBody Map<String, Object> queryStudentWork(@RequestBody Work work) {
 		Map<String, Object> msg = new HashMap<String, Object>();
 		Work newWork = this.studentService.showStudentWork(work.getsId(), work.getPwId());
@@ -268,6 +277,7 @@ public class StudentController {
 	 * @return
 	 */
 	@RequestMapping("uploadFile.do")
+	@RequiresRoles({"student"})
 	public @ResponseBody Map<String, Object> uploadFile(@RequestParam("file") CommonsMultipartFile file, @RequestBody Work work) {
 		Map<String, Object> msg = new HashMap<String, Object>();
 		String oldPath = studentService.selectWorkwAddr(work.getsId(), work.getPwId());
@@ -307,6 +317,7 @@ public class StudentController {
 	 * @return
 	 */
 	@RequestMapping(value = "downloadstudent.do")
+	@RequiresRoles({"student"})
 	public void download(@RequestBody Work work, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		File file = new File(work.getwAddr());
 		String fielName = work.getsId() + "_" + studentService.selectStudentName(work.getsId()) + "_" + file.getName();
@@ -322,6 +333,7 @@ public class StudentController {
 	 * @return
 	 */
 	@RequestMapping(value = "selectCourseStudent")
+	@RequiresRoles({"student"})
 	@ResponseBody
 	public Map<String, Object> selectCourseStudent(@RequestBody CourseWapper coursewapper) {
 
@@ -337,7 +349,6 @@ public class StudentController {
 			data.put("msg", "服务器错误");
 		}
 		return data;
-
 	}
-
+	
 }

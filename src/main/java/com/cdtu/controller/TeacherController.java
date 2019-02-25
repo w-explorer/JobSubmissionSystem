@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,7 @@ public class TeacherController {
 	 * @author 李红兵
 	 */
 	@ResponseBody
+	@RequiresRoles({"teacher"})
 	@RequestMapping(value = "/statistic.do")
 	public Map<String, Object> doStatistic(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
@@ -71,6 +73,7 @@ public class TeacherController {
 	 * @author weiyuhang
 	 */
 	@RequestMapping("delete.do")
+	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> deleteClassCreateJsp(@RequestParam("ctId") Integer ctId) {
 
 		String msg = teacherService.deleteClassCreateService(ctId);
@@ -90,6 +93,7 @@ public class TeacherController {
 	 *
 	 * @author weiyuhang
 	 */
+	@RequiresRoles({"teacher"})
 	@RequestMapping("selectCourseStudent.do")
 	public @ResponseBody Map<String, Object> selectCourseStudentJsp(@RequestBody CourseWapper coursewapper) {
 
@@ -115,6 +119,7 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping("selectClass.do")
+	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> selectAllCourse() {
 
 		Subject subject = SecurityUtils.getSubject();
@@ -143,6 +148,7 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "createClass.do", method = RequestMethod.POST)
+	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> createClass(@RequestBody ClassCreate classcreate) {
 		Map<String, Object> data = new HashMap<String, Object>();
 		Subject subject = SecurityUtils.getSubject();
@@ -170,6 +176,7 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping("updateClassCreate.do")
+	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, String> updateClassCreate(@RequestBody ClassCreate classcreate) {
 		String msg = teacherService.updateClassCreateService(classcreate);
 		Map<String, String> data = new HashMap<String, String>();
@@ -191,6 +198,7 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "publishEstimate.do", method = RequestMethod.POST)
+	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> publishEstimate(@RequestBody PublishEstimate publishEstimate) {
 		Map<String, Object> msg = new HashMap<String, Object>();
 		Integer status = teacherService.PublishEstimate(publishEstimate);
@@ -217,6 +225,7 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "publishWork.do", method = RequestMethod.POST)
+	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> publishWork(@RequestBody PublishWork publishWork) {
 		Map<String, Object> msg = new HashMap<String, Object>();
 		Integer status = teacherService.publishWork(publishWork);
@@ -244,6 +253,7 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "queryPublishWork.do", method = RequestMethod.POST)
+	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> queryPublishWork(@RequestBody CourseWapper courseWapper) {
 		Map<String, Object> msg = this.teacherService.showPublishWork(courseWapper);
 		if (msg != null) {
@@ -270,6 +280,7 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "queryStudentsInWork.do", method = RequestMethod.POST)
+	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> queryStudentInWork(@RequestBody CourseWapper courseWapper) {
 		Map<String, Object> msg = this.teacherService.showStudentInWork(courseWapper);
 		if (msg != null) {
@@ -293,6 +304,7 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "remarkStudentWork.do", method = RequestMethod.POST)
+	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> remarkStudentWork(@RequestBody Work work) {
 		Map<String, Object> msg = new HashMap<String, Object>();
 		Integer status = this.teacherService.addWorkRemark(work);
@@ -316,6 +328,7 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "queryStudentWork.do", method = RequestMethod.POST)
+	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> queryStudentWork(@RequestBody Work work) {
 		Map<String, Object> msg = new HashMap<String, Object>();
 		Work newWork = this.teacherService.selectStudentWork(work.getsId(), work.getPwId());
@@ -339,6 +352,7 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "downloadteache.do")
+	@RequiresRoles({"teacher"})
 	public void download(@RequestBody Work work, HttpServletResponse response) throws IOException {
 		File file = new File(work.getwAddr());
 		String fileName = work.getsId() + "_" + teacherService.selectStudentName(work.getsId()) + "_" + file.getName();
@@ -359,6 +373,7 @@ public class TeacherController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "downLoadAll.do")
+	@RequiresRoles({"teacher"})
 	@ResponseBody
 	public void downloadAll(@RequestBody Work work, HttpServletResponse response) throws IOException {
 
