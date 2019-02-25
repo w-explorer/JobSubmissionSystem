@@ -342,6 +342,7 @@ public class TeacherController {
 	public void download(@RequestBody Work work, HttpServletResponse response) throws IOException {
 		File file = new File(work.getwAddr());
 		String fileName = work.getsId() + "_" + teacherService.selectStudentName(work.getsId()) + "_" + file.getName();
+		System.out.println(fileName);
 		DownloadFile.downloadFile(file, fileName, response);
 		// return new
 		// ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),
