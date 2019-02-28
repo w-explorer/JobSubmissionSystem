@@ -174,7 +174,7 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public List<CourseStudent> selectCourseStudentService(CourseWapper coursewapper) {
 		
-		return this.studentSelectCourseMapper.selectCourseStudent(coursewapper);
+		return com.cdtu.util.OrderByUtil.OrderASC(studentSelectCourseMapper.selectCourseStudent(coursewapper));
 	}
 
 

@@ -27,6 +27,7 @@ import com.cdtu.model.Teacher;
 import com.cdtu.model.Work;
 import com.cdtu.service.TeacherService;
 import com.cdtu.util.OAUtil;
+import com.cdtu.util.OrderByUtil;
 @Service("teacherService")
 public class TeacherServiceImpl implements TeacherService {
 
@@ -68,7 +69,7 @@ public class TeacherServiceImpl implements TeacherService {
 	 */
 	@Override
 	public List<CourseStudent> selectCourseStudentService(CourseWapper coursewapper) {
-		return this.studentSelectCourseMapper.selectCourseStudent(coursewapper);
+		return  com.cdtu.util.OrderByUtil.OrderASC(studentSelectCourseMapper.selectCourseStudent(coursewapper));
 	}
 
 	/**

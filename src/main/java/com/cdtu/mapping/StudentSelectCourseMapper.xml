@@ -21,6 +21,7 @@
 			student_select_course.ct_id=#{ctId} AND
 		</if>
 		student.s_id=student_select_course.s_id
+		
 	</select>
 	<!-- 查询该课程学生 by:魏宇航  end-->
 	
