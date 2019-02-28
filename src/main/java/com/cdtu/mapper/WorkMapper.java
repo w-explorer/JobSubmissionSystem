@@ -79,4 +79,14 @@ public interface WorkMapper {
 	 */
 	String selectWorkFlieStudent(@Param("sId") String sId, @Param("pwId") String pwId);
 
+	/**
+	 * 模糊查询作业名字
+	 * @param sId
+	 * @param cId
+	 * @return
+	 */
+	public List<Map<String, Object>> fuzzySearchWorkBySidAndCid(@Param("sId")String sId, @Param("cId")int cId,@Param("pwName")String pwName) ;
+
+	public List<Map<String, Object>> fuzzySearchWorkByTidAndCid(@Param("tId")String tId,  @Param("cId")int cId,@Param("pwName")String pwName);
+
 }

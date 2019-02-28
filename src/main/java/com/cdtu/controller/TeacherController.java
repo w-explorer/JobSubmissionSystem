@@ -415,7 +415,7 @@ public class TeacherController {
 	
 	/**
 	 * 
-	 *
+	 *控制作业状态
 	 * @author WYH
 	 * @param sIds
 	 * @param pwId
@@ -432,8 +432,27 @@ public class TeacherController {
 			msg.put("status", 200);
 		
 			// TODO: handle exception
-			
-		
 		return msg;
 }
+	/**
+	 * @author 文成
+	 * 模糊查询作业
+	 * @param paramsMap
+	 * @return
+	 */
+	@RequestMapping(value="fuzzySearchWork.do")
+	@RequiresRoles({"teacher"})
+	public @ResponseBody Map<String,Object> fuzzySearchWork(@RequestBody Map<String, Object> paramsMap){
+		Map<String, Object> map = new HashMap<String, Object>();
+		int cId = Integer.parseInt((String) paramsMap.get("cId"));
+		String pwName = (String) paramsMap.get("pwName");
+		String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		try {
+			map.put("status", 200);
+			map.put("fuzzySearchWorks", workService.fuzzySearchWorkByTidAndCid(tId, cId,pwName));
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
 }

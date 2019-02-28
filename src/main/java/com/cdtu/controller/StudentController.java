@@ -328,11 +328,12 @@ public class StudentController {
 	}
 
 	/**
+	 * 查询班级学生
 	 * @author weiyuhang
 	 * @param coursewapper
 	 * @return
 	 */
-	@RequestMapping(value = "selectCourseStudent")
+	@RequestMapping(value = "selectCourseStudent.do")
 	@RequiresRoles({"student"})
 	@ResponseBody
 	public Map<String, Object> selectCourseStudent(@RequestBody CourseWapper coursewapper) {
@@ -349,6 +350,27 @@ public class StudentController {
 			data.put("msg", "服务器错误");
 		}
 		return data;
+	}
+	/**
+	 * @author 文成
+	 * 模糊查询作业
+	 * @param paramsMap
+	 * @return
+	 */
+	@RequestMapping(value="fuzzySearchWork.do")
+	@RequiresRoles({"student"})
+	public @ResponseBody Map<String,Object> fuzzySearchWork(@RequestBody Map<String, Object> paramsMap){
+		Map<String, Object> map = new HashMap<String, Object>();
+		int cId = Integer.parseInt((String) paramsMap.get("cId"));
+		String pwName = (String) paramsMap.get("pwName");
+		String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		try {
+			map.put("status", 200);
+			map.put("fuzzySearchWorks", workService.fuzzySearchWorkBySidAndCid(sId, cId,pwName));
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
 	}
 	
 }

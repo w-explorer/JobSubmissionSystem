@@ -33,6 +33,26 @@
 		OR (publish_work.tsc_id = #{cId} AND student_select_course.tsc_id = #{cId}))
 	</select>
 	<!-- 李红兵end -->
+	<!-- 文成end -->
+	<select id="fuzzySearchWorkBySidAndCid" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT  pw.`pw_name`
+		FROM publish_work pw,student_select_course ssc
+		WHERE
+		ssc.`s_id`=#{sId}
+		AND pw.`pw_name` LIKE '%${pwName}%'
+		AND(ssc.`tsc_id`=#{cId} AND ssc.`tsc_id`=pw.`tsc_id`)
+		OR(ssc.`ct_id`=#{cId} AND ssc.`ct_id`=pw.`ct_id`)
+	</select>
+	<select id="fuzzySearchWorkByTidAndCid" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT  DISTINCT pw.`pw_name`
+		FROM publish_work pw,teacher_select_course tsc,class_create  cc
+		WHERE
+		tsc.`t_id`=#{tId}
+		AND pw.`pw_name` LIKE '%${pwName}%'
+		AND(tsc.`tsc_id`=#{cId} AND tsc.`tsc_id`=pw.`tsc_id`)
+		OR(cc.`ct_id`=#{cId} AND cc.`ct_id`=pw.`ct_id`)
+	</select>
+	<!-- 文成end -->
 	
 	<!-- 查询作业数量 by:黎睿-->
 	<select id="selectWorkCount" resultType="java.lang.Integer">

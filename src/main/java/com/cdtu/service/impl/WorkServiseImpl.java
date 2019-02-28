@@ -41,4 +41,16 @@ public class WorkServiseImpl implements WorkService {
 		});
 		return maps;
 	}
+
+	@Override
+	public List<Map<String, Object>> fuzzySearchWorkBySidAndCid(String sId, int cId,String pwName) {
+		List<Map<String,Object>> maps =workMapper.fuzzySearchWorkBySidAndCid(sId,cId,pwName);
+		return maps;
+	}
+
+	@Override
+	public List<Map<String, Object>> fuzzySearchWorkByTidAndCid(String tId, int cId, String pwName) {
+		List<Map<String,Object>> maps =workMapper.fuzzySearchWorkByTidAndCid(tId,cId,pwName);
+		return maps;
+	}
 }

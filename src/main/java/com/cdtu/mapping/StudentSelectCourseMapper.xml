@@ -32,7 +32,7 @@
 	</insert>
 
 	<select id="selectBySId" parameterType="java.lang.String" resultType="java.util.HashMap">
-		SELECT course.c_id AS cId, course.c_name AS cName, teacher.t_name AS tName, school.sc_name AS scName, course.c_img_src AS cImgSrc
+		SELECT course.c_id AS cId, course.c_name AS cName, teacher.t_name AS tName, teacher.t_img_src AS tImgSrc,school.sc_name AS scName, course.c_img_src AS cImgSrc
 		FROM student_select_course, course, teacher, school, teacher_select_course
 		WHERE student_select_course.s_id = #{sId}
 		AND teacher_select_course.tsc_id = student_select_course.tsc_id
@@ -40,7 +40,7 @@
 		AND school.sc_id = course.sc_id
 		AND teacher.t_id = teacher_select_course.t_id
 		UNION
-		SELECT class_create.ct_id AS cId, class_create.ct_name AS cName, teacher.t_name AS tName, "未设置学院归属" AS scName, class_create.ct_img_src AS cImgSrc
+		SELECT class_create.ct_id AS cId, class_create.ct_name AS cName, teacher.t_name AS tName,  teacher.t_img_src AS tImgSrc,"未设置学院归属" AS scName, class_create.ct_img_src AS cImgSrc
 		FROM student_select_course, teacher, class_create
 		WHERE student_select_course.s_id = #{sId}
 		AND student_select_course.ct_id = class_create.ct_id
