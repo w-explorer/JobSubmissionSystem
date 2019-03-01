@@ -37,7 +37,7 @@ public class StudentServiceImpl implements StudentService {
 	@Resource
 	private PublishWorkMapper publishWorkMapper;
 	@Resource
-	private WorkMapper work; 
+	private WorkMapper workMapper; 
 	@Resource
 	private StudentSelectCourseMapper studentSelectCourseMapper;
 	@Override
@@ -97,7 +97,7 @@ public class StudentServiceImpl implements StudentService {
 			publishWorks.put("countover", this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), false));
 			publishWorks.put("countall", this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), null));
 			for(PublishWork publishWork:publishWorkLs){
-				if(this.work.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId())!=0){
+				if(this.workMapper.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId())!=0){
 					publishWork.setWstate("已参与");
 				}else{
 					publishWork.setWstate("未参与");
@@ -122,7 +122,7 @@ public class StudentServiceImpl implements StudentService {
 			publishWorks.put("countover", this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), false));
 			publishWorks.put("countall", this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), null));
 			for(PublishWork publishWork:publishWorkLs){
-				if(this.work.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId())!=0){
+				if(this.workMapper.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId())!=0){
 					publishWork.setWstate("已参与");
 				}else{
 					publishWork.setWstate("未参与");
@@ -135,13 +135,13 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public Integer submitWork(Work work) {
 		if(work!=null){
-			if(this.work.selectWork(work.getsId(), work.getPwId())==null){
+			if(this.workMapper.selectWork(work.getsId(), work.getPwId())==null){
 				work.setId(OAUtil.getId());
-				this.work.insertWork(work);
+				this.workMapper.insertWork(work);
 				return 1;
 			}
-			if(this.work.selectWork(work.getsId(), work.getPwId())!=null){
-				this.work.studentUpdateWork(work);
+			if(this.workMapper.selectWork(work.getsId(), work.getPwId())!=null){
+				this.workMapper.studentUpdateWork(work);
 				return 1;
 			}
 			return -1;
@@ -152,7 +152,7 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public Work showStudentWork(String sId,String pwId){
 		if(sId!=null&&pwId!=null){
-			return this.work.selectWork(sId, pwId);
+			return this.workMapper.selectWork(sId, pwId);
 		}else{
 			return null;
 		}
@@ -160,12 +160,12 @@ public class StudentServiceImpl implements StudentService {
 	}
 	@Override
 	public Integer updateWorkwAddr(String sId, String pwId, String wAddr) {
-		this.work.updateWorkFlieStudent(sId, pwId, wAddr);
+		this.workMapper.updateWorkFlieStudent(sId, pwId, wAddr);
 		return 1;
 	}
 	@Override
 	public String selectWorkwAddr(String sId, String pwId) {
-		return this.work.selectWorkFlieStudent(sId, pwId);
+		return this.workMapper.selectWorkFlieStudent(sId, pwId);
 	}
 	@Override
 	public String selectStudentName(String id){

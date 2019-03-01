@@ -455,7 +455,13 @@ public class TeacherController {
 		}
 		return map;
 	}
-	@RequestMapping(value="SearchPwByPwName.do")
+	/**
+	 * 按作业名字查询作业
+	 * @author wencheng
+	 * @param paramsMap
+	 * @return
+	 */
+	@RequestMapping(value="SearchPwByPwName.dotime")
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String,Object> SearchPwByPwName(@RequestBody Map<String,Object> paramsMap){
 		Map<String, Object> map = new HashMap<String, Object>();

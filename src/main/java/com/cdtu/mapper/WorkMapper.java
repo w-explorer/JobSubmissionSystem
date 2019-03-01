@@ -91,4 +91,6 @@ public interface WorkMapper {
 
 	public List<Map<String, Object>> SearchPwByPwName(@Param("tId")String tId,  @Param("cId")int cId,@Param("pwName")String pwName);
 
+	public List<Map<String, Object>> SsearchPwByPwName(@Param("sId")String sId,  @Param("cId")int cId,@Param("pwName")String pwName);
+
 }
