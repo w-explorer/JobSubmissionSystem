@@ -440,7 +440,7 @@ public class TeacherController {
 	 * @param paramsMap
 	 * @return
 	 */
-	@RequestMapping(value="fuzzySearchWork.do")
+	@RequestMapping(value="fuzzySearchWorkNames.do")
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String,Object> fuzzySearchWork(@RequestBody Map<String, Object> paramsMap){
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -450,6 +450,21 @@ public class TeacherController {
 		try {
 			map.put("status", 200);
 			map.put("fuzzySearchWorks", workService.fuzzySearchWorkByTidAndCid(tId, cId,pwName));
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
+	@RequestMapping(value="SearchPwByPwName.do")
+	@RequiresRoles({"teacher"})
+	public @ResponseBody Map<String,Object> SearchPwByPwName(@RequestBody Map<String,Object> paramsMap){
+		Map<String, Object> map = new HashMap<String, Object>();
+		int cId = Integer.parseInt((String) paramsMap.get("cId"));
+		String pwName = (String) paramsMap.get("pwName");
+		String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		try {
+			map.put("status", 200);
+			map.put("fuzzySearchWorks", workService.SearchPwByPwName(tId, cId,pwName));
 		} catch (Exception e) {
 			handlException(map, e);
 		}
