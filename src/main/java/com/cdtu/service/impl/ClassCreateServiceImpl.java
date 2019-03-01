@@ -42,4 +42,14 @@ public class ClassCreateServiceImpl implements ClassCreateService {
 		map.put("msgJoinAble", (boolean) map.get("joinAble") ? "是" : "否");
 		return map;
 	}
+	
+	/**
+	 * 根据课堂号查询课程详情
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public Map<String, Object> getDetails(int cId) {
+		return ccMapper.selectDetails(cId);
+	}
 }

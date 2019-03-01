@@ -9,6 +9,16 @@
 		WHERE class_create.ct_id = #{cId}
 		AND teacher.t_id = class_create.t_id
 	</select>
+	
+	<select id="selectDetails" resultType="java.util.HashMap">
+		SELECT c_id AS cId, c_name AS cName, c_img_src AS cImgSrc
+		FROM course
+		WHERE c_id = #{cId}
+		UNION
+		SELECT ct_id AS cId, ct_name AS cName, ct_img_src AS cImgSrc
+		FROM class_create
+		WHERE ct_id = #{cId}
+	</select>
 
 	<select id="countByCId" resultType="java.lang.Integer">
 		SELECT count(*) from
