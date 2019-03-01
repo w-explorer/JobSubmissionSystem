@@ -112,4 +112,9 @@ public interface PublishWorkMapper {
      * @return
      */
     void changePublishWork(PublishWork publishwork);
+
+	List<PublishWork> getAllPublishWorks();
+
+	void updatePublishWorkState(@Param("pwId")String pwId, @Param("flag")Boolean flag);
+
 }
