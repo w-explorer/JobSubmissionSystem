@@ -27,10 +27,8 @@ import com.cdtu.model.Teacher;
 import com.cdtu.model.Work;
 import com.cdtu.service.TeacherService;
 import com.cdtu.util.OAUtil;
-import com.cdtu.util.OrderByUtil;
 @Service("teacherService")
 public class TeacherServiceImpl implements TeacherService {
-
 	@Resource
 	private TeacherMapper teacherMapper;
 	@Resource
