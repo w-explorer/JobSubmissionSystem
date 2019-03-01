@@ -18,6 +18,12 @@ public interface ClassCreateMapper {
 	 * @Author 李红兵
 	 */
 	public Map<String, Object> selectByCId(@Param("cId") int cId, @Param("sId") String sId);
+	
+	/**
+	 *
+	 * @author 李红兵
+	 */
+	public Map<String, Object> selectDetails(@Param("cId") int cId);
 
 	/**
 	 * 教师增添课程

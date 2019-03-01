@@ -43,4 +43,24 @@ public class StudentSelectCourseServiceImpl implements StudentSelectCourseServic
 	public List<Map<String, Object>> getJoinedCourses(String sId) {
 		return sscMapper.selectBySId(sId);
 	}
+	
+	/**
+	 * 分页查询该课程内的学生
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public List<Map<String, Object>> getStudents(int cId, int page) {
+		return sscMapper.selectStudents(cId, (page - 1) * 40, page * 40);
+	}
+
+	/**
+	 * 查询班内人数
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public int countStudents(int cId) {
+		return sscMapper.countStudents(cId);
+	}
 }

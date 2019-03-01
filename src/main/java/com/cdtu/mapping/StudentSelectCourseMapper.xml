@@ -62,5 +62,28 @@
 		AND (publish_work.ct_id = student_select_course.ct_id
 		OR publish_work.tsc_id = student_select_course.tsc_id)
 	</select>
+	
+	<select id="countStudents" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM student_select_course, teacher_select_course
+		WHERE student_select_course.ct_id = #{cId}
+		OR (teacher_select_course.c_id = #{cId}
+		AND teacher_select_course.tsc_id = student_select_course.tsc_id)
+	</select>
+	
+	<select id="selectStudents" resultType="java.util.HashMap">
+		SELECT student.s_name AS sName, student.s_id AS sId, student.s_img_src AS sImgSrc
+		FROM student, student_select_course
+		WHERE student_select_course.ct_id = #{cId}
+		AND student_select_course.s_id = student.s_id
+		UNION
+		SELECT student.s_name AS sName, student.s_id AS sId, student.s_img_src AS sImgSrc
+		FROM student, teacher_select_course, student_select_course
+		WHERE teacher_select_course.c_id = #{cId}
+		AND teacher_select_course.tsc_id = student_select_course.tsc_id
+		AND student_select_course.s_id = student.s_id
+		ORDER BY sId ASC
+		LIMIT #{start}, #{end}
+	</select>
 	<!-- 李红兵end -->
 </mapper>

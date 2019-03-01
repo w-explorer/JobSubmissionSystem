@@ -44,6 +44,46 @@ public class StudentController {
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
 
 	/**
+	 * 查询课堂详情
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/details.do")
+	public Map<String, Object> doDetails(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			int cId = Integer.parseInt((String) paramsMap.get("cId"));
+			map.putAll(ccService.getDetails(cId));
+			map.put("stusNum", sscService.countStudents(cId));
+			map.put("status", 200);
+		} catch (Exception e) {
+			this.handlException(map, e);
+		}
+		return map;
+	}
+
+	/**
+	 * 查看课堂成员
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/queryStudents.do")
+	public Map<String, Object> doQueryStudents(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			int cId = Integer.parseInt((String) paramsMap.get("cId"));
+			int page = (int) paramsMap.get("page");
+			map.put("students", sscService.getStudents(cId, page));
+			map.put("status", 200);
+		} catch (Exception e) {
+			this.handlException(map, e);
+		}
+		return map;
+	}
+	
+	/**
 	 * 执行根据创课号（邀请码）查询课程
 	 *
 	 * @author 李红兵
