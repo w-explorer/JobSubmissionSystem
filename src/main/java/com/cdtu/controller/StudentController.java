@@ -413,4 +413,26 @@ public class StudentController {
 		return map;
 	}
 	
+	/**
+	 * 学生按作业名字查询作业
+	 * @author wencheng
+	 * @param paramsMap
+	 * @return
+	 */
+	@RequestMapping(value="SearchPwByPwName.dotime")
+	@RequiresRoles({"student"})
+	public @ResponseBody Map<String,Object> SearchPwByPwName(@RequestBody Map<String,Object> paramsMap){
+		Map<String, Object> map = new HashMap<String, Object>();
+		int cId = Integer.parseInt((String) paramsMap.get("cId"));
+		String pwName = (String) paramsMap.get("pwName");
+		String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		try {
+			map.put("status", 200);
+			map.put("fuzzySearchWorks", workService.SsearchPwByPwName(sId, cId,pwName));
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
+	
 }

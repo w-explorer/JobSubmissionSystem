@@ -382,4 +382,12 @@
 	 pw_state = #{pwState}
      where pw_id = #{pwId}
 	</update>
+	<!-- 文成start -->
+	<select id="getAllPublishWorks" resultMap="BaseResultMap">
+		select * from publish_work
+	</select>
+	<update id="updatePublishWorkState">
+		UPDATE  publish_work SET pw_state =#{flag} WHERE pw_id=#{pwId}
+	</update>
+	<!-- 文成end -->
 </mapper>

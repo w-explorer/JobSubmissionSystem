@@ -35,22 +35,56 @@
 	<!-- 李红兵end -->
 	<!-- 文成end -->
 	<select id="fuzzySearchWorkBySidAndCid" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		SELECT  pw.`pw_name`
+		SELECT  pw.pw_name
 		FROM publish_work pw,student_select_course ssc
 		WHERE
-		ssc.`s_id`=#{sId}
-		AND pw.`pw_name` LIKE '%${pwName}%'
-		AND(ssc.`tsc_id`=#{cId} AND ssc.`tsc_id`=pw.`tsc_id`)
-		OR(ssc.`ct_id`=#{cId} AND ssc.`ct_id`=pw.`ct_id`)
+		ssc.s_id=#{sId}
+		AND pw.pw_name LIKE '%${pwName}%'
+		AND(ssc.tsc_id=#{cId} AND ssc.tsc_id=pw.tsc_id)
+		OR(ssc.ct_id=#{cId} AND ssc.ct_id=pw.ct_id)
 	</select>
-	<select id="fuzzySearchWorkByTidAndCid" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		SELECT  DISTINCT pw.`pw_name`
+	<select id="fuzzySearchWorkByTidAndCid"  resultType="java.util.HashMap">
+		SELECT  DISTINCT pw.pw_name
 		FROM publish_work pw,teacher_select_course tsc,class_create  cc
 		WHERE
-		tsc.`t_id`=#{tId}
-		AND pw.`pw_name` LIKE '%${pwName}%'
-		AND(tsc.`tsc_id`=#{cId} AND tsc.`tsc_id`=pw.`tsc_id`)
-		OR(cc.`ct_id`=#{cId} AND cc.`ct_id`=pw.`ct_id`)
+		tsc.t_id=#{tId}
+		AND pw.pw_name LIKE '%${pwName}%'
+		AND(tsc.tsc_id=#{cId} AND tsc.tsc_id=pw.tsc_id)
+		OR(cc.ct_id=#{cId} AND cc.ct_id=pw.ct_id)
+	</select>
+	<select id="SearchPwByPwName"  resultType="java.util.HashMap">
+		SELECT  DISTINCT pw.pw_id AS pwId,pw.tsc_id AS cId,pw.pw_name AS pwName,pw.pw_end AS pwEnd,pw.pw_state AS pwState
+		FROM publish_work pw,teacher_select_course tsc
+		WHERE
+		tsc.t_id=#{tId}
+		AND pw.pw_name = #{pwName}
+		AND tsc.tsc_id=#{cId}
+		AND tsc.tsc_id=pw.tsc_id
+		UNION
+		SELECT  DISTINCT pw.pw_id AS pwId,pw.ct_id AS cId,pw.pw_name AS pwName,pw.pw_end AS pwEnd,pw.pw_state AS pwState
+		FROM publish_work pw,class_create  cc,teacher_select_course tsc
+		WHERE
+		tsc.t_id=#{tId}
+		AND pw.pw_name = #{pwName}
+		AND cc.ct_id=#{cId}
+		AND cc.ct_id=pw.ct_id
+	</select>
+	<select id="SsearchPwByPwName"  resultType="java.util.HashMap">
+		SELECT  DISTINCT pw.pw_id AS pwId,pw.tsc_id AS cId,pw.pw_name AS pwName,pw.pw_end AS pwEnd,pw.pw_state AS pwState
+		FROM publish_work pw,student_select_course ssc
+		WHERE
+		ssc.s_id=#{sId}
+		AND pw.pw_name =  #{pwName}
+		AND ssc.tsc_id=#{cId}
+		AND ssc.tsc_id=pw.tsc_id
+		UNION
+		SELECT  DISTINCT pw.pw_id AS pwId,pw.ct_id AS cId,pw.pw_name AS pwName,pw.pw_end AS pwEnd,pw.pw_state AS pwState
+		FROM publish_work pw,student_select_course ssc
+		WHERE
+		ssc.s_id=#{sId}
+		AND pw.pw_name =  #{pwName}
+		AND ssc.ct_id=#{cId} 
+		AND ssc.ct_id=pw.ct_id
 	</select>
 	<!-- 文成end -->
 	

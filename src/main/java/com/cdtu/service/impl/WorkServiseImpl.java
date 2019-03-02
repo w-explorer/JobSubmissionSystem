@@ -13,6 +13,7 @@ import com.cdtu.service.WorkService;
 @Service(value = "workService")
 public class WorkServiseImpl implements WorkService {
 	private @Resource WorkMapper workMapper;
+	
 
 	/**
 	 * 统计作业提交情况
@@ -51,6 +52,39 @@ public class WorkServiseImpl implements WorkService {
 	@Override
 	public List<Map<String, Object>> fuzzySearchWorkByTidAndCid(String tId, int cId, String pwName) {
 		List<Map<String,Object>> maps =workMapper.fuzzySearchWorkByTidAndCid(tId,cId,pwName);
+		return maps;
+	}
+
+	@Override
+	public List<Map<String, Object>> SearchPwByPwName(String tId, int cId, String pwName) {
+		List<Map<String,Object>> maps =workMapper.SearchPwByPwName(tId,cId,pwName);
+		for (Map<String, Object> map : maps) {
+			if(((int)map.get("pwState"))==0){
+				map.put("pwState", "已结束");
+			}
+			else{
+				map.put("pwState", "正在进行中");
+			}
+		}
+		return maps;
+	}
+
+	@Override
+	public List<Map<String, Object>> SsearchPwByPwName(String sId, int cId, String pwName) {
+		List<Map<String,Object>> maps =workMapper.SsearchPwByPwName(sId,cId,pwName);
+		for (Map<String, Object> map : maps) {
+			if(this.workMapper.selectWorkCount(sId, (String) map.get("pwId"))!=0){
+				map.put("wState","已参与");
+			}else{
+				map.put("wState","未参与");
+			}
+			if(((int)map.get("pwState"))==0){
+				map.put("pwState", "已结束");
+			}
+			else{
+				map.put("pwState", "正在进行中");
+			}
+		}
 		return maps;
 	}
 }
