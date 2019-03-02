@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.cdtu.mapper.WorkMapper;
 import com.cdtu.service.WorkService;
+import com.cdtu.util.FormatDateToString;
 
 @Service(value = "workService")
 public class WorkServiseImpl implements WorkService {
@@ -59,6 +60,7 @@ public class WorkServiseImpl implements WorkService {
 	public List<Map<String, Object>> SearchPwByPwName(String tId, int cId, String pwName) {
 		List<Map<String,Object>> maps =workMapper.SearchPwByPwName(tId,cId,pwName);
 		for (Map<String, Object> map : maps) {
+			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));//将时间秒变成字符串形式
 			if(((int)map.get("pwState"))==0){
 				map.put("pwState", "已结束");
 			}
@@ -78,6 +80,7 @@ public class WorkServiseImpl implements WorkService {
 			}else{
 				map.put("wState","未参与");
 			}
+				map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));
 			if(((int)map.get("pwState"))==0){
 				map.put("pwState", "已结束");
 			}
