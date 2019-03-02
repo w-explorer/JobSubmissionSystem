@@ -397,7 +397,7 @@ public class StudentController {
 	 * @param paramsMap
 	 * @return
 	 */
-	@RequestMapping(value="fuzzySearchWorkNames.do")
+	@RequestMapping(value="fuzzySearchWork.do")
 	@RequiresRoles({"student"})
 	public @ResponseBody Map<String,Object> fuzzySearchWork(@RequestBody Map<String, Object> paramsMap){
 		Map<String, Object> map = new HashMap<String, Object>();

@@ -19,26 +19,21 @@
 			</list>
 		</property>
 	</bean>
-
 	<!-- 添加注解驱动 配置注解处理器映射器 处理适配器 默认提供 json处理 -->
 	<mvc:annotation-driven/>
 	<mvc:default-servlet-handler/>
-	<mvc:interceptors> 
-	    <mvc:interceptor>    
-	        <!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller -->  
-	        <mvc:mapping path="/**" />  
-	        <!-- 全局拦截 判断角色信息是否过期  权限是否对应-->  
-	        <mvc:exclude-mapping path="/role/checkCode" />
-	        <mvc:exclude-mapping path="/role/login.*" />
-	        <mvc:exclude-mapping path="/role/quit.do" />
-	        <mvc:exclude-mapping path="/login.*" />
-	        <bean class="com.cdtu.util.TokenInterceptor"></bean>    
-	    </mvc:interceptor>  
-	    <!-- 拦截作业过期时间  进行判断时间已到 修改课程状态 -->
-	    <mvc:interceptor>
-        	<mvc:mapping path="/**/*.dotime"/>  <!-- 仅拦截.dotime结尾所有请求-->
-        	<bean class="com.cdtu.util.ChangePublishWorkStateByConparetoEndTime"/>
-        </mvc:interceptor>   
+	<mvc:interceptors>    
+    <mvc:interceptor>    
+        <!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller -->  
+        <mvc:mapping path="/**" />  
+        <!-- /register 和 /login 不需要拦截-->  
+        <mvc:exclude-mapping path="/role/checkCode" />
+        <mvc:exclude-mapping path="/role/login.*" />
+        <mvc:exclude-mapping path="/role/quit.do" />
+        <mvc:exclude-mapping path="/login.*" />
+        <bean class="com.cdtu.util.TokenInterceptor"></bean>
+            
+    </mvc:interceptor>  
     <!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法 -->  
 	</mvc:interceptors>
 

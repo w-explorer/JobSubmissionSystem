@@ -140,4 +140,10 @@ public interface TeacherService {
 	 * @return
 	 */
 	int updatePublishwork(PublishWork publishwork);
+	/**
+	 * 老师删除加错的学生
+	 * @param CourseStudent
+	 * @return
+	 */
+	int deleteCourseStudent(CourseStudent CourseStudent);
 }
