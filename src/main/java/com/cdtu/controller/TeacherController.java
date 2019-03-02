@@ -476,4 +476,23 @@ public class TeacherController {
 		}
 		return map;
 	}
+	/**
+	 * 老师删除加错的学生
+	 * @author weiyuhang
+	 */
+	@RequestMapping(value="SearchPwByPwName.dotime")
+	@RequiresRoles({"teacher"})
+	public @ResponseBody Map<String,Object> deleteCourseStudent(@RequestBody CourseStudent courseStudent){
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			teacherService.deleteCourseStudent(courseStudent);
+			map.put("status", 200);
+			map.put("msg","删除成功");
+		} catch (Exception e) {
+			handlException(map, e);
+			map.put("status", 400);
+			map.put("msg","服务器异常");
+		}
+		return map;
+	}
 }

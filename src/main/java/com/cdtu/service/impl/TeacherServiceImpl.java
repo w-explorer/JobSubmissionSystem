@@ -291,5 +291,13 @@ public class TeacherServiceImpl implements TeacherService {
 		 this.publishWorkMapper.changePublishWork(publishwork);
 		 return 0;
 	}
+	/**
+	 * 
+	 */
+	@Override
+	public int deleteCourseStudent(CourseStudent courseStudent) {
+		teacherMapper.DeleteCourseStudent(courseStudent);
+		return 0;
+	}
 	
 }
