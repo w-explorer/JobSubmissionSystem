@@ -480,7 +480,7 @@ public class TeacherController {
 	 * 老师删除加错的学生
 	 * @author weiyuhang
 	 */
-	@RequestMapping(value="SearchPwByPwName.dotime")
+	@RequestMapping(value="deleteCourseStudent.do")
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String,Object> deleteCourseStudent(@RequestBody CourseStudent courseStudent){
 		Map<String, Object> map = new HashMap<String, Object>();
