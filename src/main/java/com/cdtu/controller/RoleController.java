@@ -18,6 +18,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,7 +34,6 @@ import com.cdtu.service.MenuService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.util.Jwt;
-import com.cdtu.util.OAUtil;
 import com.cdtu.util.RandomValidateCode;
 
 /**
@@ -205,20 +205,18 @@ public class RoleController {
 
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	@RequestMapping(value = "updateAvatar.do")
-	public void updateAvatar(@RequestParam("file") CommonsMultipartFile file,
+	public  void updateAvatar(@RequestParam("file") CommonsMultipartFile file,
 			HttpServletRequest request) {
 		// 获取当前用户
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		String path = "";
 		if (!file.isEmpty()) {
-			//生成uuid作为文件名称
-			String uuid = OAUtil.getId().toString().replaceAll("-", "");
 			//获得文件类型（可以判断如果不是图片，禁止上传）
 			String contentType = file.getContentType();
 			//获得文件后缀名称
 			String imageName = contentType.substring(contentType.indexOf("/") + 1);
-			path = "f:" + File.separator + "uploadFile" + File.separator + "avatar" + File.separator +role.getRole()+ File.separator +role.getUsername()+ File.separator + uuid + "." + imageName;
+			path = "f:" + File.separator + "uploadFile" + File.separator + "avatar" + File.separator +role.getRole()+ File.separator +role.getUsername()+ File.separator + "studentavatar." + imageName;
 			File storeDirectory = new File(path);// 即代表文件又代表目录
 			if (!storeDirectory.exists()) {
 				storeDirectory.mkdirs();// 创建一个指定的目录
@@ -230,6 +228,7 @@ public class RoleController {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			path=File.separator +"imgSrc"+ File.separator +role.getRole()+ File.separator +role.getUsername()+ File.separator + "studentavatar." + imageName;
 		}
 		if("teacher".equals(role.getRole())){
 			teacherService.updataAvatar(path,role.getUsername());
@@ -237,7 +236,6 @@ public class RoleController {
 		else if("student".equals(role.getRole())){
 			studentService.updataAvatar(path,role.getUsername());
 		}
-		System.out.println(path);
 	}
 
 }
