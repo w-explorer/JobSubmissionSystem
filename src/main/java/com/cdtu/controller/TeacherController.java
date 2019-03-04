@@ -431,7 +431,6 @@ public class TeacherController {
 			
 			msg.put("status", 200);
 		
-			// TODO: handle exception
 		return msg;
 }
 	/**
