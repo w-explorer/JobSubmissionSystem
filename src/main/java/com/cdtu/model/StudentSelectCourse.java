@@ -10,8 +10,18 @@ public class StudentSelectCourse {
 
     private String sId;
     private String state;
+    private Integer page;
+    
 
-    public Integer getId() {
+    public Integer getPage() {
+		return page;
+	}
+
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+	public Integer getId() {
 		return id;
 	}
 

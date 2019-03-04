@@ -9,14 +9,43 @@ public class PublishWork {
     private Integer ctId;
     private Integer id;
 
+    private Boolean pwState;
     private String pwEnd;
 
-    private Boolean pwState;
-
     private String pwName;
-    private String wstate; 
+    private String wStringstate; 
+    private Boolean wBoobleanstate; 
+    private String pwStringstate; 
+    private Boolean pwBoobleanstate; 
 
     
+
+    
+
+
+	public Boolean getPwState() {
+		return pwState;
+	}
+
+	public void setPwState(Boolean pwState) {
+		this.pwState = pwState;
+	}
+
+	public Boolean getwBoobleanstate() {
+		return wBoobleanstate;
+	}
+
+	public void setwBoobleanstate(Boolean wBoobleanstate) {
+		this.wBoobleanstate = wBoobleanstate;
+	}
+
+	public Boolean getPwBoobleanstate() {
+		return pwBoobleanstate;
+	}
+
+	public void setPwBoobleanstate(Boolean pwBoobleanstate) {
+		this.pwBoobleanstate = pwBoobleanstate;
+	}
 
 	public Integer getId() {
 		return id;
@@ -25,13 +54,12 @@ public class PublishWork {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public String getWstate() {
-		return wstate;
+	public String getwStringstate() {
+		return wStringstate;
 	}
 
-	public void setWstate(String wstate) {
-		this.wstate = wstate;
+	public void setwStringstate(String wStringstate) {
+		this.wStringstate = wStringstate;
 	}
 
 	public String getPwId() {
@@ -68,15 +96,17 @@ public class PublishWork {
 		this.pwEnd = pwEnd;
 	}
 
-	public Boolean getPwState() {
-        return pwState;
-    }
 
-    public void setPwState(Boolean pwState) {
-        this.pwState = pwState;
-    }
+    public String getPwStringstate() {
+		return pwStringstate;
+	}
 
-    public String getPwName() {
+	public void setPwStringstate(String pwStringstate) {
+		this.pwStringstate = pwStringstate;
+	}
+
+
+	public String getPwName() {
         return pwName;
     }
 

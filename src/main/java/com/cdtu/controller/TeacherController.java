@@ -121,7 +121,7 @@ public class TeacherController {
 	@RequestMapping("selectClass.do")
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> selectAllCourse() {
-
+		
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		String tId = role.getUsername();
@@ -426,10 +426,13 @@ public class TeacherController {
 	@RequestMapping(value = "changePublishWork.do", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> changePublishWork(@RequestBody PublishWork publishwork) {
 		Map<String, Object> msg = new HashMap<String, Object>();
-		
+		try {
 			this.teacherService.updatePublishwork(publishwork);
-			
 			msg.put("status", 200);
+		} catch (Exception e) {
+			msg.put("status", 0);
+			msg.put("msg", "服务器异常");
+		}
 		
 		return msg;
 }

@@ -13,7 +13,17 @@ public class CourseWapper {
 	private Integer id;
 	private String cImgSrc;
 	private String tImgSrc;
+	private Integer page;
 	
+	
+
+	public Integer getPage() {
+		return page;
+	}
+
+	public void setPage(Integer page) {
+		this.page = page;
+	}
 
 	public String getScName() {
 		return scName;
