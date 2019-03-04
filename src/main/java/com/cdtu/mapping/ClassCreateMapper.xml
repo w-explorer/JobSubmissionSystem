@@ -36,7 +36,7 @@
 	</insert>
 	<!--教师查询课程 by:魏宇航-->
 	<resultMap type="com.cdtu.model.CourseWapper" id="ClassCreateList">
-		<result column="ct_id" property="id" jdbcType="INTEGER" />
+		<result column="ct_id" property="ctId" />
 		<result column="ct_name" property="cName" />
 		<result column="t_name" property="tName" />
 		<result column="sc_name" property="scName" />
@@ -57,9 +57,7 @@
 	<update id="updateClassCreate" parameterType="com.cdtu.model.ClassCreate">
 		update class_create
 		<set>
-			<if test="tId != null">
 				t_id = #{tId},
-			</if>
 			<if test="ctName != null">
 				ct_name = #{ctName},
 			</if>
