@@ -22,5 +22,5 @@ public interface TeacherMapper {
 	 * @param courseStudent
 	 * @return
 	 */
-	public String DeleteCourseStudent(CourseStudent courseStudent);
+	public void DeleteCourseStudent(CourseStudent courseStudent);
 }
