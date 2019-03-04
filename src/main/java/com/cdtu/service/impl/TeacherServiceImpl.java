@@ -26,6 +26,7 @@ import com.cdtu.model.Role;
 import com.cdtu.model.Teacher;
 import com.cdtu.model.Work;
 import com.cdtu.service.TeacherService;
+import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
 @Service("teacherService")
 public class TeacherServiceImpl implements TeacherService {
@@ -186,38 +187,65 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public Map<String, Object> showPublishWork(CourseWapper courseWapper) {
+		List<PublishWork> publishWorkLs=new ArrayList<PublishWork>();
 		if(courseWapper!=null){
 			Map<String, Object> publishWorks=new HashMap<String, Object>();
 			if(courseWapper.getTscId()!=null){
-				if("process".equals(courseWapper.getState())){
-					publishWorks.put("publishWorks", this.publishWorkMapper.selectTeacherPublishWorkBytscId(courseWapper.getTscId(),true));
+				if("2".equals(courseWapper.getState())){
+					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkBytscId(courseWapper.getTscId(),true,(courseWapper.getPage()-1)*5,5);//进行
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), true)));//最大页数
 				}
-				if("over".equals(courseWapper.getState())){
-					publishWorks.put("publishWorks", this.publishWorkMapper.selectTeacherPublishWorkBytscId(courseWapper.getTscId(),false));
+				if("3".equals(courseWapper.getState())){
+					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkBytscId(courseWapper.getTscId(),false,(courseWapper.getPage()-1)*5,5);//结束
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), false)));//最大页数
 				}
-				if("all".equals(courseWapper.getState())){
-					publishWorks.put("publishWorks", this.publishWorkMapper.selectTeacherPublishWorkBytscId(courseWapper.getTscId(),null));
+				if("1".equals(courseWapper.getState())){
+					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkBytscId(courseWapper.getTscId(),null,(courseWapper.getPage()-1)*5,5);//全部
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), null)));//最大页数
 				}
 				
 				publishWorks.put("countprocess", this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), true));
 				publishWorks.put("countover", this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), false));
 				publishWorks.put("countall", this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), null));
+				for(PublishWork publishWork:publishWorkLs){
+					if(publishWork.getPwState()==true){
+						publishWork.setPwStringstate("进行中");
+						publishWork.setPwBoobleanstate(publishWork.getPwState());
+					}else{
+						publishWork.setPwStringstate("已结束");
+						publishWork.setPwBoobleanstate(publishWork.getPwState());
+					}
+				}
+				publishWorks.put("publishWorks",publishWorkLs);
 				return publishWorks;
 			}else{
 				courseWapper.setCtId(courseWapper.getId());
-				if("process".equals(courseWapper.getState())){
-					publishWorks.put("publishWorks", this.publishWorkMapper.selectTeacherPublishWorkByctId(courseWapper.getCtId(),true));
+				if("2".equals(courseWapper.getState())){
+					publishWorkLs=this.publishWorkMapper.selectTeacherPublishWorkByctId(courseWapper.getCtId(),true,(courseWapper.getPage()-1)*5,5);//进行
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), true)));//最大页数
 				}
-				if("over".equals(courseWapper.getState())){
-					publishWorks.put("publishWorks", this.publishWorkMapper.selectTeacherPublishWorkByctId(courseWapper.getCtId(),false));
+				if("3".equals(courseWapper.getState())){
+					publishWorkLs=this.publishWorkMapper.selectTeacherPublishWorkByctId(courseWapper.getCtId(),false,(courseWapper.getPage()-1)*5,5);//结束
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), false)));//最大页数
 				}
-				if("all".equals(courseWapper.getState())){
-					publishWorks.put("publishWorks", this.publishWorkMapper.selectTeacherPublishWorkByctId(courseWapper.getCtId(),null));
+				if("1".equals(courseWapper.getState())){
+					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkByctId(courseWapper.getCtId(),null,(courseWapper.getPage()-1)*5,5);//全部
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), null)));//最大页数
 				}
 				
 				publishWorks.put("countProcess", this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), true));
 				publishWorks.put("countOver", this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), false));
 				publishWorks.put("countAll", this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), null));
+				for(PublishWork publishWork:publishWorkLs){
+					if(publishWork.getPwState()==true){
+						publishWork.setPwStringstate("进行中");
+						publishWork.setPwBoobleanstate(publishWork.getPwState());
+					}else{
+						publishWork.setPwStringstate("已结束");
+						publishWork.setPwBoobleanstate(publishWork.getPwState());
+					}
+				}
+				publishWorks.put("publishWorks",publishWorkLs);
 				return publishWorks;
 			}
 		}else{
@@ -283,10 +311,10 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public int updatePublishwork(PublishWork publishwork) {
 		// TODO Auto-generated method stub
-		if(publishwork.getPwState()==false){
-			publishwork.setPwState(true);
+		if(publishwork.getPwBoobleanstate()==false){
+			publishwork.setPwBoobleanstate(true);
 		}else{
-			publishwork.setPwState(false);
+			publishwork.setPwBoobleanstate(false);
 		}
 		 this.publishWorkMapper.changePublishWork(publishwork);
 		 return 0;

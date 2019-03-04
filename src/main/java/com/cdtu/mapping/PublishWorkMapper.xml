@@ -297,6 +297,7 @@
 		<if test="pwState!=null">
 			AND publish_work.pw_state=#{pwState}
 		</if>
+		LIMIT #{start}, #{end}
 	</select>
 	<!-- 学生查询发布作业表通过ct_id和s_id by:黎睿-->
 	<select id="selectStudentPublishWorkByctId" resultMap="BaseResultMap">
@@ -313,6 +314,7 @@
 		<if test="pwState!=null">
 			AND publish_work.pw_state=#{pwState}
 		</if>
+		LIMIT #{start}, #{end}
 	</select>
 	<!-- 教师查询发布作业表通过tsc_id和s_id by:黎睿-->
 	<select id="selectTeacherPublishWorkBytscId" resultMap="BaseResultMap">
@@ -328,6 +330,7 @@
 		<if test="pwState!=null">
 			AND publish_work.pw_state=#{pwState}
 		</if>
+		LIMIT #{start}, #{end}
 	</select>
 	<!-- 教师查询发布作业表通过ct_id和s_id by:黎睿-->
 	<select id="selectTeacherPublishWorkByctId" resultMap="BaseResultMap">
@@ -342,6 +345,7 @@
 		<if test="pwState!=null">
 			AND publish_work.pw_state=#{pwState}
 		</if>
+		LIMIT #{start}, #{end}
 	</select>
 	<!-- ct_id查询作业数量 by:黎睿-->
 	<select id="selectCountBypwStateBytscId" resultType="java.lang.Integer">

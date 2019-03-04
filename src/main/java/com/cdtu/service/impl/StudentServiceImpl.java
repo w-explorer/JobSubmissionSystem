@@ -1,6 +1,8 @@
 package com.cdtu.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +27,9 @@ import com.cdtu.model.Student;
 import com.cdtu.model.StudentSelectCourse;
 import com.cdtu.model.Work;
 import com.cdtu.service.StudentService;
+import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
+
 @Service("studentService")
 public class StudentServiceImpl implements StudentService {
 	@Resource
@@ -37,110 +41,160 @@ public class StudentServiceImpl implements StudentService {
 	@Resource
 	private PublishWorkMapper publishWorkMapper;
 	@Resource
-	private WorkMapper workMapper; 
+	private WorkMapper workMapper;
 	@Resource
 	private StudentSelectCourseMapper studentSelectCourseMapper;
+
 	@Override
 	public Student getStudentBysIdAndsPassword(Role role) {
 		return this.studentMapper.getStudentBysIdAndsPassword(role);
 	}
+
 	@Override
 	public void updatasPasswordBysId(Role role) {
-		 this.studentMapper.updatasPasswordBysId(role);
+		this.studentMapper.updatasPasswordBysId(role);
 	}
+
 	@Override
 	public String getPasswordById(String id) {
 		return this.studentMapper.selectPasswordById(id);
 	}
-	
-	
-	
-	
-	
+
 	@Override
 	public List<PublishEstimate> selectPublishEstimate(StudentSelectCourse studentSelectCourse) {
-		if(studentSelectCourse.getTscId()!=null){
-			return this.publishEstimateMapper.selectPublishEstimateBytscId(studentSelectCourse.getsId(),studentSelectCourse.getTscId());
-		}
-		else{
+		if (studentSelectCourse.getTscId() != null) {
+			return this.publishEstimateMapper.selectPublishEstimateBytscId(studentSelectCourse.getsId(),
+					studentSelectCourse.getTscId());
+		} else {
 			studentSelectCourse.setCtId(studentSelectCourse.getId());
-			return this.publishEstimateMapper.selectPublishEstimateByctId(studentSelectCourse.getsId(),studentSelectCourse.getCtId());
+			return this.publishEstimateMapper.selectPublishEstimateByctId(studentSelectCourse.getsId(),
+					studentSelectCourse.getCtId());
 		}
 	}
+
 	@Override
 	public Integer submitEvaluation(Estimate estimate) {
-		if(estimate!=null){
+		if (estimate != null) {
 			estimate.seteId(OAUtil.getId());
 			this.estimateMapper.insertEstimate(estimate);
 			return 1;
-		}else{
+		} else {
 			return -1;
 		}
 	}
+
 	@Override
 	public Map<String, Object> selectPublishWork(StudentSelectCourse studentSelectCourse) {
-		List<PublishWork> publishWorkLs=new ArrayList<PublishWork>();
-		Map<String, Object> publishWorks=new HashMap<String, Object>();
-		if(studentSelectCourse.getTscId()!=null){
-			
-			if("process".equals(studentSelectCourse.getState())){
-				publishWorkLs=this.publishWorkMapper.selectStudentPublishWorkBytscId(studentSelectCourse.getsId(),studentSelectCourse.getTscId(),true);
+		List<PublishWork> publishWorkLs = new ArrayList<PublishWork>();
+		Map<String, Object> publishWorks = new HashMap<String, Object>();
+		if (studentSelectCourse.getTscId() != null) {
+
+			if ("2".equals(studentSelectCourse.getState())) {
+				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkBytscId(studentSelectCourse.getsId(),
+						studentSelectCourse.getTscId(), true, (studentSelectCourse.getPage() - 1) * 5, 5);// 进行
+				publishWorks.put("max", MaxPage.getMaxPage(
+						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), true)));// 最大页数
 			}
-			if("over".equals(studentSelectCourse.getState())){
-				publishWorkLs=this.publishWorkMapper.selectStudentPublishWorkBytscId(studentSelectCourse.getsId(),studentSelectCourse.getTscId(),false);
+			if ("3".equals(studentSelectCourse.getState())) {
+				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkBytscId(studentSelectCourse.getsId(),
+						studentSelectCourse.getTscId(), false, (studentSelectCourse.getPage() - 1) * 5, 5);// 结束
+				publishWorks.put("max", MaxPage.getMaxPage(
+						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), false)));// 最大页数
 			}
-			if("all".equals(studentSelectCourse.getState())){
-				publishWorkLs=this.publishWorkMapper.selectStudentPublishWorkBytscId(studentSelectCourse.getsId(),studentSelectCourse.getTscId(),null);
+			if ("1".equals(studentSelectCourse.getState())) {
+				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkBytscId(studentSelectCourse.getsId(),
+						studentSelectCourse.getTscId(), null, (studentSelectCourse.getPage() - 1) * 5, 5);// 全部
+				publishWorks.put("max", MaxPage.getMaxPage(
+						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), null)));// 最大页数
 			}
-			
-			publishWorks.put("countprocess", this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), true));
-			publishWorks.put("countover", this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), false));
-			publishWorks.put("countall", this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), null));
-			for(PublishWork publishWork:publishWorkLs){
-				if(this.workMapper.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId())!=0){
-					publishWork.setWstate("已参与");
-				}else{
-					publishWork.setWstate("未参与");
+
+			publishWorks.put("countprocess",
+					this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), true));
+			publishWorks.put("countover",
+					this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), false));
+			publishWorks.put("countall",
+					this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), null));
+			for (PublishWork publishWork : publishWorkLs) {
+				if (this.workMapper.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId()) != 0) {
+					publishWork.setwStringstate("已参与");
+					publishWork.setwBoobleanstate(true);
+				} else {
+					publishWork.setwStringstate("未参与");
+					publishWork.setwBoobleanstate(false);
+				}
+				if (publishWork.getPwState() == true) {
+					publishWork.setPwStringstate("进行中");
+					publishWork.setPwBoobleanstate(publishWork.getPwState());
+				} else {
+					publishWork.setPwStringstate("已结束");
+					publishWork.setPwBoobleanstate(publishWork.getPwState());
 				}
 			}
-			publishWorks.put("publishWorks",publishWorkLs);
+			publishWorks.put("publishWorks", publishWorkLs);
+			return publishWorks;
+		} else {
+			studentSelectCourse.setCtId(studentSelectCourse.getId());
+			if ("2".equals(studentSelectCourse.getState())) {
+				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkByctId(studentSelectCourse.getsId(),
+						studentSelectCourse.getCtId(), true, (studentSelectCourse.getPage() - 1) * 5, 5);// 进行
+				publishWorks.put("max", MaxPage.getMaxPage(
+						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), true)));// 最大页数
+			}
+			if ("3".equals(studentSelectCourse.getState())) {
+				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkByctId(studentSelectCourse.getsId(),
+						studentSelectCourse.getCtId(), false, (studentSelectCourse.getPage() - 1) * 5, 5);// 结束
+				publishWorks.put("max", MaxPage.getMaxPage(
+						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), false)));// 最大页数
+			}
+			if ("1".equals(studentSelectCourse.getState())) {
+				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkByctId(studentSelectCourse.getsId(),
+						studentSelectCourse.getCtId(), null, (studentSelectCourse.getPage() - 1) * 5, 5);// 全部
+				publishWorks.put("max", MaxPage.getMaxPage(
+						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), null)));// 最大页数
+			}
+
+			publishWorks.put("countprocess",
+					this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), true));
+			publishWorks.put("countover",
+					this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), false));
+			publishWorks.put("countall",
+					this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), null));
+			for (PublishWork publishWork : publishWorkLs) {
+				if (this.workMapper.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId()) != 0) {
+					publishWork.setwStringstate("已参与");
+					publishWork.setwBoobleanstate(true);
+				} else {
+					publishWork.setwStringstate("未参与");
+					publishWork.setwBoobleanstate(false);
+				}
+				if (publishWork.getPwState() == true) {
+					publishWork.setPwStringstate("进行中");
+					publishWork.setPwBoobleanstate(publishWork.getPwState());
+				} else {
+					publishWork.setPwStringstate("已结束");
+					publishWork.setPwBoobleanstate(publishWork.getPwState());
+				}
+			}
+			publishWorks.put("publishWorks", publishWorkLs);
 			return publishWorks;
 		}
-		else{
-			studentSelectCourse.setCtId(studentSelectCourse.getId());
-			if("process".equals(studentSelectCourse.getState())){
-				publishWorkLs=this.publishWorkMapper.selectStudentPublishWorkByctId(studentSelectCourse.getsId(),studentSelectCourse.getCtId(),true);
-			}
-			if("over".equals(studentSelectCourse.getState())){
-				publishWorkLs=this.publishWorkMapper.selectStudentPublishWorkByctId(studentSelectCourse.getsId(),studentSelectCourse.getCtId(),false);
-			}
-			if("all".equals(studentSelectCourse.getState())){
-				publishWorkLs=this.publishWorkMapper.selectStudentPublishWorkByctId(studentSelectCourse.getsId(),studentSelectCourse.getCtId(),null);
-			}
-			
-			publishWorks.put("countprocess", this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), true));
-			publishWorks.put("countover", this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), false));
-			publishWorks.put("countall", this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), null));
-			for(PublishWork publishWork:publishWorkLs){
-				if(this.workMapper.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId())!=0){
-					publishWork.setWstate("已参与");
-				}else{
-					publishWork.setWstate("未参与");
-				}
-			}
-			publishWorks.put("publishWorks",publishWorkLs);
-			return publishWorks;
-		}	
 	}
+
 	@Override
 	public Integer submitWork(Work work) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
 		if(work!=null){
 			if(this.workMapper.selectWork(work.getsId(), work.getPwId())==null){
 				work.setId(OAUtil.getId());
+				String nowDate = dateFormat.format(date);
+				work.setwTime(nowDate);
 				this.workMapper.insertWork(work);
 				return 1;
 			}
 			if(this.workMapper.selectWork(work.getsId(), work.getPwId())!=null){
+				String nowDate = dateFormat.format(date);
+				work.setwTime(nowDate);
 				this.workMapper.studentUpdateWork(work);
 				return 1;
 			}
@@ -149,34 +203,37 @@ public class StudentServiceImpl implements StudentService {
 			return -1;
 		}
 	}
+
 	@Override
-	public Work showStudentWork(String sId,String pwId){
-		if(sId!=null&&pwId!=null){
+	public Work showStudentWork(String sId, String pwId) {
+		if (sId != null && pwId != null) {
 			return this.workMapper.selectWork(sId, pwId);
-		}else{
+		} else {
 			return null;
 		}
-		
+
 	}
+
 	@Override
 	public Integer updateWorkwAddr(String sId, String pwId, String wAddr) {
 		this.workMapper.updateWorkFlieStudent(sId, pwId, wAddr);
 		return 1;
 	}
+
 	@Override
 	public String selectWorkwAddr(String sId, String pwId) {
 		return this.workMapper.selectWorkFlieStudent(sId, pwId);
 	}
+
 	@Override
-	public String selectStudentName(String id){
+	public String selectStudentName(String id) {
 		return this.studentMapper.selectStudentName(id);
 	}
+
 	@Override
 	public List<CourseStudent> selectCourseStudentService(CourseWapper coursewapper) {
-		
+
 		return com.cdtu.util.OrderByUtil.OrderASC(studentSelectCourseMapper.selectCourseStudent(coursewapper));
 	}
-
-
 
 }

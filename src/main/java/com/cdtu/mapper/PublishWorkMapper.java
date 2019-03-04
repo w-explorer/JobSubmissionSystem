@@ -53,7 +53,7 @@ public interface PublishWorkMapper {
      * @param tscId
      * @return
      */
-    List<PublishWork> selectStudentPublishWorkBytscId(@Param("sId") String sId,@Param("tscId") Integer tscId,@Param("pwState") Boolean pwState);
+    List<PublishWork> selectStudentPublishWorkBytscId(@Param("sId") String sId,@Param("tscId") Integer tscId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
     /**
      * 学生查询发布作业表通过s_id和ct_id
      * @author LR
@@ -61,7 +61,7 @@ public interface PublishWorkMapper {
      * @param ctId
      * @return
      */
-    List<PublishWork> selectStudentPublishWorkByctId(@Param("sId") String sId,@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState);
+    List<PublishWork> selectStudentPublishWorkByctId(@Param("sId") String sId,@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
     /**
      * 教师查询发布作业表通过s_id和tsc_id
      * @author LR
@@ -70,7 +70,7 @@ public interface PublishWorkMapper {
      * @param pwState
      * @return
      */
-    List<PublishWork> selectTeacherPublishWorkBytscId(@Param("tscId") Integer tscId,@Param("pwState") Boolean pwState);
+    List<PublishWork> selectTeacherPublishWorkBytscId(@Param("tscId") Integer tscId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
     /**
      * 教师查询发布作业表通过s_id和ct_id
      * @author LR
@@ -79,7 +79,7 @@ public interface PublishWorkMapper {
      * @param pwState
      * @return
      */
-    List<PublishWork> selectTeacherPublishWorkByctId(@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState);
+    List<PublishWork> selectTeacherPublishWorkByctId(@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
     /**
      * 教师查询发布作业的数量通过tsc_id
      * @author LR
