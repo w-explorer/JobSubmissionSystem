@@ -299,5 +299,9 @@ public class TeacherServiceImpl implements TeacherService {
 		teacherMapper.DeleteCourseStudent(courseStudent);
 		return 0;
 	}
+	@Override
+	public void updataAvatar(String path, String username) {
+		teacherMapper.updataAvatar(path,username);
+	}
 	
 }

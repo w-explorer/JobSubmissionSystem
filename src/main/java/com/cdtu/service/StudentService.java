@@ -98,4 +98,6 @@ public interface StudentService {
 	 * @return
 	 */
 	public List<CourseStudent> selectCourseStudentService(CourseWapper coursewapper);
+
+	public void updataAvatar(String path, String username);
 }

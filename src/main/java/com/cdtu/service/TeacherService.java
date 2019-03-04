@@ -146,4 +146,10 @@ public interface TeacherService {
 	 * @return
 	 */
 	int deleteCourseStudent(CourseStudent CourseStudent);
+	/**
+	 * 老师修改头像
+	 * @param path
+	 * @param username
+	 */
+	public void updataAvatar(String path, String username);
 }

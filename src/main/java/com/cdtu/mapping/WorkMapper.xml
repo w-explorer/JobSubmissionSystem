@@ -35,7 +35,7 @@
 	<!-- 李红兵end -->
 	<!-- 文成end -->
 	<select id="fuzzySearchWorkBySidAndCid" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		SELECT  pw.pw_name
+		SELECT  pw.pw_name as value
 		FROM publish_work pw,student_select_course ssc
 		WHERE
 		ssc.s_id=#{sId}
@@ -44,7 +44,7 @@
 		OR(ssc.ct_id=#{cId} AND ssc.ct_id=pw.ct_id)
 	</select>
 	<select id="fuzzySearchWorkByTidAndCid"  resultType="java.util.HashMap">
-		SELECT  DISTINCT pw.pw_name
+		SELECT  DISTINCT pw.pw_name as value
 		FROM publish_work pw,teacher_select_course tsc,class_create  cc
 		WHERE
 		tsc.t_id=#{tId}

@@ -176,6 +176,11 @@ public class StudentServiceImpl implements StudentService {
 		
 		return com.cdtu.util.OrderByUtil.OrderASC(studentSelectCourseMapper.selectCourseStudent(coursewapper));
 	}
+	@Override
+	public void updataAvatar(String path, String username) {
+		studentMapper.updataAvatar(path,username);
+		
+	}
 
 
 

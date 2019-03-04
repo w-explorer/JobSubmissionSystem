@@ -75,4 +75,8 @@ public class UploadFileUtil {
 		return newfile;
 		
 	}
+	public static String updateFile(CommonsMultipartFile file) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
