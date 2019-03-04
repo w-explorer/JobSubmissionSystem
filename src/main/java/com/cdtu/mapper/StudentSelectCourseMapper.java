@@ -41,4 +41,17 @@ public interface StudentSelectCourseMapper {
 	 * @author weiyuhang
 	 */
 	public List<CourseStudent> selectCourseStudent(CourseWapper coursewapper);
+	/**
+	 * 查询该课程的学生
+	 *
+	 * @author weiyuhang
+	 */
+	public List<CourseStudent> selectCourseStudents( @Param("cId")int cId, @Param("start") int start, @Param("end") int end);
+	/**
+	 * 查询该课程的学生最大页数
+	 *
+	 * @author weiyuhang
+	 */
+	public int count(CourseWapper coursewapper);
+	
 }

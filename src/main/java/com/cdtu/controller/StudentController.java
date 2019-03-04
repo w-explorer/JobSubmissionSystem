@@ -377,7 +377,6 @@ public class StudentController {
 	@RequiresRoles({"student"})
 	@ResponseBody
 	public Map<String, Object> selectCourseStudent(@RequestBody CourseWapper coursewapper) {
-
 		List<CourseStudent> coursestudentslist;
 		Map<String, Object> data = new HashMap<String, Object>();
 		try {

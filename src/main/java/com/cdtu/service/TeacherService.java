@@ -146,4 +146,10 @@ public interface TeacherService {
 	 * @return
 	 */
 	int deleteCourseStudent(CourseStudent CourseStudent);
+	/**
+	 * 分页该课程查找学生
+	 * @param CourseStudent
+	 * @return
+	 */
+	public Map<String, Object> selectCourseStudents(CourseWapper courseWapper);
 }
