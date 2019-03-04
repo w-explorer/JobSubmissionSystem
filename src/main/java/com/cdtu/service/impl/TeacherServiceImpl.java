@@ -296,7 +296,7 @@ public class TeacherServiceImpl implements TeacherService {
 	 */
 	@Override
 	public int deleteCourseStudent(CourseStudent courseStudent) {
-		teacherMapper.DeleteCourseStudent(courseStudent);
+		teacherMapper.deleteCourseStudent(courseStudent);
 		return 0;
 	}
 	
