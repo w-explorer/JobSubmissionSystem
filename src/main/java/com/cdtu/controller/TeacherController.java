@@ -72,7 +72,7 @@ public class TeacherController {
 	 *
 	 * @author weiyuhang
 	 */
-	@RequestMapping("deleteCourse.do")
+	@RequestMapping("delete.do")
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> deleteClassCreateJsp(@RequestParam("ctId") Integer ctId) {
 
@@ -121,6 +121,7 @@ public class TeacherController {
 	@RequestMapping("selectClass.do")
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> selectAllCourse() {
+		
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		String tId = role.getUsername();
@@ -432,6 +433,7 @@ public class TeacherController {
 			msg.put("status", 0);
 			msg.put("msg", "服务器异常");
 		}
+		
 		return msg;
 }
 	/**
