@@ -11,11 +11,16 @@ public class CourseStudent {
 
 	    private String sMajor;
 	    
-	   
+		private Integer cId;
 
-	    private Integer ctId;
 
-	    private Integer tscId;
+	    public Integer getcId() {
+			return cId;
+		}
+
+		public void setcId(Integer cId) {
+			this.cId = cId;
+		}
 
 		public String getsId() {
 			return sId;
@@ -43,28 +48,8 @@ public class CourseStudent {
 
 		
 
-		public Integer getCtId() {
-			return ctId;
-		}
 
-		public void setCtId(Integer ctId) {
-			this.ctId = ctId;
-		}
-
-		public Integer getTscId() {
-			return tscId;
-		}
-
-		public void setTscId(Integer tscId) {
-			this.tscId = tscId;
-		}
-
-		@Override
-		public String toString() {
-			return "CourseStudent [sId=" + sId + ", sName=" + sName + ", sMajor=" + sMajor + ", ctId=" + ctId
-					+ ", tscId=" + tscId + "]";
-		}
-
+		
 		
 	    
 }

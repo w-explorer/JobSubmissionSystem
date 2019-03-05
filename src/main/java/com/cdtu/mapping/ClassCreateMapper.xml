@@ -65,11 +65,11 @@
 				ct_switch = #{ctSwitch},
 			</if>
 		</set>
-		where ct_id=#{ctId}
+		where ct_id=#{cId}
 	</update>
 	<!--教师删除课程 by:魏宇航-->
 	<delete id="deleteClassCreate" parameterType="int">
 		delete from class_create
-		where ct_id=#{ctId}
+		where ct_id=#{cId}
 	</delete>
 </mapper>
