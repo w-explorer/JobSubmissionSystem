@@ -282,6 +282,40 @@
 		publish_work(pw_id,ct_id,pw_name,pw_end,pw_state)
 		VALUES(#{pwId},#{ctId},#{pwName},#{pwEnd},#{pwState})
 	</insert>
+	<!-- 学生查询发布作业表通过课程号（cId） by:黎睿-->
+	<select id="selectStudentPublishWorkBycId" resultMap="BaseResultMap">
+		SELECT DISTINCT 
+		publish_work.*
+		FROM student,student_select_course,publish_work,class_create
+		WHERE
+		student.s_id=student_select_course.s_id
+		AND
+		student_select_course.ct_id=class_create.ct_id
+		AND
+		student_select_course.ct_id=publish_work.ct_id	
+		AND
+		student.s_id=#{sId}
+		AND class_create.ct_id=#{cId}
+		UNION
+		SELECT DISTINCT 
+		publish_work.*
+		FROM student,student_select_course,publish_work,teacher_select_course,course
+		WHERE
+		student.s_id=student_select_course.s_id
+		AND
+		student_select_course.tsc_id=publish_work.tsc_id
+		AND
+		student_select_course.tsc_id=teacher_select_course.tsc_id
+		AND
+		teacher_select_course.c_id=course.c_id
+		AND
+		student.s_id=#{sId}
+		AND course.c_id=#{cId}
+		<if test="pwState!=null">
+			AND publish_work.pw_state=#{pwState}
+		</if>
+		LIMIT #{start}, #{end}
+	</select>
 	<!-- 学生查询发布作业表通过tsc_id和s_id by:黎睿-->
 	<select id="selectStudentPublishWorkBytscId" resultMap="BaseResultMap">
 		SELECT
@@ -311,6 +345,70 @@
 		AND
 		student.s_id=#{sId}
 		AND student_select_course.tsc_id=#{ctId}
+		<if test="pwState!=null">
+			AND publish_work.pw_state=#{pwState}
+		</if>
+		LIMIT #{start}, #{end}
+	</select>
+	<!-- 学生查询发布作业表通过课程号（cId）数量 by:黎睿-->
+	<select id="selectStudentPublishWorkCount" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM (SELECT DISTINCT 
+		publish_work.*
+		FROM student,student_select_course,publish_work,class_create
+		WHERE
+		student.s_id=student_select_course.s_id
+		AND
+		student_select_course.ct_id=class_create.ct_id
+		AND
+		student_select_course.ct_id=publish_work.ct_id	
+		AND
+		student.s_id=#{sId}
+		AND class_create.ct_id=#{cId}
+		UNION
+		SELECT DISTINCT 
+		publish_work.*
+		FROM student,student_select_course,publish_work,teacher_select_course,course
+		WHERE
+		student.s_id=student_select_course.s_id
+		AND
+		student_select_course.tsc_id=publish_work.tsc_id
+		AND
+		student_select_course.tsc_id=teacher_select_course.tsc_id
+		AND
+		teacher_select_course.c_id=course.c_id
+		AND
+		student.s_id=#{sId}
+		AND course.c_id=#{cId}
+		<if test="pwState!=null">
+			AND publish_work.pw_state=#{pwState}
+		</if>) num
+	</select>
+	<!-- 教师查询发布作业表通过课程号（cId） by:黎睿-->
+	<select id="selectTeacherPublishWorkBycId" resultMap="BaseResultMap">
+		SELECT DISTINCT
+		publish_work.*
+		FROM teacher,publish_work,class_create
+		WHERE
+		teacher.t_id=class_create.t_id
+		AND
+		class_create.ct_id=publish_work.ct_id	
+		AND
+		teacher.t_id=#{tId}
+		AND class_create.ct_id=#{cId}
+		UNION
+		SELECT DISTINCT 
+		publish_work.*
+		FROM teacher,publish_work,teacher_select_course,course
+		WHERE
+		teacher.t_id=teacher_select_course.t_id
+		AND
+		teacher_select_course.tsc_id=publish_work.tsc_id
+		AND
+		teacher_select_course.c_id=course.c_id
+		AND
+		teacher.t_id=#{tId}
+		AND course.c_id=#{cId}
 		<if test="pwState!=null">
 			AND publish_work.pw_state=#{pwState}
 		</if>
@@ -346,6 +444,36 @@
 			AND publish_work.pw_state=#{pwState}
 		</if>
 		LIMIT #{start}, #{end}
+	</select>
+	<!-- 教师查询发布作业表通过课程号（cId）数量 by:黎睿-->
+	<select id="selectTeacherPublishWorkCount" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM (SELECT DISTINCT
+		publish_work.*
+		FROM teacher,publish_work,class_create
+		WHERE
+		teacher.t_id=class_create.t_id
+		AND
+		class_create.ct_id=publish_work.ct_id	
+		AND
+		teacher.t_id=#{tId}
+		AND class_create.ct_id=#{cId}
+		UNION
+		SELECT DISTINCT 
+		publish_work.*
+		FROM teacher,publish_work,teacher_select_course,course
+		WHERE
+		teacher.t_id=teacher_select_course.t_id
+		AND
+		teacher_select_course.tsc_id=publish_work.tsc_id
+		AND
+		teacher_select_course.c_id=course.c_id
+		AND
+		teacher.t_id=#{tId}
+		AND course.c_id=#{cId}
+		<if test="pwState!=null">
+			AND publish_work.pw_state=#{pwState}
+		</if>) num
 	</select>
 	<!-- ct_id查询作业数量 by:黎睿-->
 	<select id="selectCountBypwStateBytscId" resultType="java.lang.Integer">

@@ -82,6 +82,50 @@ public class StudentServiceImpl implements StudentService {
 			return -1;
 		}
 	}
+	@Override
+	public Map<String, Object> demonPublishWork(StudentSelectCourse studentSelectCourse,String sId) {
+		List<PublishWork> publishWorkLs = new ArrayList<PublishWork>();
+		Map<String, Object> publishWorks = new HashMap<String, Object>();
+		if(studentSelectCourse!=null){
+			if ("2".equals(studentSelectCourse.getState())) {
+				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkBycId(sId,studentSelectCourse.getcId(), true, (studentSelectCourse.getPage() - 1) * 5, 5);// 进行
+				publishWorks.put("max", MaxPage.getMaxPage(this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), true),5));// 最大页数
+			}
+			if ("3".equals(studentSelectCourse.getState())) {
+				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkBycId(sId,studentSelectCourse.getcId(), false, (studentSelectCourse.getPage() - 1) * 5, 5);// 结束
+				publishWorks.put("max", MaxPage.getMaxPage(this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), false),5));// 最大页数
+			}
+			if ("1".equals(studentSelectCourse.getState())) {
+				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkBycId(sId,studentSelectCourse.getcId(), null, (studentSelectCourse.getPage() - 1) * 5, 5);// 全部
+				publishWorks.put("max", MaxPage.getMaxPage(this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), null),5));// 最大页数
+			}
+
+			publishWorks.put("countprocess",this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), true));
+			publishWorks.put("countover",this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), false));
+			publishWorks.put("countall",this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), null));
+			for (PublishWork publishWork : publishWorkLs) {
+				if (this.workMapper.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId()) != 0) {
+					publishWork.setwStringstate("已参与");
+					publishWork.setwBoobleanstate(true);
+				} else {
+					publishWork.setwStringstate("未参与");
+					publishWork.setwBoobleanstate(false);
+				}
+				if (publishWork.getPwState() == true) {
+					publishWork.setPwStringstate("进行中");
+					publishWork.setPwBoobleanstate(publishWork.getPwState());
+				} else {
+					publishWork.setPwStringstate("已结束");
+					publishWork.setPwBoobleanstate(publishWork.getPwState());
+				}
+			}
+			publishWorks.put("publishWorks", publishWorkLs);
+			return publishWorks;
+		}else{
+			return null;
+		}
+			
+	}
 
 	@Override
 	public Map<String, Object> selectPublishWork(StudentSelectCourse studentSelectCourse) {
