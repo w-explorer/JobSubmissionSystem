@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -249,7 +250,9 @@ public class StudentController {
 	@RequestMapping("selectPW.do")
 	@RequiresRoles({"student"})
 	public @ResponseBody Map<String, Object> selectPW(@RequestBody StudentSelectCourse studentSelectCourse) {
-		Map<String, Object> msg = this.studentService.selectPublishWork(studentSelectCourse);
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		Map<String, Object> msg = this.studentService.demonPublishWork(studentSelectCourse, role.getUsername());
 		if (msg == null) {
 			msg = new HashMap<String, Object>();
 			msg.put("status", 0);

@@ -98,4 +98,12 @@ public interface StudentService {
 	 * @return
 	 */
 	public List<CourseStudent> selectCourseStudentService(CourseWapper coursewapper);
+	/**
+	 * 学生查询发布作业（cId）
+	 * @author LR
+	 * @param studentSelectCourse
+	 * @param sId
+	 * @return
+	 */
+	Map<String, Object> demonPublishWork(StudentSelectCourse studentSelectCourse, String sId);
 }

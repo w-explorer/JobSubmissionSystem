@@ -184,6 +184,43 @@ public class TeacherServiceImpl implements TeacherService {
 			return -1;
 		}
 	}
+	@Override
+	public Map<String, Object> demonPublishWork(CourseWapper courseWapper,String tId) {
+		List<PublishWork> publishWorkLs=new ArrayList<PublishWork>();
+		if(courseWapper!=null){
+			Map<String, Object> publishWorks=new HashMap<String, Object>();
+				if("2".equals(courseWapper.getState())){
+					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkBycId(tId,courseWapper.getcId(),true,(courseWapper.getPage()-1)*5,5);//进行
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), true)));//最大页数
+				}
+				if("3".equals(courseWapper.getState())){
+					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkBycId(tId,courseWapper.getcId(),false,(courseWapper.getPage()-1)*5,5);//结束
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), false)));//最大页数
+				}
+				if("1".equals(courseWapper.getState())){
+					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkBycId(tId,courseWapper.getcId(),null,(courseWapper.getPage()-1)*5,5);//全部
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), null)));//最大页数
+				}
+				
+				publishWorks.put("countprocess", this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), true));
+				publishWorks.put("countover", this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), false));
+				publishWorks.put("countall", this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), null));
+				for(PublishWork publishWork:publishWorkLs){
+					if(publishWork.getPwState()==true){
+						publishWork.setPwStringstate("进行中");
+						publishWork.setPwBoobleanstate(publishWork.getPwState());
+					}else{
+						publishWork.setPwStringstate("已结束");
+						publishWork.setPwBoobleanstate(publishWork.getPwState());
+					}
+				}
+				publishWorks.put("publishWorks",publishWorkLs);
+				return publishWorks;
+			}else{
+			return null;
+		}
+		
+	}
 
 	@Override
 	public Map<String, Object> showPublishWork(CourseWapper courseWapper) {

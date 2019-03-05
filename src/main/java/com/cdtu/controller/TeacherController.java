@@ -255,7 +255,9 @@ public class TeacherController {
 	@RequestMapping(value = "queryPublishWork.do", method = RequestMethod.POST)
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> queryPublishWork(@RequestBody CourseWapper courseWapper) {
-		Map<String, Object> msg = this.teacherService.showPublishWork(courseWapper);
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		Map<String, Object> msg = this.teacherService.demonPublishWork(courseWapper,role.getUsername());
 		if (msg != null) {
 			if (msg.get("publishWorks") != null) {
 				msg.put("status", 200);

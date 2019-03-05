@@ -92,7 +92,7 @@ public interface TeacherService {
 	 * @param state
 	 * @return
 	 */
-	public Map<String,Object> showPublishWork(CourseWapper courseWapper);
+	public Map<String,Object> showPublishWork(CourseWapper courseWappe);
 	/**
 	 * 填写作业评语
 	 * @author LR
@@ -146,4 +146,11 @@ public interface TeacherService {
 	 * @return
 	 */
 	int deleteCourseStudent(CourseStudent CourseStudent);
+	/**
+	 * 查询发布的作业(课程cId)
+	 * @author LR
+	 * @param courseWapper
+	 * @return
+	 */
+	public Map<String, Object> demonPublishWork(CourseWapper courseWapper,String tId);
 }
