@@ -33,6 +33,7 @@ import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
+import com.cdtu.util.MaxPage;
 import com.cdtu.util.UploadFileUtil;
 
 @Controller
@@ -56,7 +57,6 @@ public class StudentController {
 		try {
 			int cId = Integer.parseInt((String) paramsMap.get("cId"));
 			map.putAll(ccService.getDetails(cId));
-			map.put("stusNum", sscService.countStudents(cId));
 			map.put("status", 200);
 		} catch (Exception e) {
 			this.handlException(map, e);
@@ -76,7 +76,10 @@ public class StudentController {
 		try {
 			int cId = Integer.parseInt((String) paramsMap.get("cId"));
 			int page = (int) paramsMap.get("page");
+			int stusNum = sscService.countStudents(cId);
 			map.put("students", sscService.getStudents(cId, page));
+			map.put("pageNum", MaxPage.getMaxPage(stusNum, 30));
+			map.put("stusNum", stusNum);
 			map.put("status", 200);
 		} catch (Exception e) {
 			this.handlException(map, e);
@@ -321,17 +324,17 @@ public class StudentController {
 	 */
 	@RequestMapping("uploadFile.do")
 	@RequiresRoles({"student"})
-	public @ResponseBody Map<String, Object> uploadFile(@RequestParam("file") CommonsMultipartFile file, @RequestBody Work work) {
+	public @ResponseBody Map<String, Object> uploadFile(@RequestParam("file") CommonsMultipartFile file, @RequestParam("sId") String sId,@RequestParam("pwId") String pwId) {
 		Map<String, Object> msg = new HashMap<String, Object>();
-		String oldPath = studentService.selectWorkwAddr(work.getsId(), work.getPwId());
+		String oldPath = studentService.selectWorkwAddr(sId, pwId);
 		try {
-			String newPath = UploadFileUtil.updateFile(file, oldPath, work.getsId(), work.getPwId());
+			String newPath = UploadFileUtil.updateFile(file, oldPath, sId, pwId);
 			if ("-1".equals(newPath)) {
 				msg.put("status", -1);
 				msg.put("msg", "保存文件类型有误");
 				return msg;
 			} else {
-				Integer status = studentService.updateWorkwAddr(work.getsId(), work.getPwId(), newPath);
+				Integer status = studentService.updateWorkwAddr(sId, pwId, newPath);
 				if (status == 1) {
 					msg.put("status", 200);
 					return msg;
@@ -380,7 +383,6 @@ public class StudentController {
 	@RequiresRoles({"student"})
 	@ResponseBody
 	public Map<String, Object> selectCourseStudent(@RequestBody CourseWapper coursewapper) {
-
 		List<CourseStudent> coursestudentslist;
 		Map<String, Object> data = new HashMap<String, Object>();
 		try {
@@ -437,5 +439,4 @@ public class StudentController {
 		}
 		return map;
 	}
-	
 }

@@ -1,5 +1,6 @@
 package com.cdtu.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -13,14 +14,16 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.cdtu.model.Menu;
 import com.cdtu.model.Role;
@@ -199,9 +202,39 @@ public class RoleController {
 		return map;
 	}
 
-	@RequestMapping(value = "/updateAvatar.do")
-	public @ResponseBody String updateAvatar(MultipartFile file, HttpServletRequest request) {
-		return null;
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	@RequestMapping(value = "updateAvatar.do")
+	public  void updateAvatar(@RequestParam("file") CommonsMultipartFile file,
+			HttpServletRequest request) {
+		// 获取当前用户
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String path = "";
+		if (!file.isEmpty()) {
+			//获得文件类型（可以判断如果不是图片，禁止上传）
+			String contentType = file.getContentType();
+			//获得文件后缀名称
+			String imageName = contentType.substring(contentType.indexOf("/") + 1);
+			path = "f:" + File.separator + "uploadFile" + File.separator + "avatar" + File.separator +role.getRole()+ File.separator +role.getUsername()+ File.separator + "studentavatar." + imageName;
+			File storeDirectory = new File(path);// 即代表文件又代表目录
+			if (!storeDirectory.exists()) {
+				storeDirectory.mkdirs();// 创建一个指定的目录
+			}
+			try {
+				file.transferTo(new File(path));
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			path=File.separator +"imgSrc"+ File.separator +role.getRole()+ File.separator +role.getUsername()+ File.separator + "studentavatar." + imageName;
+		}
+		if("teacher".equals(role.getRole())){
+			teacherService.updataAvatar(path,role.getUsername());
+		}
+		else if("student".equals(role.getRole())){
+			studentService.updataAvatar(path,role.getUsername());
+		}
 	}
 
 }

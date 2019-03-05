@@ -86,4 +86,29 @@
 		LIMIT #{start}, #{end}
 	</select>
 	<!-- 李红兵end -->
+	
+	<select id="selectCourseStudents" parameterType="java.util.HashMap" 
+	 resultMap="studentlist">
+	SELECT student.*,student_select_course.* FROM
+		student,student_select_course WHERE
+		student_select_course.tsc_id=#{cId} AND
+		student.s_id=student_select_course.s_id
+		UNION
+		SELECT student.*,student_select_course.* FROM
+		student,student_select_course WHERE
+		student_select_course.ct_id=#{cId} AND
+		student.s_id=student_select_course.s_id
+	   limit #{start},#{end}
+	</select>
+	<select id="count" parameterType="com.cdtu.model.CourseWapper" resultType="Int">
+	SELECT COUNT(*)
+		FROM student_select_course
+		where
+		<if test="tscId!=null">
+			student_select_course.tsc_id=#{tscId} 
+		</if>
+		<if test="ctId!=null">
+			student_select_course.ct_id=#{ctId}
+		</if>
+	</select>
 </mapper>

@@ -46,6 +46,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 		try {
 			token = CookieUtils.getCookieValue(request, this.cookieName);
 		} catch (Exception e) {
+			System.out.println("token拦截了");
 			return false;
 		}
 		if (token!=null) {
@@ -54,6 +55,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 			//token解析失败  重定向
 			if(role==null){
 				responseMessage(response, request);
+				System.out.println("token拦截了");
 				return false;
 			}
 			if(!subject.isAuthenticated()||(Role) request.getSession().getAttribute("role")==null){
@@ -69,7 +71,6 @@ public class TokenInterceptor implements HandlerInterceptor {
 		
 		response.setCharacterEncoding("utf-8");
 		//1、从cookie中取TT_TOKEN
-		System.out.println("token拦截了");
 		Role role1 = (Role) request.getSession().getAttribute("role");
 		// token不存在
 		if (null != token && null != role1) {
@@ -83,6 +84,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 					return true;
 				} else {
 					responseMessage(response, request);
+					System.out.println("token拦截了");
 					return false;
 				}
 			} else {

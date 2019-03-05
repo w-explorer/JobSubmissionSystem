@@ -22,5 +22,6 @@ public interface TeacherMapper {
 	 * @param courseStudent
 	 * @return
 	 */
+	public void updataAvatar(@Param("tImgSrc")String path, @Param("tId")String username);
 	public void deleteCourseStudent(CourseStudent courseStudent);
 }

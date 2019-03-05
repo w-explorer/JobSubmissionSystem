@@ -105,5 +105,10 @@ public interface StudentService {
 	 * @param sId
 	 * @return
 	 */
-	Map<String, Object> demonPublishWork(StudentSelectCourse studentSelectCourse, String sId);
+	 	Map<String, Object> demonPublishWork(StudentSelectCourse studentSelectCourse, String sId);
+
+	public void updataAvatar(String path, String username);
+	 
+	 
+
 }

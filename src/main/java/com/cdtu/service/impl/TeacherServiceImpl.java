@@ -62,12 +62,13 @@ public class TeacherServiceImpl implements TeacherService {
 	
 	
 	/**
-	 * 教师查询该课程学生
+	 * 教师查询该课程所有学生
 	 * 
 	 * @author weiyuhang
 	 */
 	@Override
 	public List<CourseStudent> selectCourseStudentService(CourseWapper coursewapper) {
+		
 		return  com.cdtu.util.OrderByUtil.OrderASC(studentSelectCourseMapper.selectCourseStudent(coursewapper));
 	}
 
@@ -191,15 +192,15 @@ public class TeacherServiceImpl implements TeacherService {
 			Map<String, Object> publishWorks=new HashMap<String, Object>();
 				if("2".equals(courseWapper.getState())){
 					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkBycId(tId,courseWapper.getcId(),true,(courseWapper.getPage()-1)*5,5);//进行
-					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), true)));//最大页数
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), true),5));//最大页数
 				}
 				if("3".equals(courseWapper.getState())){
 					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkBycId(tId,courseWapper.getcId(),false,(courseWapper.getPage()-1)*5,5);//结束
-					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), false)));//最大页数
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), false),5));//最大页数
 				}
 				if("1".equals(courseWapper.getState())){
 					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkBycId(tId,courseWapper.getcId(),null,(courseWapper.getPage()-1)*5,5);//全部
-					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), null)));//最大页数
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), null),5));//最大页数
 				}
 				
 				publishWorks.put("countprocess", this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), true));
@@ -230,15 +231,15 @@ public class TeacherServiceImpl implements TeacherService {
 			if(courseWapper.getTscId()!=null){
 				if("2".equals(courseWapper.getState())){
 					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkBytscId(courseWapper.getTscId(),true,(courseWapper.getPage()-1)*5,5);//进行
-					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), true)));//最大页数
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), true),5));//最大页数
 				}
 				if("3".equals(courseWapper.getState())){
 					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkBytscId(courseWapper.getTscId(),false,(courseWapper.getPage()-1)*5,5);//结束
-					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), false)));//最大页数
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), false),5));//最大页数
 				}
 				if("1".equals(courseWapper.getState())){
 					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkBytscId(courseWapper.getTscId(),null,(courseWapper.getPage()-1)*5,5);//全部
-					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), null)));//最大页数
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), null),5));//最大页数
 				}
 				
 				publishWorks.put("countprocess", this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), true));
@@ -259,15 +260,15 @@ public class TeacherServiceImpl implements TeacherService {
 				courseWapper.setCtId(courseWapper.getId());
 				if("2".equals(courseWapper.getState())){
 					publishWorkLs=this.publishWorkMapper.selectTeacherPublishWorkByctId(courseWapper.getCtId(),true,(courseWapper.getPage()-1)*5,5);//进行
-					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), true)));//最大页数
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), true),5));//最大页数
 				}
 				if("3".equals(courseWapper.getState())){
 					publishWorkLs=this.publishWorkMapper.selectTeacherPublishWorkByctId(courseWapper.getCtId(),false,(courseWapper.getPage()-1)*5,5);//结束
-					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), false)));//最大页数
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), false),5));//最大页数
 				}
 				if("1".equals(courseWapper.getState())){
 					publishWorkLs= this.publishWorkMapper.selectTeacherPublishWorkByctId(courseWapper.getCtId(),null,(courseWapper.getPage()-1)*5,5);//全部
-					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), null)));//最大页数
+					publishWorks.put("max",MaxPage.getMaxPage(this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), null),5));//最大页数
 				}
 				
 				publishWorks.put("countProcess", this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), true));
@@ -364,5 +365,38 @@ public class TeacherServiceImpl implements TeacherService {
 		teacherMapper.deleteCourseStudent(courseStudent);
 		return 0;
 	}
+
+	/**
+	 * 分页查找班级内所有学生
+	 * @authorweiyuhang
+	 */
+	public Map<String, Object> selectCourseStudents(CourseWapper courseWapper) {
+		Map<String, Object> msg=new HashMap<String, Object>();
+		int count=studentSelectCourseMapper.count(courseWapper);
+		System.out.println(courseWapper.getTscId());
+		System.out.println(courseWapper.getPage()-1);
+		int cId;
+		if(courseWapper.getTscId()!=null){
+			cId=courseWapper.getTscId();
+		}else{
+			cId=courseWapper.getCtId();
+		}
+		List<CourseStudent> courseStudents=studentSelectCourseMapper.selectCourseStudents(cId, (courseWapper.getPage()-1)*30, 30);
+		int maxpage=0;
+		if(count%30!=0){
+			maxpage=count/30+1;
+		}else{
+			maxpage=count/30;
+		}
+		msg.put("max", maxpage);
+		msg.put("courseStudents",courseStudents);
+		return msg;
+	}
+
+	@Override
+	public void updataAvatar(String path, String username) {
+		teacherMapper.updataAvatar(path,username);
+	}
 	
+
 }

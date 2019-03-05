@@ -89,15 +89,15 @@ public class StudentServiceImpl implements StudentService {
 		if(studentSelectCourse!=null){
 			if ("2".equals(studentSelectCourse.getState())) {
 				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkBycId(sId,studentSelectCourse.getcId(), true, (studentSelectCourse.getPage() - 1) * 5, 5);// 进行
-				publishWorks.put("max", MaxPage.getMaxPage(this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), true)));// 最大页数
+				publishWorks.put("max", MaxPage.getMaxPage(this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), true),5));// 最大页数
 			}
 			if ("3".equals(studentSelectCourse.getState())) {
 				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkBycId(sId,studentSelectCourse.getcId(), false, (studentSelectCourse.getPage() - 1) * 5, 5);// 结束
-				publishWorks.put("max", MaxPage.getMaxPage(this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), false)));// 最大页数
+				publishWorks.put("max", MaxPage.getMaxPage(this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), false),5));// 最大页数
 			}
 			if ("1".equals(studentSelectCourse.getState())) {
 				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkBycId(sId,studentSelectCourse.getcId(), null, (studentSelectCourse.getPage() - 1) * 5, 5);// 全部
-				publishWorks.put("max", MaxPage.getMaxPage(this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), null)));// 最大页数
+				publishWorks.put("max", MaxPage.getMaxPage(this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), null),5));// 最大页数
 			}
 
 			publishWorks.put("countprocess",this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), true));
@@ -137,19 +137,19 @@ public class StudentServiceImpl implements StudentService {
 				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkBytscId(studentSelectCourse.getsId(),
 						studentSelectCourse.getTscId(), true, (studentSelectCourse.getPage() - 1) * 5, 5);// 进行
 				publishWorks.put("max", MaxPage.getMaxPage(
-						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), true)));// 最大页数
+						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), true),5));// 最大页数
 			}
 			if ("3".equals(studentSelectCourse.getState())) {
 				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkBytscId(studentSelectCourse.getsId(),
 						studentSelectCourse.getTscId(), false, (studentSelectCourse.getPage() - 1) * 5, 5);// 结束
 				publishWorks.put("max", MaxPage.getMaxPage(
-						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), false)));// 最大页数
+						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), false),5));// 最大页数
 			}
 			if ("1".equals(studentSelectCourse.getState())) {
 				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkBytscId(studentSelectCourse.getsId(),
 						studentSelectCourse.getTscId(), null, (studentSelectCourse.getPage() - 1) * 5, 5);// 全部
 				publishWorks.put("max", MaxPage.getMaxPage(
-						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), null)));// 最大页数
+						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), null),5));// 最大页数
 			}
 
 			publishWorks.put("countprocess",
@@ -182,19 +182,19 @@ public class StudentServiceImpl implements StudentService {
 				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkByctId(studentSelectCourse.getsId(),
 						studentSelectCourse.getCtId(), true, (studentSelectCourse.getPage() - 1) * 5, 5);// 进行
 				publishWorks.put("max", MaxPage.getMaxPage(
-						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), true)));// 最大页数
+						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), true),5));// 最大页数
 			}
 			if ("3".equals(studentSelectCourse.getState())) {
 				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkByctId(studentSelectCourse.getsId(),
 						studentSelectCourse.getCtId(), false, (studentSelectCourse.getPage() - 1) * 5, 5);// 结束
 				publishWorks.put("max", MaxPage.getMaxPage(
-						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), false)));// 最大页数
+						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), false),5));// 最大页数
 			}
 			if ("1".equals(studentSelectCourse.getState())) {
 				publishWorkLs = this.publishWorkMapper.selectStudentPublishWorkByctId(studentSelectCourse.getsId(),
 						studentSelectCourse.getCtId(), null, (studentSelectCourse.getPage() - 1) * 5, 5);// 全部
 				publishWorks.put("max", MaxPage.getMaxPage(
-						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), null)));// 最大页数
+						this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), null),5));// 最大页数
 			}
 
 			publishWorks.put("countprocess",
@@ -278,6 +278,11 @@ public class StudentServiceImpl implements StudentService {
 	public List<CourseStudent> selectCourseStudentService(CourseWapper coursewapper) {
 
 		return com.cdtu.util.OrderByUtil.OrderASC(studentSelectCourseMapper.selectCourseStudent(coursewapper));
+	}
+	@Override
+	public void updataAvatar(String path, String username) {
+		studentMapper.updataAvatar(path,username);
+		
 	}
 
 }

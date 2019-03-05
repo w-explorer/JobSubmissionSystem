@@ -42,17 +42,20 @@ public class UploadFileUtil {
 			if(type.equals("png")||type.equals("jpg")||type.equals("gif")){
 				String path=realPath+"image"+File.separator+fileName;
 				file.transferTo(createFile(path));
+				path=File.separator+"workfile"+File.separator+pwId+File.separator+id+File.separator+"image"+File.separator+fileName;
 				return path;
 			}
 			if(type.equals("rar")||type.equals("zip")||type.equals("7z")){
 				String path=realPath+"package"+File.separator+fileName;
 				file.transferTo(createFile(path));
+				path=File.separator+"workfile"+File.separator+pwId+File.separator+id+File.separator+"package"+File.separator+fileName;
 				return path;
 	
 			}
 			if(type.equals("doc")||type.equals("docx")||type.equals("txt")){
 				String path=realPath+"file"+File.separator+fileName;
 				file.transferTo(createFile(path));
+				path=File.separator+"workfile"+File.separator+pwId+File.separator+id+File.separator+"file"+File.separator+fileName;
 				return path;
 			}
 			return "-1";
@@ -74,5 +77,9 @@ public class UploadFileUtil {
 		}
 		return newfile;
 		
+	}
+	public static String updateFile(CommonsMultipartFile file) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

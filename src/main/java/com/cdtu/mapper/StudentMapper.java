@@ -31,5 +31,6 @@ public interface StudentMapper {
      * @return
      */
     String selectStudentName(String id);
+	public void updataAvatar(@Param("sImgSrc")String path,@Param("sId") String username);
 	
 }

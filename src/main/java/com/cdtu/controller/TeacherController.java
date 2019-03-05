@@ -499,4 +499,23 @@ public class TeacherController {
 		}
 		return map;
 	}
+	/**
+	 * 教师分页查询该课程学生
+	 *
+	 * @author weiyuhang
+	 */
+	@RequiresRoles({"teacher"})
+	@RequestMapping("selectCourseStudents.do")
+	public @ResponseBody Map<String, Object> selectCourseStudents(@RequestBody CourseWapper coursewapper) {
+		Map<String, Object> data=new HashMap<String, Object>();
+		try {
+			data = teacherService.selectCourseStudents(coursewapper);
+			data.put("status", 200);
+		} catch (Exception e) {
+			e.printStackTrace();
+			data.put("status", 0);
+			data.put("msg", "服务器错误");
+		}
+		return data;
+	}
 }
