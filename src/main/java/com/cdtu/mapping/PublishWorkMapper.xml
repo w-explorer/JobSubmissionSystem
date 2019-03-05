@@ -284,7 +284,9 @@
 	</insert>
 	<!-- 学生查询发布作业表通过课程号（cId） by:黎睿-->
 	<select id="selectStudentPublishWorkBycId" resultMap="BaseResultMap">
-		SELECT DISTINCT 
+	SELECT publishwork.*
+	FROM
+		(SELECT DISTINCT 
 		publish_work.*
 		FROM student,student_select_course,publish_work,class_create
 		WHERE
@@ -311,8 +313,9 @@
 		AND
 		student.s_id=#{sId}
 		AND course.c_id=#{cId}
+		) publishwork
 		<if test="pwState!=null">
-			AND publish_work.pw_state=#{pwState}
+			WHERE publishwork.pw_state=#{pwState}
 		</if>
 		LIMIT #{start}, #{end}
 	</select>
@@ -353,7 +356,8 @@
 	<!-- 学生查询发布作业表通过课程号（cId）数量 by:黎睿-->
 	<select id="selectStudentPublishWorkCount" resultType="java.lang.Integer">
 		SELECT COUNT(*)
-		FROM (SELECT DISTINCT 
+		FROM
+		(SELECT DISTINCT 
 		publish_work.*
 		FROM student,student_select_course,publish_work,class_create
 		WHERE
@@ -380,13 +384,16 @@
 		AND
 		student.s_id=#{sId}
 		AND course.c_id=#{cId}
+		) publishwork
 		<if test="pwState!=null">
-			AND publish_work.pw_state=#{pwState}
-		</if>) num
+			WHERE publishwork.pw_state=#{pwState}
+		</if>
 	</select>
 	<!-- 教师查询发布作业表通过课程号（cId） by:黎睿-->
 	<select id="selectTeacherPublishWorkBycId" resultMap="BaseResultMap">
-		SELECT DISTINCT
+		SELECT publishwork.*
+		FROM
+		(SELECT DISTINCT
 		publish_work.*
 		FROM teacher,publish_work,class_create
 		WHERE
@@ -409,8 +416,9 @@
 		AND
 		teacher.t_id=#{tId}
 		AND course.c_id=#{cId}
+		) publishwork
 		<if test="pwState!=null">
-			AND publish_work.pw_state=#{pwState}
+			WHERE publishwork.pw_state=#{pwState}
 		</if>
 		LIMIT #{start}, #{end}
 	</select>
@@ -448,7 +456,8 @@
 	<!-- 教师查询发布作业表通过课程号（cId）数量 by:黎睿-->
 	<select id="selectTeacherPublishWorkCount" resultType="java.lang.Integer">
 		SELECT COUNT(*)
-		FROM (SELECT DISTINCT
+		FROM
+		(SELECT DISTINCT
 		publish_work.*
 		FROM teacher,publish_work,class_create
 		WHERE
@@ -471,9 +480,10 @@
 		AND
 		teacher.t_id=#{tId}
 		AND course.c_id=#{cId}
+		) publishwork
 		<if test="pwState!=null">
-			AND publish_work.pw_state=#{pwState}
-		</if>) num
+			WHERE publishwork.pw_state=#{pwState}
+		</if>
 	</select>
 	<!-- ct_id查询作业数量 by:黎睿-->
 	<select id="selectCountBypwStateBytscId" resultType="java.lang.Integer">
