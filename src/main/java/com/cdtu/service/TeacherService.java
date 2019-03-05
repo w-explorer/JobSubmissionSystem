@@ -147,9 +147,17 @@ public interface TeacherService {
 	 */
 	int deleteCourseStudent(CourseStudent CourseStudent);
 	/**
+
+	 * 分页该课程查找学生
+	 * @param CourseStudent
+	 * @return
+	 */
+	public Map<String, Object> selectCourseStudents(CourseWapper courseWapper);
+/**
 	 * 老师修改头像
 	 * @param path
 	 * @param username
 	 */
 	public void updataAvatar(String path, String username);
+
 }

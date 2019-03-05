@@ -62,12 +62,13 @@ public class TeacherServiceImpl implements TeacherService {
 	
 	
 	/**
-	 * 教师查询该课程学生
+	 * 教师查询该课程所有学生
 	 * 
 	 * @author weiyuhang
 	 */
 	@Override
 	public List<CourseStudent> selectCourseStudentService(CourseWapper coursewapper) {
+		
 		return  com.cdtu.util.OrderByUtil.OrderASC(studentSelectCourseMapper.selectCourseStudent(coursewapper));
 	}
 
@@ -327,9 +328,38 @@ public class TeacherServiceImpl implements TeacherService {
 		teacherMapper.deleteCourseStudent(courseStudent);
 		return 0;
 	}
+
+	/**
+	 * 分页查找班级内所有学生
+	 * @authorweiyuhang
+	 */
+	public Map<String, Object> selectCourseStudents(CourseWapper courseWapper) {
+		Map<String, Object> msg=new HashMap<String, Object>();
+		int count=studentSelectCourseMapper.count(courseWapper);
+		System.out.println(courseWapper.getTscId());
+		System.out.println(courseWapper.getPage()-1);
+		int cId;
+		if(courseWapper.getTscId()!=null){
+			cId=courseWapper.getTscId();
+		}else{
+			cId=courseWapper.getCtId();
+		}
+		List<CourseStudent> courseStudents=studentSelectCourseMapper.selectCourseStudents(cId, (courseWapper.getPage()-1)*40, 40);
+		int maxpage=0;
+		if(count%40!=0){
+			maxpage=count/40+1;
+		}else{
+			maxpage=count/40;
+		}
+		msg.put("max", MaxPage.getMaxPage(maxpage));
+		msg.put("courseStudents",courseStudents);
+		return msg;
+	}
+
 	@Override
 	public void updataAvatar(String path, String username) {
 		teacherMapper.updataAvatar(path,username);
 	}
 	
+
 }
