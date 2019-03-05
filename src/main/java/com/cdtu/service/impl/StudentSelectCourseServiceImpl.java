@@ -51,7 +51,7 @@ public class StudentSelectCourseServiceImpl implements StudentSelectCourseServic
 	 */
 	@Override
 	public List<Map<String, Object>> getStudents(int cId, int page) {
-		return sscMapper.selectStudents(cId, (page - 1) * 40, page * 40);
+		return sscMapper.selectStudents(cId, (page - 1) * 30, page * 30);
 	}
 
 	/**

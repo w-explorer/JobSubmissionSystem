@@ -32,6 +32,7 @@ import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
+import com.cdtu.util.MaxPage;
 import com.cdtu.util.UploadFileUtil;
 
 @Controller
@@ -55,7 +56,6 @@ public class StudentController {
 		try {
 			int cId = Integer.parseInt((String) paramsMap.get("cId"));
 			map.putAll(ccService.getDetails(cId));
-			map.put("stusNum", sscService.countStudents(cId));
 			map.put("status", 200);
 		} catch (Exception e) {
 			this.handlException(map, e);
@@ -75,7 +75,10 @@ public class StudentController {
 		try {
 			int cId = Integer.parseInt((String) paramsMap.get("cId"));
 			int page = (int) paramsMap.get("page");
+			int stusNum = sscService.countStudents(cId);
 			map.put("students", sscService.getStudents(cId, page));
+			map.put("pageNum", MaxPage.getMaxPage(stusNum, 30));
+			map.put("stusNum", stusNum);
 			map.put("status", 200);
 		} catch (Exception e) {
 			this.handlException(map, e);
