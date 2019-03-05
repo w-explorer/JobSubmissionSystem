@@ -318,17 +318,17 @@ public class StudentController {
 	 */
 	@RequestMapping("uploadFile.do")
 	@RequiresRoles({"student"})
-	public @ResponseBody Map<String, Object> uploadFile(@RequestParam("file") CommonsMultipartFile file, @RequestBody Work work) {
+	public @ResponseBody Map<String, Object> uploadFile(@RequestParam("file") CommonsMultipartFile file, @RequestParam("sId") String sId,@RequestParam("pwId") String pwId) {
 		Map<String, Object> msg = new HashMap<String, Object>();
-		String oldPath = studentService.selectWorkwAddr(work.getsId(), work.getPwId());
+		String oldPath = studentService.selectWorkwAddr(sId, pwId);
 		try {
-			String newPath = UploadFileUtil.updateFile(file, oldPath, work.getsId(), work.getPwId());
+			String newPath = UploadFileUtil.updateFile(file, oldPath, sId, pwId);
 			if ("-1".equals(newPath)) {
 				msg.put("status", -1);
 				msg.put("msg", "保存文件类型有误");
 				return msg;
 			} else {
-				Integer status = studentService.updateWorkwAddr(work.getsId(), work.getPwId(), newPath);
+				Integer status = studentService.updateWorkwAddr(sId, pwId, newPath);
 				if (status == 1) {
 					msg.put("status", 200);
 					return msg;
