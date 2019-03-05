@@ -184,6 +184,7 @@ public class TeacherController {
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, String> updateClassCreate(@RequestBody ClassCreate classcreate) {
 		Map<String, String> data = new HashMap<String, String>();
+		System.out.println("test");
 		try {
 			String msg = teacherService.updateClassCreateService(classcreate);
 			if ("success".equals(msg)) {
@@ -436,6 +437,7 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> changePublishWork(@RequestBody PublishWork publishwork) {
 		Map<String, Object> msg = new HashMap<String, Object>();
 		try {
+			System.out.println(publishwork.getPwState());
 			this.teacherService.updatePublishwork(publishwork);
 			msg.put("status", 200);
 		} catch (Exception e) {

@@ -36,7 +36,7 @@
 	</insert>
 	<!--教师查询课程 by:魏宇航-->
 	<resultMap type="com.cdtu.model.CourseWapper" id="ClassCreateList">
-		<result column="ct_id" property="cId" />
+		<result column="ct_id" property="ctId" />
 		<result column="ct_name" property="cName" />
 		<result column="t_name" property="tName" />
 		<result column="sc_name" property="scName" />

@@ -11,11 +11,16 @@ public class CourseStudent {
 
 	    private String sMajor;
 	    
-	   
+		private Integer cId;
 
-	    private Integer cId;
 
-	   
+	    public Integer getcId() {
+			return cId;
+		}
+
+		public void setcId(Integer cId) {
+			this.cId = cId;
+		}
 
 		public String getsId() {
 			return sId;
@@ -43,13 +48,6 @@ public class CourseStudent {
 
 		
 
-		public Integer getCId() {
-			return cId;
-		}
-
-		public void setCId(Integer cId) {
-			this.cId = cId;
-		}
 
 		
 		

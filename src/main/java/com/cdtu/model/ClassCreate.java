@@ -9,15 +9,17 @@ public class ClassCreate {
 
     private Boolean ctSwitch;
 
-    public Integer getCId() {
-        return cId;
-    }
+    
 
-    public void setCId(Integer cId) {
-        this.cId = cId;
-    }
+    public Integer getcId() {
+		return cId;
+	}
 
-    public String gettId() {
+	public void setcId(Integer cId) {
+		this.cId = cId;
+	}
+
+	public String gettId() {
         return tId;
     }
 

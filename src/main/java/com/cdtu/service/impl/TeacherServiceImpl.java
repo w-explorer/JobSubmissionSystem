@@ -312,10 +312,10 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public int updatePublishwork(PublishWork publishwork) {
 		// TODO Auto-generated method stub
-		if(publishwork.getPwBoobleanstate()==false){
-			publishwork.setPwBoobleanstate(true);
+		if(publishwork.getPwState()==false){
+			publishwork.setPwState(true);
 		}else{
-			publishwork.setPwBoobleanstate(false);
+			publishwork.setPwState(false);
 		}
 		 this.publishWorkMapper.changePublishWork(publishwork);
 		 return 0;
