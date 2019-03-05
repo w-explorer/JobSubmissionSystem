@@ -348,7 +348,6 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 	@Override
 	public int updatePublishwork(PublishWork publishwork) {
-		// TODO Auto-generated method stub
 		if(publishwork.getPwState()==false){
 			publishwork.setPwState(true);
 		}else{

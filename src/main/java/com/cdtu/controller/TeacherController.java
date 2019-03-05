@@ -40,8 +40,8 @@ import com.cdtu.util.DownloadFile;
 @RequestMapping(value = "teacher")
 public class TeacherController {
 	private @Resource(name = "workService") WorkService workService;
-	private @Resource(name = "sscService") StudentSelectCourseService sscService;
 	private @Resource(name = "teacherService") TeacherService teacherService;
+	private @Resource(name = "sscService") StudentSelectCourseService sscService;
 
 	/**
 	 * 老师统计作业提交情况，参数是发布作业码
@@ -49,7 +49,7 @@ public class TeacherController {
 	 * @author 李红兵
 	 */
 	@ResponseBody
-	@RequiresRoles({"teacher"})
+	@RequiresRoles(value = {"teacher"})
 	@RequestMapping(value = "/statistic.do")
 	public Map<String, Object> doStatistic(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
