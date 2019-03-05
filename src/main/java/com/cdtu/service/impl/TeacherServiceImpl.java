@@ -344,12 +344,12 @@ public class TeacherServiceImpl implements TeacherService {
 		}else{
 			cId=courseWapper.getCtId();
 		}
-		List<CourseStudent> courseStudents=studentSelectCourseMapper.selectCourseStudents(cId, (courseWapper.getPage()-1)*40, 40);
+		List<CourseStudent> courseStudents=studentSelectCourseMapper.selectCourseStudents(cId, (courseWapper.getPage()-1)*30, 30);
 		int maxpage=0;
-		if(count%40!=0){
-			maxpage=count/40+1;
+		if(count%30!=0){
+			maxpage=count/30+1;
 		}else{
-			maxpage=count/40;
+			maxpage=count/30;
 		}
 		msg.put("max", MaxPage.getMaxPage(maxpage));
 		msg.put("courseStudents",courseStudents);
