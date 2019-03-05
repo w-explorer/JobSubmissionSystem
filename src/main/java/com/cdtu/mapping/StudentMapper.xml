@@ -27,6 +27,11 @@
 		SET S_PASSWORD =#{newPassword,jdbcType=VARCHAR}
 	    WHERE S_ID=#{username,jdbcType=VARCHAR}
 	</update>
+	<update id="updataAvatar">
+		update student
+		set s_img_src=#{sImgSrc}
+		where s_id=#{sId}
+	</update>
 	<!-- 文成end -->
 	
 	

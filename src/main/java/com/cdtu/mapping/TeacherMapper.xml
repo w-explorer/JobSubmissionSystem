@@ -27,4 +27,10 @@
 	<delete id="deleteCourseStudent" parameterType="com.cdtu.model.CourseStudent">
 	delete from student_select_course where ct_id=#{ctId} and s_id=#{sId}
 	</delete>
+	
+	<update id="updataAvatar">
+		update teacher
+		set t_img_src=#{tImgSrc}
+		where t_id=#{tId}
+	</update>
 </mapper>

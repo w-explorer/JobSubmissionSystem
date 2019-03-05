@@ -328,6 +328,7 @@ public class TeacherServiceImpl implements TeacherService {
 		teacherMapper.deleteCourseStudent(courseStudent);
 		return 0;
 	}
+
 	/**
 	 * 分页查找班级内所有学生
 	 * @authorweiyuhang
@@ -354,4 +355,11 @@ public class TeacherServiceImpl implements TeacherService {
 		msg.put("courseStudents",courseStudents);
 		return msg;
 	}
+
+	@Override
+	public void updataAvatar(String path, String username) {
+		teacherMapper.updataAvatar(path,username);
+	}
+	
+
 }

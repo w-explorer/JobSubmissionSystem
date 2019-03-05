@@ -20,7 +20,7 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 	private PublishWorkMapper publishWorkMapper;
 	@Override
 	public void changePublishWorkStateByConparetoEndTime() {
-		SimpleDateFormat mySDF = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat mySDF = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		Date nowDate = null;
 		Date endDate = null;
