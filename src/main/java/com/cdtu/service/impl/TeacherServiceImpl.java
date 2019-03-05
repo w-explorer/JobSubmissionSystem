@@ -129,7 +129,7 @@ public class TeacherServiceImpl implements TeacherService {
 	 * @return
 	 */
 	@Override
-	public String updateClassCreateService(ClassCreate classcreate) {
+	public String updateClassCreateService(ClassCreate classcreate){
 		boolean flag = false;// 判断是否重复
 		List<CourseWapper> classcreates = classcreatemapper.selectClassCreate(classcreate.gettId());
 		for (CourseWapper classCreate2 : classcreates) {

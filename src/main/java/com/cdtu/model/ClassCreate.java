@@ -1,7 +1,7 @@
 package com.cdtu.model;
 
 public class ClassCreate {
-    private Integer ctId;
+    private Integer cId;
 
     private String tId;
 
@@ -9,12 +9,12 @@ public class ClassCreate {
 
     private Boolean ctSwitch;
 
-    public Integer getCtId() {
-        return ctId;
+    public Integer getCId() {
+        return cId;
     }
 
-    public void setCtId(Integer ctId) {
-        this.ctId = ctId;
+    public void setCId(Integer cId) {
+        this.cId = cId;
     }
 
     public String gettId() {

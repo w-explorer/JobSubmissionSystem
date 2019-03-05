@@ -25,7 +25,7 @@
 	    WHERE T_ID=#{username,jdbcType=VARCHAR}
 	</update>
 	<delete id="deleteCourseStudent" parameterType="com.cdtu.model.CourseStudent">
-	delete from student_select_course where ct_id=#{ctId} and s_id=#{sId}
+	delete from student_select_course where ct_id=#{cId} and s_id=#{sId}
 	</delete>
 	
 	<update id="updataAvatar">

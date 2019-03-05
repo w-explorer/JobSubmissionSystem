@@ -72,19 +72,24 @@ public class TeacherController {
 	 *
 	 * @author weiyuhang
 	 */
-	@RequestMapping("delete.do")
+	@RequestMapping("deleteCourse.do")
 	@RequiresRoles({"teacher"})
-	public @ResponseBody Map<String, Object> deleteClassCreateJsp(@RequestParam("ctId") Integer ctId) {
-
-		String msg = teacherService.deleteClassCreateService(ctId);
+	public @ResponseBody Map<String, Object> deleteClassCreateJsp(@RequestParam("cId") Integer cId) {
 		Map<String, Object> data = new HashMap<String, Object>();
-		if ("success".equals(msg)) {
-			data.put("status", 200);
-			data.put("msg", "删除成功");
-		} else {
-			data.put("status", 0);
-			data.put("msg", "删除失败");
-		}
+		try{
+        	String msg = teacherService.deleteClassCreateService(cId);
+    		if ("success".equals(msg)) {
+    			data.put("status", 200);
+    			data.put("msg", "删除成功");
+    		} else {
+    			data.put("status", 0);
+    			data.put("msg", "删除失败");
+    		}
+        }catch(Exception e){
+        	data.put("status", 0);
+			data.put("msg", "无法删除");
+        }
+		
 		return data;
 	}
 
@@ -178,18 +183,22 @@ public class TeacherController {
 	@RequestMapping("updateClassCreate.do")
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, String> updateClassCreate(@RequestBody ClassCreate classcreate) {
-		String msg = teacherService.updateClassCreateService(classcreate);
 		Map<String, String> data = new HashMap<String, String>();
-		if ("success".equals(msg)) {
-			data.put("status", "200");
-			data.put("msg", "修改成功");
-		} else {
+		try {
+			String msg = teacherService.updateClassCreateService(classcreate);
+			if ("success".equals(msg)) {
+				data.put("status", "200");
+				data.put("msg", "修改成功");
+			} else {
+				data.put("status", "0");
+				data.put("msg", "修改课程名重复");
+			}
+		} catch (Exception e) {
 			data.put("status", "0");
-			data.put("msg", "修改课程名重复");
+			data.put("msg", "无法修改");
 		}
 		return data;
 	}
-
 	/**
 	 * 老师发布评价
 	 *
@@ -486,34 +495,18 @@ public class TeacherController {
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String,Object> deleteCourseStudent(@RequestBody CourseStudent courseStudent){
 		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			teacherService.deleteCourseStudent(courseStudent);
-			map.put("status", 200);
-			map.put("msg","删除成功");
-		} catch (Exception e) {
-			handlException(map, e);
-			map.put("status", 400);
-			map.put("msg","服务器异常");
-		}
+		
+			try {
+				teacherService.deleteCourseStudent(courseStudent);
+				map.put("status", 200);
+				map.put("msg","删除成功");
+			} catch (Exception e) {
+				handlException(map, e);
+				map.put("status", 0);
+				map.put("msg","无法踢人");
+			}	
+		
+		
 		return map;
-	}
-	/**
-	 * 教师分页查询该课程学生
-	 *
-	 * @author weiyuhang
-	 */
-	@RequiresRoles({"teacher"})
-	@RequestMapping("selectCourseStudents.do")
-	public @ResponseBody Map<String, Object> selectCourseStudents(@RequestBody CourseWapper coursewapper) {
-		Map<String, Object> data=new HashMap<String, Object>();
-		try {
-			data = teacherService.selectCourseStudents(coursewapper);
-			data.put("status", 200);
-		} catch (Exception e) {
-			e.printStackTrace();
-			data.put("status", 0);
-			data.put("msg", "服务器错误");
-		}
-		return data;
 	}
 }
