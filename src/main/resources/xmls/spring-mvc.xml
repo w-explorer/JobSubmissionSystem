@@ -30,6 +30,7 @@
         <mvc:exclude-mapping path="/role/checkCode" />
         <mvc:exclude-mapping path="/role/login.*" />
         <mvc:exclude-mapping path="/role/quit.do" />
+        <mvc:exclude-mapping path="/role/forgetpassword.do" />
         <mvc:exclude-mapping path="/login.*" />
         <bean class="com.cdtu.util.TokenInterceptor"></bean>
             

@@ -56,7 +56,7 @@
 	</select>
 	
 	<select id="countByPwId" parameterType = "java.lang.String" resultType="java.lang.Integer">
-		SELECT COUNT(*)
+		SELECT DISTINCT COUNT(*)
 		FROM student_select_course, publish_work
 		WHERE publish_work.pw_id = #{pwId}
 		AND (publish_work.ct_id = student_select_course.ct_id
@@ -64,7 +64,7 @@
 	</select>
 	
 	<select id="countStudents" resultType="java.lang.Integer">
-		SELECT COUNT(*)
+		SELECT DISTINCT COUNT(*)
 		FROM student_select_course, teacher_select_course
 		WHERE student_select_course.ct_id = #{cId}
 		OR (teacher_select_course.c_id = #{cId}

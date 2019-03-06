@@ -32,8 +32,10 @@ import com.cdtu.model.Teacher;
 import com.cdtu.service.MenuService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherService;
+import com.cdtu.service.UserService;
 import com.cdtu.util.Jwt;
 import com.cdtu.util.RandomValidateCode;
+import com.cdtu.util.SendEmail;
 
 /**
  * @author wencheng
@@ -47,6 +49,8 @@ public class RoleController {
 	private TeacherService teacherService;
 	@Resource(name = "menuService")
 	private MenuService menuService;
+	@Resource(name = "userService")
+	private UserService userService;
 
 	// 执行登陆方法
 	@RequestMapping(value = "/login.do", method = RequestMethod.POST)
@@ -235,6 +239,29 @@ public class RoleController {
 		else if("student".equals(role.getRole())){
 			studentService.updataAvatar(path,role.getUsername());
 		}
+	}
+
+	@RequestMapping(value = "forgetpassword.do")
+	public @ResponseBody Map<String, Object> forgetPassword(@RequestBody Map<String,Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		String username = (String) paramsMap.get("username");
+		String email  = (String) paramsMap.get("email");
+		List<Map<String,Object>> user = userService.getPassword(username,email);
+		
+		String password=null;
+		if(user.size()==0){
+			map.put("status", 404);
+			map.put("msg", "亲，账号或邮箱错误！若不记得邮箱请联系管理员！");
+		}
+		else{
+			for (Map<String, Object> map2 : user) {
+				password=(String) map2.get("password");
+			}
+			SendEmail.sendPasswordByEmail(email, password);
+			map.put("status", 200);
+			map.put("msg", "请前往邮箱查看密码  https://mail.qq.com/");
+		}
+		return map;
 	}
 
 }

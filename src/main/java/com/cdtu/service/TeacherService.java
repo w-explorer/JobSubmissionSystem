@@ -158,6 +158,6 @@ public interface TeacherService {
 	 * @param path
 	 * @param username
 	 */
-	public void updataAvatar(String path, String username);
+	public void updataAvatar(String path, String username);	
 
 }

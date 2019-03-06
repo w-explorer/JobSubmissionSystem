@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.UserMapper" >
+  <select id="getPassword" resultType="java.util.HashMap">
+  	select s_password as password
+  	from student
+  	where s_id=#{username}
+  	and s_email=#{email}
+  	UNION
+  	select t_password as password
+  	from teacher
+  	where t_id=#{username}
+  	and t_email=#{email}
+  </select>
+</mapper>
