@@ -17,11 +17,19 @@ public class PublishWork {
     private Boolean wBoobleanstate; 
     private String pwStringstate; 
     private Boolean pwBoobleanstate; 
-
+    private String pwContent;
     
 
     
 
+
+	public String getPwContent() {
+		return pwContent;
+	}
+
+	public void setPwContent(String pwContent) {
+		this.pwContent = pwContent;
+	}
 
 	public Boolean getPwState() {
 		return pwState;
