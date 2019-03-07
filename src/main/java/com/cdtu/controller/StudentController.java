@@ -206,7 +206,7 @@ public class StudentController {
 	 * @param state
 	 * @return
 	 */
-	@RequestMapping("selectPW.do")
+	@RequestMapping("selectPw.do")
 	@RequiresRoles({"student"})
 	public @ResponseBody Map<String, Object> selectPW(@RequestBody StudentSelectCourse studentSelectCourse) {
 		Subject subject = SecurityUtils.getSubject();
@@ -390,6 +390,25 @@ public class StudentController {
 		try {
 			map.put("status", 200);
 			map.put("fuzzySearchWorks", workService.SsearchPwByPwName(sId, cId,pwName));
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
+	/**
+	 * 得到作业详情
+	 * @param paramsMap
+	 * @return
+	 */
+	@RequestMapping(value="getPwDetails.do")
+	@RequiresRoles({"student"})
+	public @ResponseBody Map<String,Object> PwDetails(@RequestBody Map<String,Object> paramsMap){
+		Map<String, Object> map = new HashMap<String, Object>();
+		String pwId = (String) paramsMap.get("pwId");
+		String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		try {
+			map.put("status", 200);
+			
 		} catch (Exception e) {
 			handlException(map, e);
 		}

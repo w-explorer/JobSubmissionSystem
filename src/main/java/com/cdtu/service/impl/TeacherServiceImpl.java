@@ -208,11 +208,11 @@ public class TeacherServiceImpl implements TeacherService {
 				publishWorks.put("countall", this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), null));
 				for(PublishWork publishWork:publishWorkLs){
 					if(publishWork.getPwState()==true){
-						publishWork.setPwStringstate("进行中");
-						publishWork.setPwBoobleanstate(publishWork.getPwState());
+						publishWork.setPwStringState("进行中");
+						publishWork.setPwBooleanState(publishWork.getPwState());
 					}else{
-						publishWork.setPwStringstate("已结束");
-						publishWork.setPwBoobleanstate(publishWork.getPwState());
+						publishWork.setPwStringState("已结束");
+						publishWork.setPwBooleanState(publishWork.getPwState());
 					}
 				}
 				publishWorks.put("publishWorks",publishWorkLs);
@@ -247,11 +247,11 @@ public class TeacherServiceImpl implements TeacherService {
 				publishWorks.put("countall", this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), null));
 				for(PublishWork publishWork:publishWorkLs){
 					if(publishWork.getPwState()==true){
-						publishWork.setPwStringstate("进行中");
-						publishWork.setPwBoobleanstate(publishWork.getPwState());
+						publishWork.setPwStringState("进行中");
+						publishWork.setPwBooleanState(publishWork.getPwState());
 					}else{
-						publishWork.setPwStringstate("已结束");
-						publishWork.setPwBoobleanstate(publishWork.getPwState());
+						publishWork.setPwStringState("已结束");
+						publishWork.setPwBooleanState(publishWork.getPwState());
 					}
 				}
 				publishWorks.put("publishWorks",publishWorkLs);
@@ -276,11 +276,11 @@ public class TeacherServiceImpl implements TeacherService {
 				publishWorks.put("countAll", this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), null));
 				for(PublishWork publishWork:publishWorkLs){
 					if(publishWork.getPwState()==true){
-						publishWork.setPwStringstate("进行中");
-						publishWork.setPwBoobleanstate(publishWork.getPwState());
+						publishWork.setPwStringState("进行中");
+						publishWork.setPwBooleanState(publishWork.getPwState());
 					}else{
-						publishWork.setPwStringstate("已结束");
-						publishWork.setPwBoobleanstate(publishWork.getPwState());
+						publishWork.setPwStringState("已结束");
+						publishWork.setPwBooleanState(publishWork.getPwState());
 					}
 				}
 				publishWorks.put("publishWorks",publishWorkLs);

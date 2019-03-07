@@ -8,6 +8,7 @@
     <result column="pw_end" property="pwEnd" jdbcType="DATE" />
     <result column="pw_state" property="pwState" jdbcType="BIT" />
     <result column="pw_name" property="pwName" jdbcType="LONGVARCHAR" />
+    <result column="activityImgSrc" property="activityImgSrc" jdbcType="CHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.cdtu.model.PublishWork" extends="BaseResultMap" >
     <result column="pw_name" property="pwName" jdbcType="LONGVARCHAR" />
@@ -287,7 +288,7 @@
 	SELECT publishwork.*
 	FROM
 		(SELECT DISTINCT 
-		publish_work.*
+		publish_work.*,class_create.ct_img_src as activityImgSrc
 		FROM student,student_select_course,publish_work,class_create
 		WHERE
 		student.s_id=student_select_course.s_id
@@ -300,7 +301,7 @@
 		AND class_create.ct_id=#{cId}
 		UNION
 		SELECT DISTINCT 
-		publish_work.*
+		publish_work.*,course.c_img_src as activityImgSrc
 		FROM student,student_select_course,publish_work,teacher_select_course,course
 		WHERE
 		student.s_id=student_select_course.s_id
