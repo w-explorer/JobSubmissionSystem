@@ -3,6 +3,8 @@ package com.cdtu.mapper;
 import com.cdtu.model.PublishWork;
 import com.cdtu.model.PublishWorkExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface PublishWorkMapper {
@@ -163,5 +165,7 @@ public interface PublishWorkMapper {
 	List<PublishWork> getAllPublishWorks();
 
 	void updatePublishWorkState(@Param("pwId")String pwId, @Param("flag")Boolean flag);
+
+	List<Map<String, Object>> getPwDetails(@Param("sId")String sId, @Param("pwId")String pwId);
 
 }

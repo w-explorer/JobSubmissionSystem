@@ -26,7 +26,7 @@ public class RandomValidateCode {
     
     private int width = 80;//图片宽
     private int height = 26;//图片高
-    private int lineSize = 40;//干扰线数量
+    private int lineSize = 80;//干扰线数量
     private int stringNum = 4;//随机产生字符数量
     
     /**

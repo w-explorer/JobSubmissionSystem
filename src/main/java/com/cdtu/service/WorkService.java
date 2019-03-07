@@ -15,4 +15,5 @@ public interface WorkService {
 	public List<Map<String, Object>> SearchPwByPwName(String tId, int cId, String pwName);
 
 	public List<Map<String, Object>> SsearchPwByPwName(String sId, int cId, String pwName);
+
 }

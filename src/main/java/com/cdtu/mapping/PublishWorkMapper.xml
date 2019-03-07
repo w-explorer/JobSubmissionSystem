@@ -532,5 +532,30 @@
 	<update id="updatePublishWorkState">
 		UPDATE  publish_work SET pw_state =#{flag} WHERE pw_id=#{pwId}
 	</update>
+	<select id="getPwDetails" resultType="java.util.HashMap" >
+		SELECT  DISTINCT pw.pw_name AS pwName,c.c_img_src AS activityImgSrc,pw.pw_content AS pwContent,work.w_context AS wContent,work.w_addr AS wAddr ,work.w_problem AS wProblem,work.s_w_state AS sWState
+		FROM publish_work pw,student_select_course ssc ,teacher_select_course tsc,course c ,WORK
+		WHERE
+		ssc.s_id=#{sId}
+		AND pw.pw_id = #{pwId}
+		AND pw.tsc_id=tsc.tsc_id
+		AND c.c_id=tsc.c_id
+		AND ssc.tsc_id=tsc.tsc_id
+		AND tsc.c_id=c.c_id
+		AND ssc.tsc_id=pw.tsc_id
+		AND pw.tsc_id=tsc.tsc_id
+		AND tsc.c_id=c.c_id
+		AND pw.pw_id=work.pw_id
+		UNION
+		SELECT  DISTINCT pw.pw_name AS pwName,cc.ct_img_src AS activityImgSrc,pw.pw_content AS pwContent,work.w_context AS wContent,work.w_addr AS wAddr ,work.w_problem AS wProblem,work.s_w_state AS sWState
+		FROM publish_work pw,student_select_course ssc,class_create cc,WORK
+		WHERE
+		ssc.s_id=#{sId}
+		AND pw.pw_id =#{pwId}
+		AND ssc.ct_id=pw.ct_id
+		AND ssc.ct_id=pw.ct_id
+		AND ssc.ct_id=cc.ct_id
+		AND pw.pw_id=work.pw_id
+	</select>
 	<!-- 文成end -->
 </mapper>

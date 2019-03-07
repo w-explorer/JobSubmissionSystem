@@ -33,7 +33,7 @@
 		OR (publish_work.tsc_id = #{cId} AND student_select_course.tsc_id = #{cId}))
 	</select>
 	<!-- 李红兵end -->
-	<!-- 文成end -->
+	<!-- 文成start -->
 	<select id="fuzzySearchWorkBySidAndCid" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 		SELECT  pw.pw_name as value
 		FROM publish_work pw,student_select_course ssc,course c,teacher_select_course tsc
@@ -93,6 +93,9 @@
 		AND ssc.ct_id=#{cId}
 		AND ssc.ct_id=pw.ct_id
 		AND ssc.ct_id=cc.ct_id
+		
+	</select>
+	<select id="getPwDetails" resultType="java.util.HashMap">
 		
 	</select>
 	<!-- 文成end -->

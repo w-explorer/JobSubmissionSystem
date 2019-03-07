@@ -29,6 +29,7 @@ import com.cdtu.model.Role;
 import com.cdtu.model.StudentSelectCourse;
 import com.cdtu.model.Work;
 import com.cdtu.service.ClassCreateService;
+import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.WorkService;
@@ -42,6 +43,7 @@ public class StudentController {
 	private @Resource(name = "ccService") ClassCreateService ccService;
 	private @Resource(name = "studentService") StudentService studentService;
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
+	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 
 	/**
 	 * 执行根据创课号（邀请码）查询课程
@@ -408,7 +410,7 @@ public class StudentController {
 		String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		try {
 			map.put("status", 200);
-			
+			map.put("publicWork", publishWorkService.getPwDetails(sId,pwId));
 		} catch (Exception e) {
 			handlException(map, e);
 		}
