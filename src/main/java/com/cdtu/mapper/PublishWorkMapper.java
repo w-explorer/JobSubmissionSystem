@@ -49,6 +49,12 @@ public interface PublishWorkMapper {
      */
     void insterByctId(PublishWork publishWork);
     /**
+     * 通过cId添加发布作业
+     * @author weiyuhang
+     * @param publishWork
+     */
+    void insterBycId(PublishWork publishWork);
+    /**
      * 学生查询发布作业表通过cId
      * @author LR
      * @param sId

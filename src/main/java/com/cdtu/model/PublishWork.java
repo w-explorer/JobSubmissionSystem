@@ -1,30 +1,20 @@
 package com.cdtu.model;
 
-
 public class PublishWork {
-    private String pwId;
-
-    private Integer tscId;
-
-    private Integer ctId;
-    private Integer id;
-
-    private Boolean pwState;
-    private String pwEnd;
-    private String pwContent;
-    private String activityImgSrc;
-
-    private String pwName;
-    private String wStringState; 
-    private Boolean wBooleanState; 
-    private String pwStringState; 
-    private Boolean pwBooleanState; 
-
-    
-
-    
-
-
+	private String pwId;
+	private Integer tscId;
+	private Integer ctId;
+	private Integer id;
+    private Integer cId;
+	private Boolean pwState;
+	private String pwEnd;
+	private String pwContent;
+	private String activityImgSrc;
+	private String pwName;
+	private String wStringState;
+	private Boolean wBooleanState;
+	private String pwStringState;
+	private Boolean pwBooleanState;
 	public String getPwContent() {
 		return pwContent;
 	}
@@ -49,7 +39,6 @@ public class PublishWork {
 		this.pwState = pwState;
 	}
 
-
 	public Integer getId() {
 		return id;
 	}
@@ -57,33 +46,32 @@ public class PublishWork {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public String getPwId() {
-        return pwId;
-    }
+		return pwId;
+	}
 
-    public void setPwId(String pwId) {
-        this.pwId = pwId == null ? null : pwId.trim();
-    }
+	public void setPwId(String pwId) {
+		this.pwId = pwId == null ? null : pwId.trim();
+	}
 
-    public Integer getTscId() {
-        return tscId;
-    }
+	public Integer getTscId() {
+		return tscId;
+	}
 
-    public void setTscId(Integer tscId) {
-        this.tscId = tscId;
-    }
+	public void setTscId(Integer tscId) {
+		this.tscId = tscId;
+	}
 
-    public Integer getCtId() {
-        return ctId;
-    }
+	public Integer getCtId() {
+		return ctId;
+	}
 
-    public void setCtId(Integer ctId) {
-        this.ctId = ctId;
-    }
+	public void setCtId(Integer ctId) {
+		this.ctId = ctId;
+	}
 
-
-
-    public String getPwEnd() {
+	public String getPwEnd() {
 		return pwEnd;
 	}
 
@@ -91,16 +79,13 @@ public class PublishWork {
 		this.pwEnd = pwEnd;
 	}
 
-
-
-
 	public String getPwName() {
-        return pwName;
-    }
+		return pwName;
+	}
 
-    public void setPwName(String pwName) {
-        this.pwName = pwName == null ? null : pwName.trim();
-    }
+	public void setPwName(String pwName) {
+		this.pwName = pwName == null ? null : pwName.trim();
+	}
 
 	public String getwStringState() {
 		return wStringState;
@@ -109,7 +94,6 @@ public class PublishWork {
 	public void setwStringState(String wStringState) {
 		this.wStringState = wStringState;
 	}
-
 
 	public String getPwStringState() {
 		return pwStringState;
@@ -134,6 +118,11 @@ public class PublishWork {
 	public void setPwBooleanState(Boolean pwBooleanState) {
 		this.pwBooleanState = pwBooleanState;
 	}
+	public Integer getcId() {
+		return cId;
+	}
 
-    
+	public void setcId(Integer cId) {
+		this.cId = cId;
+	}
 }
