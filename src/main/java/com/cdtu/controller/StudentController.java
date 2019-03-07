@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,11 +33,9 @@ import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
-import com.cdtu.util.MaxPage;
 import com.cdtu.util.UploadFileUtil;
 
 @Controller
-@RequiresRoles({"student"})
 @RequestMapping(value = "student")
 public class StudentController {
 	private @Resource(name = "workService") WorkService workService;
@@ -45,59 +44,17 @@ public class StudentController {
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
 
 	/**
-	 * 查询课堂详情
-	 *
-	 * @author 李红兵
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/details.do")
-	public Map<String, Object> doDetails(@RequestBody Map<String, Object> paramsMap) {
-		Map<String, Object> map = new HashMap<>();
-		try {
-			int cId = Integer.parseInt((String) paramsMap.get("cId"));
-			map.putAll(ccService.getDetails(cId));
-			map.put("status", 200);
-		} catch (Exception e) {
-			this.handlException(map, e);
-		}
-		return map;
-	}
-
-	/**
-	 * 查看课堂成员
-	 *
-	 * @author 李红兵
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/queryStudents.do")
-	public Map<String, Object> doQueryStudents(@RequestBody Map<String, Object> paramsMap) {
-		Map<String, Object> map = new HashMap<>();
-		try {
-			int cId = Integer.parseInt((String) paramsMap.get("cId"));
-			int page = (int) paramsMap.get("page");
-			int stusNum = sscService.countStudents(cId);
-			map.put("students", sscService.getStudents(cId, page));
-			map.put("pageNum", MaxPage.getMaxPage(stusNum, 30));
-			map.put("stusNum", stusNum);
-			map.put("status", 200);
-		} catch (Exception e) {
-			this.handlException(map, e);
-		}
-		return map;
-	}
-	
-	/**
 	 * 执行根据创课号（邀请码）查询课程
 	 *
 	 * @author 李红兵
 	 */
 	@ResponseBody
-	@RequiresRoles({"student"})
+	@RequiresRoles(value = {"student"})
 	@RequestMapping(value = "/queryCourse.do")
 	public Map<String, Object> doQueryCourse(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			int cId = Integer.parseInt((String) paramsMap.get("cId"));// 前端改成cId
+			int cId = Integer.parseInt((String) paramsMap.get("cId"));
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			if (ccService.isExisted(cId)) {
 				map.put("status", 200);
@@ -118,12 +75,12 @@ public class StudentController {
 	 * @author 李红兵
 	 */
 	@ResponseBody
+	@RequiresRoles(value = {"student"})
 	@RequestMapping(value = "/joinCourse.do")
-	@RequiresRoles({"student"})
 	public Map<String, Object> doJoinCourse(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			int cId = Integer.parseInt((String) paramsMap.get("cId"));// 前端改成cId
+			int cId = Integer.parseInt((String) paramsMap.get("cId"));
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			if (ccService.isExisted(cId)) {
 				if (sscService.isJoined(cId, sId)) {
@@ -150,14 +107,14 @@ public class StudentController {
 	 * @author 李红兵
 	 */
 	@ResponseBody
-	@RequiresRoles({"student"})
+	@RequiresRoles(value = {"student"})
 	@RequestMapping(value = "/queryJoinedCourses.do")
 	public Map<String, Object> doQueryJoinedCourses() {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			map.put("status", 200);
-			map.put("joinedCourses", sscService.getJoinedCourses(sId));// 前端改成joinedCourses
+			map.put("joinedCourses", sscService.getJoinedCourses(sId));
 		} catch (Exception e) {
 			this.handlException(map, e);
 		}
@@ -170,8 +127,8 @@ public class StudentController {
 	 * @author 李红兵
 	 */
 	@ResponseBody
+	@RequiresRoles(value = {"student"})
 	@RequestMapping(value = "/queryWorks.do")
-	@RequiresRoles({"student"})
 	public Map<String, Object> doQueryWorks(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -252,7 +209,9 @@ public class StudentController {
 	@RequestMapping("selectPW.do")
 	@RequiresRoles({"student"})
 	public @ResponseBody Map<String, Object> selectPW(@RequestBody StudentSelectCourse studentSelectCourse) {
-		Map<String, Object> msg = this.studentService.selectPublishWork(studentSelectCourse);
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		Map<String, Object> msg = this.studentService.demonPublishWork(studentSelectCourse, role.getUsername());
 		if (msg == null) {
 			msg = new HashMap<String, Object>();
 			msg.put("status", 0);

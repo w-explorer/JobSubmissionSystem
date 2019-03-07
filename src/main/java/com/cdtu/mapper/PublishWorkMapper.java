@@ -47,39 +47,86 @@ public interface PublishWorkMapper {
      */
     void insterByctId(PublishWork publishWork);
     /**
+     * 学生查询发布作业表通过cId
+     * @author LR
+     * @param sId
+     * @param cId
+     * @param pwState
+     * @param start
+     * @param end
+     * @return
+     */
+    List<PublishWork> selectStudentPublishWorkBycId(@Param("sId") String sId,@Param("cId") String cId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
+    /**
      * 学生查询发布作业表通过s_id和tsc_id
      * @author LR
      * @param sId
      * @param tscId
+     * @param pwState
+     * @param start
+     * @param end
      * @return
      */
     List<PublishWork> selectStudentPublishWorkBytscId(@Param("sId") String sId,@Param("tscId") Integer tscId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
     /**
-     * 学生查询发布作业表通过s_id和ct_id
+     * * 学生查询发布作业表通过s_id和ct_id
      * @author LR
      * @param sId
      * @param ctId
+     * @param pwState
+     * @param start
+     * @param end
      * @return
      */
     List<PublishWork> selectStudentPublishWorkByctId(@Param("sId") String sId,@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
     /**
-     * 教师查询发布作业表通过s_id和tsc_id
+     * 学生查询发布作业表通过cId数量
      * @author LR
      * @param sId
+     * @param cId
+     * @param pwState
+     * @return
+     */
+    Integer selectStudentPublishWorkCount(@Param("sId") String sId,@Param("cId") String cId,@Param("pwState") Boolean pwState);
+    /**
+     * 教师查询发布作业表通过cId
+     * @author LR
      * @param tscId
      * @param pwState
+     * @param start
+     * @param end
+     * @return
+     */
+    List<PublishWork> selectTeacherPublishWorkBycId(@Param("tId") String tId,@Param("cId") String cId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
+    /**
+     * 教师查询发布作业表通过s_id和tsc_id
+     * @author LR
+     * @param tscId
+     * @param pwState
+     * @param start
+     * @param end
      * @return
      */
     List<PublishWork> selectTeacherPublishWorkBytscId(@Param("tscId") Integer tscId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
     /**
      * 教师查询发布作业表通过s_id和ct_id
      * @author LR
-     * @param sId
      * @param ctId
      * @param pwState
+     * @param start
+     * @param end
      * @return
      */
     List<PublishWork> selectTeacherPublishWorkByctId(@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
+    /**
+     *  教师查询发布作业表通过cId数量
+     * @author LR
+     * @param tId
+     * @param cId
+     * @param pwState
+     * @return
+     */
+    Integer selectTeacherPublishWorkCount(@Param("tId") String tId,@Param("cId") String cId,@Param("pwState") Boolean pwState);
     /**
      * 教师查询发布作业的数量通过tsc_id
      * @author LR
