@@ -274,8 +274,8 @@
   <!-- 添加含有tscid的发布作业 by:黎睿-->
 	<insert id="insterBytscId" parameterType="com.cdtu.model.PublishWork">
 		INSERT INTO
-		publish_work(pw_id,tsc_id,pw_name,pw_end,pw_state)
-		VALUES(#{pwId},#{tscId},#{pwName},#{pwEnd},#{pwState})
+		publish_work(pw_id,tsc_id,pw_name,pw_end,pw_state,pw_content)
+		VALUES(#{pwId},#{tscId},#{pwName},#{pwEnd},#{pwState},#{pwContent})
 	</insert>
 	<!-- 添加含有ctid的发布作业 by:黎睿-->
 	<insert id="insterByctId" parameterType="com.cdtu.model.PublishWork">

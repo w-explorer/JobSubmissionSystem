@@ -211,7 +211,7 @@ public class TeacherController {
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> publishEstimate(@RequestBody PublishEstimate publishEstimate) {
 		Map<String, Object> msg = new HashMap<String, Object>();
-		Integer status = teacherService.PublishEstimate(publishEstimate);
+		Integer status = teacherService.PublishEstimatecId(publishEstimate);
 		if (status == 1) {
 			msg.put("status", 200);
 		} else {
@@ -238,7 +238,8 @@ public class TeacherController {
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> publishWork(@RequestBody PublishWork publishWork) {
 		Map<String, Object> msg = new HashMap<String, Object>();
-		Integer status = teacherService.publishWork(publishWork);
+		Integer status = teacherService.publishWorkcId(publishWork);
+		System.out.println(publishWork.getPwContent());
 		if (status == 1) {
 			msg.put("status", 200);
 		} else {

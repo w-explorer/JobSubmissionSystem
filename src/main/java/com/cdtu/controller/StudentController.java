@@ -280,8 +280,11 @@ public class StudentController {
 	 */
 	@RequestMapping("uploadFile.do")
 	@RequiresRoles({"student"})
-	public @ResponseBody Map<String, Object> uploadFile(@RequestParam("file") CommonsMultipartFile file, @RequestParam("sId") String sId,@RequestParam("pwId") String pwId) {
+	public @ResponseBody Map<String, Object> uploadFile(@RequestParam("file") CommonsMultipartFile file, @RequestParam("pwId") String pwId) {
 		Map<String, Object> msg = new HashMap<String, Object>();
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String sId=role.getUsername();
 		String oldPath = studentService.selectWorkwAddr(sId, pwId);
 		try {
 			String newPath = UploadFileUtil.updateFile(file, oldPath, sId, pwId);
