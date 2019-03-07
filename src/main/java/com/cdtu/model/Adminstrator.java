@@ -11,8 +11,18 @@ public class Adminstrator {
     private String aId;
 
     private String aPassword;
+    private String aName;
+    
 
-    public String getaId() {
+    public String getaName() {
+		return aName;
+	}
+
+	public void setaName(String aName) {
+		this.aName = aName;
+	}
+
+	public String getaId() {
         return aId;
     }
 

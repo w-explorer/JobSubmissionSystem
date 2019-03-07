@@ -25,10 +25,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.cdtu.model.Adminstrator;
 import com.cdtu.model.Menu;
 import com.cdtu.model.Role;
 import com.cdtu.model.Student;
 import com.cdtu.model.Teacher;
+import com.cdtu.service.AdminstratorService;
 import com.cdtu.service.MenuService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherService;
@@ -51,6 +53,8 @@ public class RoleController {
 	private MenuService menuService;
 	@Resource(name = "userService")
 	private UserService userService;
+	@Resource(name = "adminstratorService")
+	private AdminstratorService adminstratorService;
 
 	// 执行登陆方法
 	@RequestMapping(value = "/login.do", method = RequestMethod.POST)
@@ -70,7 +74,6 @@ public class RoleController {
 		// 构造一个用户名密码令牌 ,是否记住我
 		UsernamePasswordToken token1 = new UsernamePasswordToken(role.getUsername(), role.getPassword(), role.getRole());
 		try {
-			token1.setRememberMe(role.isRememberMe());
 			System.out.println(role.isRememberMe() + "///////////" + subject.isRemembered() + "登陆 记住密码");
 			// 提交认证
 			subject.login(token1);
@@ -113,6 +116,10 @@ public class RoleController {
 		} else if ("student".equals(role.getRole())) {
 			Student student = this.studentService.getStudentBysIdAndsPassword(role);
 			role.setName(student.getsName());
+			map.put("role", role);
+		} else if ("admin".equals(role.getRole())) {
+			Adminstrator adminstrator = this.adminstratorService.getAdminByaIdAndaPassword(role);
+			role.setName(adminstrator.getaName());
 			map.put("role", role);
 		} else {
 			map.put("msg", "获取用户失败");

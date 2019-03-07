@@ -105,18 +105,18 @@ public class StudentServiceImpl implements StudentService {
 			publishWorks.put("countall",this.publishWorkMapper.selectStudentPublishWorkCount(sId,studentSelectCourse.getcId(), null));
 			for (PublishWork publishWork : publishWorkLs) {
 				if (this.workMapper.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId()) != 0) {
-					publishWork.setwStringstate("已参与");
-					publishWork.setwBoobleanstate(true);
+					publishWork.setwStringState("已参与");
+					publishWork.setwBooleanState(true);
 				} else {
-					publishWork.setwStringstate("未参与");
-					publishWork.setwBoobleanstate(false);
+					publishWork.setwStringState("未参与");
+					publishWork.setwBooleanState(false);
 				}
 				if (publishWork.getPwState() == true) {
-					publishWork.setPwStringstate("进行中");
-					publishWork.setPwBoobleanstate(publishWork.getPwState());
+					publishWork.setPwStringState("进行中");
+					publishWork.setPwBooleanState(publishWork.getPwState());
 				} else {
-					publishWork.setPwStringstate("已结束");
-					publishWork.setPwBoobleanstate(publishWork.getPwState());
+					publishWork.setPwStringState("已结束");
+					publishWork.setPwBooleanState(publishWork.getPwState());
 				}
 			}
 			publishWorks.put("publishWorks", publishWorkLs);
@@ -160,18 +160,18 @@ public class StudentServiceImpl implements StudentService {
 					this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getTscId(), null));
 			for (PublishWork publishWork : publishWorkLs) {
 				if (this.workMapper.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId()) != 0) {
-					publishWork.setwStringstate("已参与");
-					publishWork.setwBoobleanstate(true);
+					publishWork.setwStringState("已参与");
+					publishWork.setwBooleanState(true);
 				} else {
-					publishWork.setwStringstate("未参与");
-					publishWork.setwBoobleanstate(false);
+					publishWork.setwStringState("未参与");
+					publishWork.setwBooleanState(false);
 				}
 				if (publishWork.getPwState() == true) {
-					publishWork.setPwStringstate("进行中");
-					publishWork.setPwBoobleanstate(publishWork.getPwState());
+					publishWork.setPwStringState("进行中");
+					publishWork.setPwBooleanState(publishWork.getPwState());
 				} else {
-					publishWork.setPwStringstate("已结束");
-					publishWork.setPwBoobleanstate(publishWork.getPwState());
+					publishWork.setPwStringState("已结束");
+					publishWork.setPwBooleanState(publishWork.getPwState());
 				}
 			}
 			publishWorks.put("publishWorks", publishWorkLs);
@@ -205,18 +205,18 @@ public class StudentServiceImpl implements StudentService {
 					this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.getCtId(), null));
 			for (PublishWork publishWork : publishWorkLs) {
 				if (this.workMapper.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId()) != 0) {
-					publishWork.setwStringstate("已参与");
-					publishWork.setwBoobleanstate(true);
+					publishWork.setwStringState("已参与");
+					publishWork.setwBooleanState(true);
 				} else {
-					publishWork.setwStringstate("未参与");
-					publishWork.setwBoobleanstate(false);
+					publishWork.setwStringState("未参与");
+					publishWork.setwBooleanState(false);
 				}
 				if (publishWork.getPwState() == true) {
-					publishWork.setPwStringstate("进行中");
-					publishWork.setPwBoobleanstate(publishWork.getPwState());
+					publishWork.setPwStringState("进行中");
+					publishWork.setPwBooleanState(publishWork.getPwState());
 				} else {
-					publishWork.setPwStringstate("已结束");
-					publishWork.setPwBoobleanstate(publishWork.getPwState());
+					publishWork.setPwStringState("已结束");
+					publishWork.setPwBooleanState(publishWork.getPwState());
 				}
 			}
 			publishWorks.put("publishWorks", publishWorkLs);
