@@ -17,7 +17,7 @@ public class SendEmail {
 		SimpleMailMessage msg = new SimpleMailMessage();
 		msg.setFrom("2515106327@qq.com"); // 发件人邮箱
 		msg.setTo(email); // 收件人邮箱
-		msg.setSubject("测试Spring邮件"); // 标题
+		msg.setSubject("找回密码邮件"); // 标题
 		msg.setText("这是您的密码:"+password); // 文本信息
 		try {
 			mailSender.send(msg);

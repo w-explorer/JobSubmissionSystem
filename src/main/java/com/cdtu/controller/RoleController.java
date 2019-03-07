@@ -247,7 +247,6 @@ public class RoleController {
 		String username = (String) paramsMap.get("username");
 		String email  = (String) paramsMap.get("email");
 		List<Map<String,Object>> user = userService.getPassword(username,email);
-		
 		String password=null;
 		if(user.size()==0){
 			map.put("status", 404);
@@ -259,7 +258,7 @@ public class RoleController {
 			}
 			SendEmail.sendPasswordByEmail(email, password);
 			map.put("status", 200);
-			map.put("msg", "请前往邮箱查看密码  https://mail.qq.com/");
+			map.put("msg", "请前往邮箱查看密码！");
 		}
 		return map;
 	}
