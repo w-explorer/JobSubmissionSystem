@@ -3,6 +3,8 @@ package com.cdtu.mapper;
 import com.cdtu.model.PublishWork;
 import com.cdtu.model.PublishWorkExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface PublishWorkMapper {
@@ -46,6 +48,12 @@ public interface PublishWorkMapper {
      * @param publishWork
      */
     void insterByctId(PublishWork publishWork);
+    /**
+     * 通过cId添加发布作业
+     * @author weiyuhang
+     * @param publishWork
+     */
+    void insterBycId(PublishWork publishWork);
     /**
      * 学生查询发布作业表通过cId
      * @author LR
@@ -163,5 +171,7 @@ public interface PublishWorkMapper {
 	List<PublishWork> getAllPublishWorks();
 
 	void updatePublishWorkState(@Param("pwId")String pwId, @Param("flag")Boolean flag);
+
+	List<Map<String, Object>> getPwDetails(@Param("sId")String sId, @Param("pwId")String pwId);
 
 }

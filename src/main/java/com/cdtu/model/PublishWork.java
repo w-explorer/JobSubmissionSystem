@@ -1,27 +1,35 @@
 package com.cdtu.model;
 
-
 public class PublishWork {
-    private String pwId;
+	private String pwId;
+	private Integer tscId;
+	private Integer ctId;
+	private Integer id;
+    private Integer cId;
+	private Boolean pwState;
+	private String pwEnd;
+	private String pwContent;
+	private String activityImgSrc;
+	private String pwName;
+	private String wStringState;
+	private Boolean wBooleanState;
+	private String pwStringState;
+	private Boolean pwBooleanState;
+	public String getPwContent() {
+		return pwContent;
+	}
 
-    private Integer tscId;
+	public void setPwContent(String pwContent) {
+		this.pwContent = pwContent;
+	}
 
-    private Integer ctId;
-    private Integer id;
+	public String getActivityImgSrc() {
+		return activityImgSrc;
+	}
 
-    private Boolean pwState;
-    private String pwEnd;
-
-    private String pwName;
-    private String wStringstate; 
-    private Boolean wBoobleanstate; 
-    private String pwStringstate; 
-    private Boolean pwBoobleanstate; 
-
-    
-
-    
-
+	public void setActivityImgSrc(String activityImgSrc) {
+		this.activityImgSrc = activityImgSrc;
+	}
 
 	public Boolean getPwState() {
 		return pwState;
@@ -31,22 +39,6 @@ public class PublishWork {
 		this.pwState = pwState;
 	}
 
-	public Boolean getwBoobleanstate() {
-		return wBoobleanstate;
-	}
-
-	public void setwBoobleanstate(Boolean wBoobleanstate) {
-		this.wBoobleanstate = wBoobleanstate;
-	}
-
-	public Boolean getPwBoobleanstate() {
-		return pwBoobleanstate;
-	}
-
-	public void setPwBoobleanstate(Boolean pwBoobleanstate) {
-		this.pwBoobleanstate = pwBoobleanstate;
-	}
-
 	public Integer getId() {
 		return id;
 	}
@@ -54,41 +46,32 @@ public class PublishWork {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getwStringstate() {
-		return wStringstate;
-	}
-
-	public void setwStringstate(String wStringstate) {
-		this.wStringstate = wStringstate;
-	}
 
 	public String getPwId() {
-        return pwId;
-    }
+		return pwId;
+	}
 
-    public void setPwId(String pwId) {
-        this.pwId = pwId == null ? null : pwId.trim();
-    }
+	public void setPwId(String pwId) {
+		this.pwId = pwId == null ? null : pwId.trim();
+	}
 
-    public Integer getTscId() {
-        return tscId;
-    }
+	public Integer getTscId() {
+		return tscId;
+	}
 
-    public void setTscId(Integer tscId) {
-        this.tscId = tscId;
-    }
+	public void setTscId(Integer tscId) {
+		this.tscId = tscId;
+	}
 
-    public Integer getCtId() {
-        return ctId;
-    }
+	public Integer getCtId() {
+		return ctId;
+	}
 
-    public void setCtId(Integer ctId) {
-        this.ctId = ctId;
-    }
+	public void setCtId(Integer ctId) {
+		this.ctId = ctId;
+	}
 
-
-
-    public String getPwEnd() {
+	public String getPwEnd() {
 		return pwEnd;
 	}
 
@@ -96,21 +79,50 @@ public class PublishWork {
 		this.pwEnd = pwEnd;
 	}
 
-
-    public String getPwStringstate() {
-		return pwStringstate;
-	}
-
-	public void setPwStringstate(String pwStringstate) {
-		this.pwStringstate = pwStringstate;
-	}
-
-
 	public String getPwName() {
-        return pwName;
-    }
+		return pwName;
+	}
 
-    public void setPwName(String pwName) {
-        this.pwName = pwName == null ? null : pwName.trim();
-    }
+	public void setPwName(String pwName) {
+		this.pwName = pwName == null ? null : pwName.trim();
+	}
+
+	public String getwStringState() {
+		return wStringState;
+	}
+
+	public void setwStringState(String wStringState) {
+		this.wStringState = wStringState;
+	}
+
+	public String getPwStringState() {
+		return pwStringState;
+	}
+
+	public void setPwStringState(String pwStringState) {
+		this.pwStringState = pwStringState;
+	}
+
+	public Boolean getwBooleanState() {
+		return wBooleanState;
+	}
+
+	public void setwBooleanState(Boolean wBooleanState) {
+		this.wBooleanState = wBooleanState;
+	}
+
+	public Boolean getPwBooleanState() {
+		return pwBooleanState;
+	}
+
+	public void setPwBooleanState(Boolean pwBooleanState) {
+		this.pwBooleanState = pwBooleanState;
+	}
+	public Integer getcId() {
+		return cId;
+	}
+
+	public void setcId(Integer cId) {
+		this.cId = cId;
+	}
 }

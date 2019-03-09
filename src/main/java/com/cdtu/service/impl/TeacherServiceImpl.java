@@ -208,11 +208,11 @@ public class TeacherServiceImpl implements TeacherService {
 				publishWorks.put("countall", this.publishWorkMapper.selectTeacherPublishWorkCount(tId,courseWapper.getcId(), null));
 				for(PublishWork publishWork:publishWorkLs){
 					if(publishWork.getPwState()==true){
-						publishWork.setPwStringstate("进行中");
-						publishWork.setPwBoobleanstate(publishWork.getPwState());
+						publishWork.setPwStringState("进行中");
+						publishWork.setPwBooleanState(publishWork.getPwState());
 					}else{
-						publishWork.setPwStringstate("已结束");
-						publishWork.setPwBoobleanstate(publishWork.getPwState());
+						publishWork.setPwStringState("已结束");
+						publishWork.setPwBooleanState(publishWork.getPwState());
 					}
 				}
 				publishWorks.put("publishWorks",publishWorkLs);
@@ -247,11 +247,11 @@ public class TeacherServiceImpl implements TeacherService {
 				publishWorks.put("countall", this.publishWorkMapper.selectCountBypwStateBytscId(courseWapper.getTscId(), null));
 				for(PublishWork publishWork:publishWorkLs){
 					if(publishWork.getPwState()==true){
-						publishWork.setPwStringstate("进行中");
-						publishWork.setPwBoobleanstate(publishWork.getPwState());
+						publishWork.setPwStringState("进行中");
+						publishWork.setPwBooleanState(publishWork.getPwState());
 					}else{
-						publishWork.setPwStringstate("已结束");
-						publishWork.setPwBoobleanstate(publishWork.getPwState());
+						publishWork.setPwStringState("已结束");
+						publishWork.setPwBooleanState(publishWork.getPwState());
 					}
 				}
 				publishWorks.put("publishWorks",publishWorkLs);
@@ -276,11 +276,11 @@ public class TeacherServiceImpl implements TeacherService {
 				publishWorks.put("countAll", this.publishWorkMapper.selectCountBypwStateByctId(courseWapper.getCtId(), null));
 				for(PublishWork publishWork:publishWorkLs){
 					if(publishWork.getPwState()==true){
-						publishWork.setPwStringstate("进行中");
-						publishWork.setPwBoobleanstate(publishWork.getPwState());
+						publishWork.setPwStringState("进行中");
+						publishWork.setPwBooleanState(publishWork.getPwState());
 					}else{
-						publishWork.setPwStringstate("已结束");
-						publishWork.setPwBoobleanstate(publishWork.getPwState());
+						publishWork.setPwStringState("已结束");
+						publishWork.setPwBooleanState(publishWork.getPwState());
 					}
 				}
 				publishWorks.put("publishWorks",publishWorkLs);
@@ -348,7 +348,6 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 	@Override
 	public int updatePublishwork(PublishWork publishwork) {
-		// TODO Auto-generated method stub
 		if(publishwork.getPwState()==false){
 			publishwork.setPwState(true);
 		}else{
@@ -395,8 +394,44 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public void updataAvatar(String path, String username) {
-		teacherMapper.updataAvatar(path,username);
+		teacherMapper.updataAvatar(path, username);
 	}
-	
 
+	public Integer publishWorkcId(PublishWork publishWork) {
+		publishWork.setPwId(OAUtil.getId());
+		if (publishWork.getcId()<100000) {
+			publishWork.setCtId(publishWork.getcId());
+			this.publishWorkMapper.insterByctId(publishWork);
+			return 1;
+		}else if(publishWork.getcId()>100000){
+			publishWork.setTscId(publishWork.getcId());
+			this.publishWorkMapper.insterBytscId(publishWork);
+			return 1;
+			}
+		return -1;
+	}
+	/**
+	 * 发布评价
+	 * 
+	 * @author weiyuhang
+	 */
+	@Override
+	public Integer PublishEstimatecId(PublishEstimate publishEstimate) {
+		if (publishEstimate != null) {
+			publishEstimate.setEpId(OAUtil.getId());
+			if (publishEstimate.getcId()>10000) {
+				publishEstimate.setTscId(publishEstimate.getcId());
+				this.publishEstimateMapper.insertByTscId(publishEstimate);
+				return 1;
+			}
+			else{
+				publishEstimate.setCtId(publishEstimate.getcId());
+				this.publishEstimateMapper.insertByCtId(publishEstimate);
+				return 1;
+			}
+		} else {
+			return -1;
+		}
+
+	}
 }

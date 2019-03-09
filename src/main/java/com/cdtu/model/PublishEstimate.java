@@ -7,8 +7,16 @@ public class PublishEstimate {
 
     private Integer ctId;
     private Integer id;
+    private Integer cId;
+    public Integer getcId() {
+		return cId;
+	}
 
-    private String epStartTime;
+	public void setcId(Integer cId) {
+		this.cId = cId;
+	}
+
+	private String epStartTime;
 
     public Integer getId() {
 		return id;

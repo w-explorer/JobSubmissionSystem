@@ -201,7 +201,13 @@
 			</dependency>
 
 		<!-- Shiro的jar包 End -->
-		
+		<!-- spring email start -->
+			<dependency>
+			    <groupId>javax.mail</groupId>
+			    <artifactId>mail</artifactId>
+			    <version>1.4.7</version>
+			</dependency>		
+		<!-- spring email end -->
 		<!-- 上传组件包 end -->
 	</dependencies>
 

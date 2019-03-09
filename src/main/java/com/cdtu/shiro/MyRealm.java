@@ -17,6 +17,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import com.cdtu.mapper.MenuMapper;
 import com.cdtu.model.Menu;
 import com.cdtu.model.Role;
+import com.cdtu.service.AdminstratorService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherService;
 
@@ -32,6 +33,8 @@ public class MyRealm extends AuthorizingRealm {
 	private StudentService studentService;
 	@Resource(name = "teacherService")
 	private TeacherService teacherService;
+	@Resource(name = "adminstratorService")
+	private AdminstratorService adminService;
 	private @Resource MenuMapper menuMapper;
 
 	/**
@@ -53,6 +56,9 @@ public class MyRealm extends AuthorizingRealm {
 			role.setPassword(password);
 		} else if ("student".equals(roleName)) {
 			password = this.studentService.getPasswordById(userName);
+			role.setPassword(password);
+		} else if ("admin".equals(roleName)) {
+			password = this.adminService.getPasswordById(userName);
 			role.setPassword(password);
 		}
 		if (password == null) {
@@ -79,7 +85,13 @@ public class MyRealm extends AuthorizingRealm {
 				SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(role, s_password,
 						this.getClass().getSimpleName());
 				return info;
-			}
+			} else if ("admin".equals(roleName)) {
+			System.out.println("admin");
+			String a_password = password;
+			SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(role, a_password,
+					this.getClass().getSimpleName());
+			return info;
+		}
 
 		}
 		return null;

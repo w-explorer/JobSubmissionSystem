@@ -29,76 +29,34 @@ import com.cdtu.model.Role;
 import com.cdtu.model.StudentSelectCourse;
 import com.cdtu.model.Work;
 import com.cdtu.service.ClassCreateService;
+import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
-import com.cdtu.util.MaxPage;
 import com.cdtu.util.UploadFileUtil;
 
 @Controller
-@RequiresRoles({"student"})
 @RequestMapping(value = "student")
 public class StudentController {
 	private @Resource(name = "workService") WorkService workService;
 	private @Resource(name = "ccService") ClassCreateService ccService;
 	private @Resource(name = "studentService") StudentService studentService;
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
+	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 
-	/**
-	 * 查询课堂详情
-	 *
-	 * @author 李红兵
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/details.do")
-	public Map<String, Object> doDetails(@RequestBody Map<String, Object> paramsMap) {
-		Map<String, Object> map = new HashMap<>();
-		try {
-			int cId = Integer.parseInt((String) paramsMap.get("cId"));
-			map.putAll(ccService.getDetails(cId));
-			map.put("status", 200);
-		} catch (Exception e) {
-			this.handlException(map, e);
-		}
-		return map;
-	}
-
-	/**
-	 * 查看课堂成员
-	 *
-	 * @author 李红兵
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/queryStudents.do")
-	public Map<String, Object> doQueryStudents(@RequestBody Map<String, Object> paramsMap) {
-		Map<String, Object> map = new HashMap<>();
-		try {
-			int cId = Integer.parseInt((String) paramsMap.get("cId"));
-			int page = (int) paramsMap.get("page");
-			int stusNum = sscService.countStudents(cId);
-			map.put("students", sscService.getStudents(cId, page));
-			map.put("pageNum", MaxPage.getMaxPage(stusNum, 30));
-			map.put("stusNum", stusNum);
-			map.put("status", 200);
-		} catch (Exception e) {
-			this.handlException(map, e);
-		}
-		return map;
-	}
-	
 	/**
 	 * 执行根据创课号（邀请码）查询课程
 	 *
 	 * @author 李红兵
 	 */
 	@ResponseBody
-	@RequiresRoles({"student"})
+	@RequiresRoles(value = {"student"})
 	@RequestMapping(value = "/queryCourse.do")
 	public Map<String, Object> doQueryCourse(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			int cId = Integer.parseInt((String) paramsMap.get("cId"));// 前端改成cId
+			int cId = Integer.parseInt((String) paramsMap.get("cId"));
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			if (ccService.isExisted(cId)) {
 				map.put("status", 200);
@@ -119,12 +77,12 @@ public class StudentController {
 	 * @author 李红兵
 	 */
 	@ResponseBody
+	@RequiresRoles(value = {"student"})
 	@RequestMapping(value = "/joinCourse.do")
-	@RequiresRoles({"student"})
 	public Map<String, Object> doJoinCourse(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			int cId = Integer.parseInt((String) paramsMap.get("cId"));// 前端改成cId
+			int cId = Integer.parseInt((String) paramsMap.get("cId"));
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			if (ccService.isExisted(cId)) {
 				if (sscService.isJoined(cId, sId)) {
@@ -151,14 +109,14 @@ public class StudentController {
 	 * @author 李红兵
 	 */
 	@ResponseBody
-	@RequiresRoles({"student"})
+	@RequiresRoles(value = {"student"})
 	@RequestMapping(value = "/queryJoinedCourses.do")
 	public Map<String, Object> doQueryJoinedCourses() {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			map.put("status", 200);
-			map.put("joinedCourses", sscService.getJoinedCourses(sId));// 前端改成joinedCourses
+			map.put("joinedCourses", sscService.getJoinedCourses(sId));
 		} catch (Exception e) {
 			this.handlException(map, e);
 		}
@@ -171,8 +129,8 @@ public class StudentController {
 	 * @author 李红兵
 	 */
 	@ResponseBody
+	@RequiresRoles(value = {"student"})
 	@RequestMapping(value = "/queryWorks.do")
-	@RequiresRoles({"student"})
 	public Map<String, Object> doQueryWorks(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -250,7 +208,7 @@ public class StudentController {
 	 * @param state
 	 * @return
 	 */
-	@RequestMapping("selectPW.do")
+	@RequestMapping("selectPw.do")
 	@RequiresRoles({"student"})
 	public @ResponseBody Map<String, Object> selectPW(@RequestBody StudentSelectCourse studentSelectCourse) {
 		Subject subject = SecurityUtils.getSubject();
@@ -324,8 +282,11 @@ public class StudentController {
 	 */
 	@RequestMapping("uploadFile.do")
 	@RequiresRoles({"student"})
-	public @ResponseBody Map<String, Object> uploadFile(@RequestParam("file") CommonsMultipartFile file, @RequestParam("sId") String sId,@RequestParam("pwId") String pwId) {
+	public @ResponseBody Map<String, Object> uploadFile(@RequestParam("file") CommonsMultipartFile file, @RequestParam("pwId") String pwId) {
 		Map<String, Object> msg = new HashMap<String, Object>();
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String sId=role.getUsername();
 		String oldPath = studentService.selectWorkwAddr(sId, pwId);
 		try {
 			String newPath = UploadFileUtil.updateFile(file, oldPath, sId, pwId);
@@ -434,6 +395,25 @@ public class StudentController {
 		try {
 			map.put("status", 200);
 			map.put("fuzzySearchWorks", workService.SsearchPwByPwName(sId, cId,pwName));
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
+	/**
+	 * 得到作业详情
+	 * @param paramsMap
+	 * @return
+	 */
+	@RequestMapping(value="getPwDetails.do")
+	@RequiresRoles({"student"})
+	public @ResponseBody Map<String,Object> PwDetails(@RequestBody Map<String,Object> paramsMap){
+		Map<String, Object> map = new HashMap<String, Object>();
+		String pwId = (String) paramsMap.get("pwId");
+		String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		try {
+			map.put("status", 200);
+			map.put("publicWork", publishWorkService.getPwDetails(sId,pwId));
 		} catch (Exception e) {
 			handlException(map, e);
 		}

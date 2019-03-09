@@ -12,9 +12,26 @@ public class CourseStudent {
 	    private String sMajor;
 	    
 		private Integer cId;
+        private Integer ctId;
+        private Integer tscId;
+        
+	    public Integer getCtId() {
+			return ctId;
+		}
 
+		public void setCtId(Integer ctId) {
+			this.ctId = ctId;
+		}
 
-	    public Integer getcId() {
+		public Integer getTscId() {
+			return tscId;
+		}
+
+		public void setTscId(Integer tscId) {
+			this.tscId = tscId;
+		}
+
+		public Integer getcId() {
 			return cId;
 		}
 
