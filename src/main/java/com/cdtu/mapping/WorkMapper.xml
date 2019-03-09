@@ -40,17 +40,20 @@
 		WHERE
 		ssc.s_id=#{sId}
 		AND pw.pw_name LIKE '%${pwName}%'
-		AND(ssc.tsc_id=tsc.tsc_id AND tsc.c_id=c.c_id AND c.c_id=#{cId} AND ssc.tsc_id=pw.tsc_id)
-		OR(ssc.ct_id=#{cId} AND ssc.ct_id=pw.ct_id)
+		AND ssc.tsc_id=tsc.tsc_id 
+		AND tsc.c_id=c.c_id 
+		AND c.c_id=#{cId} 
+		AND ssc.tsc_id=pw.tsc_id
 	</select>
 	<select id="fuzzySearchWorkByTidAndCid"  resultType="java.util.HashMap">
 		SELECT  DISTINCT pw.pw_name as value
-		FROM publish_work pw,teacher_select_course tsc,class_create  cc,course c
+		FROM publish_work pw,teacher_select_course tsc,course c
 		WHERE
 		tsc.t_id=#{tId}
 		AND pw.pw_name LIKE '%${pwName}%'
-		AND(tsc.c_id=c.c_id AND c.c_id=#{cId} AND tsc.tsc_id=pw.tsc_id)
-		OR(cc.ct_id=#{cId} AND cc.ct_id=pw.ct_id)
+		AND tsc.c_id=c.c_id 
+		AND c.c_id=#{cId} 
+		AND tsc.tsc_id=pw.tsc_id
 	</select>
 	<select id="SearchPwByPwName"  resultType="java.util.HashMap">
 		SELECT  DISTINCT pw.pw_id AS pwId,pw.tsc_id AS cId,pw.pw_name AS pwName,pw.pw_end AS pwEnd,pw.pw_state AS pwState,c.c_img_src AS activityImgSrc
@@ -62,15 +65,6 @@
 		AND c.c_id=#{cId}
 		AND tsc.tsc_id=pw.tsc_id
 		AND tsc.c_id=c.c_id
-		UNION
-		SELECT  DISTINCT pw.pw_id AS pwId,pw.ct_id AS cId,pw.pw_name AS pwName,pw.pw_end AS pwEnd,pw.pw_state AS pwState,ct.ct_img_src AS activityImgSrc
-		FROM publish_work pw,class_create  cc,teacher_select_course tsc,class_create ct
-		WHERE
-		tsc.t_id=#{tId}
-		AND pw.pw_name = #{pwName}
-		AND cc.ct_id=#{cId}
-		AND cc.ct_id=pw.ct_id
-		AND pw.ct_id=ct.ct_id
 	</select>
 	<select id="SsearchPwByPwName"  resultType="java.util.HashMap">
 		SELECT  DISTINCT pw.pw_id AS pwId,pw.tsc_id AS cId,pw.pw_name AS pwName,pw.pw_end AS pwEnd,pw.pw_state AS pwState,c.c_img_src AS activityImgSrc
@@ -84,19 +78,6 @@
 		AND ssc.tsc_id=pw.tsc_id
 		AND pw.tsc_id=tsc.tsc_id
 		AND tsc.c_id=c.c_id
-		UNION
-		SELECT  DISTINCT pw.pw_id AS pwId,pw.ct_id AS cId,pw.pw_name AS pwName,pw.pw_end AS pwEnd,pw.pw_state AS pwState,cc.ct_img_src AS activityImgSrc
-		FROM publish_work pw,student_select_course ssc,class_create cc
-		WHERE
-		ssc.s_id=#{sId}
-		AND pw.pw_name = #{pwName}
-		AND ssc.ct_id=#{cId}
-		AND ssc.ct_id=pw.ct_id
-		AND ssc.ct_id=cc.ct_id
-		
-	</select>
-	<select id="getPwDetails" resultType="java.util.HashMap">
-		
 	</select>
 	<!-- 文成end -->
 	
