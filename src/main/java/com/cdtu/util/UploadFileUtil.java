@@ -39,7 +39,7 @@ public class UploadFileUtil {
 			String fileName = file.getOriginalFilename();
 	        String type = fileName.substring(fileName.lastIndexOf(".") + 1);
 			String realPath="F:"+File.separator+"uploadFile"+File.separator+pwId+File.separator+id+File.separator;
-			if(type.equals("png")||type.equals("jpg")||type.equals("gif")){
+			if(type.equals("png")||type.equals("jpg")||type.equals("gif")||type.equals("jpeg")){
 				String path=realPath+"image"+File.separator+fileName;
 				file.transferTo(createFile(path));
 				path=File.separator+"workfile"+File.separator+pwId+File.separator+id+File.separator+"image"+File.separator+fileName;

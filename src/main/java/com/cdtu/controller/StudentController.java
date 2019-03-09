@@ -413,7 +413,7 @@ public class StudentController {
 		String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		try {
 			map.put("status", 200);
-			map.put("publicWork", publishWorkService.getPwDetails(sId,pwId));
+			map.put("publishWork", publishWorkService.getPwDetails(sId,pwId));
 		} catch (Exception e) {
 			handlException(map, e);
 		}
