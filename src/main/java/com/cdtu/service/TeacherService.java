@@ -84,15 +84,15 @@ public interface TeacherService {
 	 * @param publishWork
 	 * @return
 	 */
-	public Integer publishWork(PublishWork publishWork);
-	/**
+	public Integer publishWork(PublishWork publishWork,String tId);
+	/*
 	 *  查询发布的作业
 	 * @author LR
 	 * @param courseWapper
 	 * @param state
 	 * @return
 	 */
-	public Map<String,Object> showPublishWork(CourseWapper courseWappe);
+	//public Map<String,Object> showPublishWork(CourseWapper courseWappe);
 	/**
 	 * 填写作业评语
 	 * @author LR
@@ -166,6 +166,5 @@ public interface TeacherService {
 	 */
 	public void updataAvatar(String path, String username);
 	Integer PublishEstimatecId(PublishEstimate publishEstimate);
-	public Integer publishWorkcId(PublishWork publishWork);
 	
 }

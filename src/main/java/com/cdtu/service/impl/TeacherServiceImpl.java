@@ -170,17 +170,12 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public Integer publishWork(PublishWork publishWork) {
+	public Integer publishWork(PublishWork publishWork,String tId) {
 		if (publishWork != null) {
 			publishWork.setPwId(OAUtil.getId());
-			if (publishWork.getTscId() != null ) {
-				this.publishWorkMapper.insterBytscId(publishWork);
-				return 1;
-			}else{
-				publishWork.setCtId(publishWork.getId());
-				this.publishWorkMapper.insterByctId(publishWork);
-				return 1;
-			}
+			publishWork.setTscId(this.publishWorkMapper.selectTscid(publishWork.getcId(), tId));
+			this.publishWorkMapper.insterBycId(publishWork);
+			return 1;
 		} else {
 			return -1;
 		}
@@ -222,7 +217,7 @@ public class TeacherServiceImpl implements TeacherService {
 		}
 		
 	}
-
+/*
 	@Override
 	public Map<String, Object> showPublishWork(CourseWapper courseWapper) {
 		List<PublishWork> publishWorkLs=new ArrayList<PublishWork>();
@@ -291,7 +286,7 @@ public class TeacherServiceImpl implements TeacherService {
 		}
 		
 	}
-
+*/
 	@Override
 	public Integer addWorkRemark(Work work) {
 		if(work!=null){
@@ -397,19 +392,7 @@ public class TeacherServiceImpl implements TeacherService {
 		teacherMapper.updataAvatar(path, username);
 	}
 
-	public Integer publishWorkcId(PublishWork publishWork) {
-		publishWork.setPwId(OAUtil.getId());
-		if (publishWork.getcId()<100000) {
-			publishWork.setCtId(publishWork.getcId());
-			this.publishWorkMapper.insterByctId(publishWork);
-			return 1;
-		}else if(publishWork.getcId()>100000){
-			publishWork.setTscId(publishWork.getcId());
-			this.publishWorkMapper.insterBytscId(publishWork);
-			return 1;
-			}
-		return -1;
-	}
+	
 	/**
 	 * 发布评价
 	 * 
@@ -434,4 +417,5 @@ public class TeacherServiceImpl implements TeacherService {
 		}
 
 	}
+
 }

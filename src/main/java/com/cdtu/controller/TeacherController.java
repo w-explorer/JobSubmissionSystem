@@ -238,7 +238,9 @@ public class TeacherController {
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> publishWork(@RequestBody PublishWork publishWork) {
 		Map<String, Object> msg = new HashMap<String, Object>();
-		Integer status = teacherService.publishWorkcId(publishWork);
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		Integer status = teacherService.publishWork(publishWork,role.getUsername());
 		System.out.println(publishWork.getPwContent());
 		if (status == 1) {
 			msg.put("status", 200);

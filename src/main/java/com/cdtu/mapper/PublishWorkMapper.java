@@ -41,30 +41,49 @@ public interface PublishWorkMapper {
      * @author LR
      * @param publishWork
      */
-    void insterBytscId(PublishWork publishWork);
-    /**
-     * 通过ctId添加发布作业
-     * @author LR
-     * @param publishWork
-     */
-    void insterByctId(PublishWork publishWork);
-    /**
-     * 通过cId添加发布作业
-     * @author weiyuhang
-     * @param publishWork
-     */
     void insterBycId(PublishWork publishWork);
     /**
-     * 学生查询发布作业表通过cId
+     * 教师查找cId
      * @author LR
-     * @param sId
      * @param cId
-     * @param pwState
-     * @param start
-     * @param end
-     * @return
+     * @param tId
      */
-    List<PublishWork> selectStudentPublishWorkBycId(@Param("sId") String sId,@Param("cId") String cId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
+    Integer selectTscid(@Param("cId")String cId,@Param("tId")String tId);
+																	    /*
+																	     * 通过ctId添加发布作业
+																	     * @author LR
+																	     * @param publishWork
+																	     */
+																	    //void insterByctId(PublishWork publishWork);
+																	    /*
+																	     * 通过cId添加发布作业
+																	     * @author weiyuhang
+																	     * @param publishWork
+																	     */
+																	    //void insterBycId(PublishWork publishWork);
+																																    /*
+																																     * 学生查询发布作业表通过cId
+																																     * @author LR
+																																     * @param sId
+																																     * @param cId
+																																     * @param pwState
+																																     * @param start
+																																     * @param end
+																																     * @return
+																																     */
+																																    //List<PublishWork> selectStudentPublishWorkBycId(@Param("sId") String sId,@Param("cId") String cId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
+																																   
+																																    /*
+																																     * * 学生查询发布作业表通过s_id和ct_id
+																																     * @author LR
+																																     * @param sId
+																																     * @param ctId
+																																     * @param pwState
+																																     * @param start
+																																     * @param end
+																																     * @return
+																																     */
+																																   // List<PublishWork> selectStudentPublishWorkByctId(@Param("sId") String sId,@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
     /**
      * 学生查询发布作业表通过s_id和tsc_id
      * @author LR
@@ -75,18 +94,7 @@ public interface PublishWorkMapper {
      * @param end
      * @return
      */
-    List<PublishWork> selectStudentPublishWorkBytscId(@Param("sId") String sId,@Param("tscId") Integer tscId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
-    /**
-     * * 学生查询发布作业表通过s_id和ct_id
-     * @author LR
-     * @param sId
-     * @param ctId
-     * @param pwState
-     * @param start
-     * @param end
-     * @return
-     */
-    List<PublishWork> selectStudentPublishWorkByctId(@Param("sId") String sId,@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
+    List<PublishWork> selectStudentPublishWorkBycId(@Param("sId") String sId,@Param("cId") String cId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
     /**
      * 学生查询发布作业表通过cId数量
      * @author LR
@@ -107,26 +115,6 @@ public interface PublishWorkMapper {
      */
     List<PublishWork> selectTeacherPublishWorkBycId(@Param("tId") String tId,@Param("cId") String cId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
     /**
-     * 教师查询发布作业表通过s_id和tsc_id
-     * @author LR
-     * @param tscId
-     * @param pwState
-     * @param start
-     * @param end
-     * @return
-     */
-    List<PublishWork> selectTeacherPublishWorkBytscId(@Param("tscId") Integer tscId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
-    /**
-     * 教师查询发布作业表通过s_id和ct_id
-     * @author LR
-     * @param ctId
-     * @param pwState
-     * @param start
-     * @param end
-     * @return
-     */
-    List<PublishWork> selectTeacherPublishWorkByctId(@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
-    /**
      *  教师查询发布作业表通过cId数量
      * @author LR
      * @param tId
@@ -134,25 +122,46 @@ public interface PublishWorkMapper {
      * @param pwState
      * @return
      */
-    Integer selectTeacherPublishWorkCount(@Param("tId") String tId,@Param("cId") String cId,@Param("pwState") Boolean pwState);
-    /**
-     * 教师查询发布作业的数量通过tsc_id
-     * @author LR
-     * @param tId
-     * @param tscId
-     * @param pwState
-     * @return
-     */
-    Integer selectCountBypwStateBytscId(@Param("tscId") Integer tscId,@Param("pwState") Boolean pwState);
-    /**
-     * 教师查询发布作业的数量通过ct_id
-     * @author LR
-     * @param tId
-     * @param ctId
-     * @param pwState
-     * @return
-     */
-    Integer selectCountBypwStateByctId(@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState);
+   Integer selectTeacherPublishWorkCount(@Param("tId") String tId,@Param("cId") String cId,@Param("pwState") Boolean pwState);
+																																    /*
+																																     * 教师查询发布作业表通过s_id和tsc_id
+																																     * @author LR
+																																     * @param tscId
+																																     * @param pwState
+																																     * @param start
+																																     * @param end
+																																     * @return
+																																     */
+																																    //List<PublishWork> selectTeacherPublishWorkBycId(@Param("cId") Integer cId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
+																																    /*
+																																     * 教师查询发布作业表通过s_id和ct_id
+																																     * @author LR
+																																     * @param ctId
+																																     * @param pwState
+																																     * @param start
+																																     * @param end
+																																     * @return
+																																     */
+																																    //List<PublishWork> selectTeacherPublishWorkByctId(@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
+																																    
+																																    /*
+																																     * 教师查询发布作业的数量通过tsc_id
+																																     * @author LR
+																																     * @param tId
+																																     * @param tscId
+																																     * @param pwState
+																																     * @return
+																																     */
+																																    //Integer selectCountBypwStateBytscId(@Param("tscId") Integer tscId,@Param("pwState") Boolean pwState);
+																																    /*
+																																     * 教师查询发布作业的数量通过ct_id（失效）
+																																     * @author LR
+																																     * @param tId
+																																     * @param ctId
+																																     * @param pwState
+																																     * @return
+																																     */
+																																    // Integer selectCountBypwStateByctId(@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState);
     /**
      * 查询发布作业名
      * @author weiyuhang

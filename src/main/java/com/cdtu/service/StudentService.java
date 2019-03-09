@@ -43,13 +43,13 @@ public interface StudentService {
 	 * @return
 	 */
 	public Integer submitEvaluation(Estimate estimate);
-	/**
+	/*
 	 * 学生查询发布作业
 	 * @author LR
 	 * @param studentSelectCourse
 	 * @return
 	 */
-	public Map<String, Object> selectPublishWork(StudentSelectCourse studentSelectCourse);
+	//public Map<String, Object> selectPublishWork(StudentSelectCourse studentSelectCourse);
 	/**
 	 * 提交作业
 	 * @author LR

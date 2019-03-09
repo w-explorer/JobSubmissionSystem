@@ -126,7 +126,7 @@ public class StudentServiceImpl implements StudentService {
 		}
 			
 	}
-
+/*
 	@Override
 	public Map<String, Object> selectPublishWork(StudentSelectCourse studentSelectCourse) {
 		List<PublishWork> publishWorkLs = new ArrayList<PublishWork>();
@@ -223,7 +223,7 @@ public class StudentServiceImpl implements StudentService {
 			return publishWorks;
 		}
 	}
-
+*/
 	@Override
 	public Integer submitWork(Work work) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

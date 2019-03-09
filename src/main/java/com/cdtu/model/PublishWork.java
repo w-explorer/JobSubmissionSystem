@@ -5,7 +5,7 @@ public class PublishWork {
 	private Integer tscId;
 	private Integer ctId;
 	private Integer id;
-    private Integer cId;
+    private String cId;
 	private Boolean pwState;
 	private String pwEnd;
 	private String pwContent;
@@ -15,6 +15,15 @@ public class PublishWork {
 	private Boolean wBooleanState;
 	private String pwStringState;
 	private Boolean pwBooleanState;
+	private Integer pwScore;
+	public Integer getPwScore() {
+		return pwScore;
+	}
+
+	public void setPwScore(Integer pwScore) {
+		this.pwScore = pwScore;
+	}
+
 	public String getPwContent() {
 		return pwContent;
 	}
@@ -118,11 +127,13 @@ public class PublishWork {
 	public void setPwBooleanState(Boolean pwBooleanState) {
 		this.pwBooleanState = pwBooleanState;
 	}
-	public Integer getcId() {
+
+	public String getcId() {
 		return cId;
 	}
 
-	public void setcId(Integer cId) {
+	public void setcId(String cId) {
 		this.cId = cId;
 	}
+
 }
