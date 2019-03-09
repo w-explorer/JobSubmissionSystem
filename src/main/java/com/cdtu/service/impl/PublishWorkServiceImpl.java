@@ -48,5 +48,14 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 		// TODO Auto-generated method stub
 		return publishWorkMapper.getPwDetails(sId,pwId);
 	}
+	@Override
+	public List<Map<String, Object>> getTFiles(String sId, String pwId) {
+		return publishWorkMapper.getTFiles(sId,pwId);
+	}
+	@Override
+	public List<Map<String, Object>> getSFiles(String sId, String pwId) {
+		// TODO Auto-generated method stub
+		return publishWorkMapper.getSFiles(sId,pwId);
+	}
 
 }

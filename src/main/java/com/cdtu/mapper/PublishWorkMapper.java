@@ -183,4 +183,8 @@ public interface PublishWorkMapper {
 
 	List<Map<String, Object>> getPwDetails(@Param("sId")String sId, @Param("pwId")String pwId);
 
+	List<Map<String, Object>> getTFiles(@Param("sId")String sId, @Param("pwId")String pwId);
+
+	List<Map<String, Object>> getSFiles(@Param("sId")String sId, @Param("pwId")String pwId);
+
 }
