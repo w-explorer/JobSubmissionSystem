@@ -396,8 +396,4 @@ public class TeacherServiceImpl implements TeacherService {
 	public void updataAvatar(String path, String username) {
 		teacherMapper.updataAvatar(path, username);
 	}
-
-	
-
-	
 }
