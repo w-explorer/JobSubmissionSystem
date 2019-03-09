@@ -165,7 +165,6 @@ public interface TeacherService {
 	 * @param username
 	 */
 	public void updataAvatar(String path, String username);
-	Integer PublishEstimatecId(PublishEstimate publishEstimate);
-	public Integer publishWorkcId(PublishWork publishWork);
+	
 	
 }
