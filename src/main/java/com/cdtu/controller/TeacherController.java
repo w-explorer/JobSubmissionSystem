@@ -211,7 +211,7 @@ public class TeacherController {
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String, Object> publishEstimate(@RequestBody PublishEstimate publishEstimate) {
 		Map<String, Object> msg = new HashMap<String, Object>();
-		Integer status = teacherService.PublishEstimatecId(publishEstimate);
+		Integer status = teacherService.PublishEstimate(publishEstimate);
 		if (status == 1) {
 			msg.put("status", 200);
 		} else {
@@ -241,6 +241,8 @@ public class TeacherController {
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		Integer status = teacherService.publishWork(publishWork,role.getUsername());
+
+
 		System.out.println(publishWork.getPwContent());
 		if (status == 1) {
 			msg.put("status", 200);

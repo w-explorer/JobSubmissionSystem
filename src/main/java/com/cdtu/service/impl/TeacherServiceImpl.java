@@ -392,30 +392,4 @@ public class TeacherServiceImpl implements TeacherService {
 		teacherMapper.updataAvatar(path, username);
 	}
 
-	
-	/**
-	 * 发布评价
-	 * 
-	 * @author weiyuhang
-	 */
-	@Override
-	public Integer PublishEstimatecId(PublishEstimate publishEstimate) {
-		if (publishEstimate != null) {
-			publishEstimate.setEpId(OAUtil.getId());
-			if (publishEstimate.getcId()>10000) {
-				publishEstimate.setTscId(publishEstimate.getcId());
-				this.publishEstimateMapper.insertByTscId(publishEstimate);
-				return 1;
-			}
-			else{
-				publishEstimate.setCtId(publishEstimate.getcId());
-				this.publishEstimateMapper.insertByCtId(publishEstimate);
-				return 1;
-			}
-		} else {
-			return -1;
-		}
-
-	}
-
 }
