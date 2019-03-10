@@ -9,4 +9,8 @@ public interface PublishWorkService {
 
 	List<Map<String,Object>> getPwDetails(String sId, String pwId);
 
+	List<Map<String,Object>> getTFiles(String sId, String pwId);
+
+	List<Map<String,Object>> getSFiles(String sId, String pwId);
+
 }

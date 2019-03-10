@@ -85,7 +85,7 @@ public class WorkServiseImpl implements WorkService {
 				map.put("wBooleanState",false);
 			}
 				map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));
-			if(((int)map.get("pwState"))==0){
+			if(!(boolean) map.get("pwState")){
 				map.put("pwStringState", "已结束");
 				map.put("pwBooleanState", false);
 			}
