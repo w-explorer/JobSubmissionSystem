@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.cdtu.service.ClassCreateService;
+import com.cdtu.service.CourseService;
 import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.util.MaxPage;
 
 @Controller
 @RequestMapping(value = "/course")
 public class CourseController {
-	private @Resource(name = "ccService") ClassCreateService ccService;
+	private @Resource(name = "courseService") CourseService courseService;
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
-	
+
 	/**
 	 * 查询课堂详情
 	 *
@@ -29,19 +29,19 @@ public class CourseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/details.do")
-	@RequiresRoles(value = {"student", "teacher"}, logical = Logical.OR)
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public Map<String, Object> doDetails(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			int cId = Integer.parseInt((String) paramsMap.get("cId"));
-			map.putAll(ccService.getDetails(cId));
+			String cId = (String) paramsMap.get("cId");
+			map.putAll(courseService.getDetails(cId));// 未进行空值校验，后期斟酌
 			map.put("status", 200);
 		} catch (Exception e) {
-			this.handlException(map, e);
+			handlException(map, e);
 		}
 		return map;
 	}
-	
+
 	/**
 	 * 查看课堂成员
 	 *
@@ -49,25 +49,25 @@ public class CourseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/queryStudents.do")
-	@RequiresRoles(value = {"student", "teacher"}, logical = Logical.OR)
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public Map<String, Object> doQueryStudents(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			int cId = Integer.parseInt((String) paramsMap.get("cId"));
+			String cId = (String) paramsMap.get("cId");
 			int page = (int) paramsMap.get("page");
 			int stusNum = sscService.countStudents(cId);
+			map.put("stusNum", stusNum);
 			map.put("students", sscService.getStudents(cId, page));
 			map.put("pageNum", MaxPage.getMaxPage(stusNum, 30));
-			map.put("stusNum", stusNum);
 			map.put("status", 200);
 		} catch (Exception e) {
-			this.handlException(map, e);
+			handlException(map, e);
 		}
 		return map;
 	}
-	
+
 	/**
-	 * 自定义异常处理
+	 * 统一异常处理
 	 *
 	 * @author 李红兵
 	 */
