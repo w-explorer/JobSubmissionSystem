@@ -154,7 +154,6 @@ public class TeacherServiceImpl implements TeacherService {
 	public Integer PublishEstimate(PublishEstimate publishEstimate,String tId) {
 		if (publishEstimate != null) {
 			publishEstimate.setEpId(OAUtil.getId());
-			
 			publishEstimate.setTscId(this.publishWorkMapper.selectTscid(publishEstimate.getcId(), tId));
 				this.publishEstimateMapper.insertByTscId(publishEstimate);
 				return 1;
