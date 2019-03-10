@@ -9,6 +9,7 @@
     <result column="pw_end" property="pwEnd" jdbcType="DATE" />
     <result column="pw_state" property="pwState" jdbcType="BIT" />
     <result column="pw_name" property="pwName" jdbcType="LONGVARCHAR" />
+    <result column="pw_content" property="pwContent" jdbcType="CHAR" />
     <result column="activityImgSrc" property="activityImgSrc" jdbcType="CHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.cdtu.model.PublishWork" extends="BaseResultMap" >
@@ -275,12 +276,12 @@
   <!-- 添加含有tscid的发布作业 by:黎睿-->
 	<insert id="insterBycId" parameterType="com.cdtu.model.PublishWork">
 		INSERT INTO
-		publish_work(pw_id,tsc_id,pw_name,pw_end,pw_state,pw_content)
-		VALUES(#{pwId},#{tscId},#{pwName},#{pwEnd},#{pwState},#{pwContent})
+		publish_work(pw_id,tsc_id,pw_name,pw_end,pw_state,pw_content,pw_score)
+		VALUES(#{pwId},#{tscId},#{pwName},#{pwEnd},#{pwState},#{pwContent},#{pwScore})
 	</insert>
   <!-- 教师查找tsc_id by:黎睿-->
-	<insert id="selecttscid" parameterType="java.lang.Integer">
-		SELECT DISTINCT 
+	<select id="selectTscid" parameterType="String" resultType="java.lang.Integer">
+		SELECT 
 		teacher_select_course.tsc_id
 		FROM teacher,teacher_select_course,course
 		WHERE
@@ -290,7 +291,7 @@
 		AND
 		teacher.t_id=#{tId}
 		AND course.c_id=#{cId}
-	</insert>
+	</select>
 																														<!-- 添加含有ctid的发布作业 by:黎睿
 																														<insert id="insterByctId" parameterType="com.cdtu.model.PublishWork">
 																															INSERT INTO

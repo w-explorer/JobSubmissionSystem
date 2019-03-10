@@ -7,12 +7,14 @@ public class PublishEstimate {
 
     private Integer ctId;
     private Integer id;
-    private Integer cId;
-    public Integer getcId() {
+    private String cId;
+    
+
+	public String getcId() {
 		return cId;
 	}
 
-	public void setcId(Integer cId) {
+	public void setcId(String cId) {
 		this.cId = cId;
 	}
 
