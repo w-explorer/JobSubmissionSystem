@@ -1,5 +1,7 @@
 package com.cdtu.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +43,20 @@ public class WorkServiseImpl implements WorkService {
 			map.put("submitted", "1".equals(map.get("submitted").toString()));
 		});
 		return maps;
+	}
+
+	/**
+	 * 统计近多少天的作业分
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public List<Map<String, Object>> getScoreInLastDays(String sId, String cId, int days) {
+		Date curDate = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String start = formatter.format(curDate.getTime() - days * 24 * 60 * 60 * 1000);
+		String end = formatter.format(curDate);
+		return workMapper.selByDateSection(sId, cId, start, end);
 	}
 
 	@Override

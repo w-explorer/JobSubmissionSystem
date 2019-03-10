@@ -19,6 +19,12 @@ public interface WorkMapper {
 	public List<Map<String, Object>> selAllWorks(@Param("sId") String sId, @Param("cId") String cId);
 
 	/**
+	 * @author 李红兵
+	 */
+	public List<Map<String, Object>> selByDateSection(@Param("sId") String sId, @Param("cId") String cId,
+			@Param("start") String start, @Param("end") String end);
+
+	/**
 	 * 添加作业
 	 *
 	 * @author LR
@@ -81,7 +87,7 @@ public interface WorkMapper {
 
 	/**
 	 * 模糊查询作业名字
-	 * 
+	 *
 	 * @param sId
 	 * @param cId
 	 * @return

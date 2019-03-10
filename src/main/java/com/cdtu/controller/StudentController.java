@@ -145,6 +145,28 @@ public class StudentController {
 	}
 
 	/**
+	 * 学生统计近几天内的某门课程的作业分数
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequiresRoles(value = { "student" })
+	@RequestMapping(value = "/statisticScore.do")
+	public Map<String, Object> doStatisticScore(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			String cId = (String) paramsMap.get("cId");
+			int days = Integer.parseInt((String) paramsMap.get("days"));
+			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+			map.put("scores", workService.getScoreInLastDays(sId, cId, days));
+			map.put("status", 200);
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
+
+	/**
 	 * 统一异常处理
 	 *
 	 * @author 李红兵
@@ -338,7 +360,7 @@ public class StudentController {
 
 	/**
 	 * 查询班级学生
-	 * 
+	 *
 	 * @author weiyuhang
 	 * @param coursewapper
 	 * @return
@@ -384,7 +406,7 @@ public class StudentController {
 
 	/**
 	 * 学生按作业名字查询作业
-	 * 
+	 *
 	 * @author wencheng
 	 * @param paramsMap
 	 * @return
@@ -407,7 +429,7 @@ public class StudentController {
 
 	/**
 	 * 得到作业详情
-	 * 
+	 *
 	 * @param paramsMap
 	 * @return
 	 */
