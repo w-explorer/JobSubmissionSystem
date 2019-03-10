@@ -16,6 +16,16 @@ public class PublishWork {
 	private String pwStringState;
 	private Boolean pwBooleanState;
 	private Integer pwScore;
+	private Integer wScore;
+	
+	public Integer getwScore() {
+		return wScore;
+	}
+
+	public void setwScore(Integer wScore) {
+		this.wScore = wScore;
+	}
+
 	public Integer getPwScore() {
 		return pwScore;
 	}

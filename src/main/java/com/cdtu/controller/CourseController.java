@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cdtu.service.CourseService;
+import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.util.MaxPage;
 
@@ -21,6 +22,7 @@ import com.cdtu.util.MaxPage;
 public class CourseController {
 	private @Resource(name = "courseService") CourseService courseService;
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
+	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 
 	/**
 	 * 查询课堂详情
@@ -34,7 +36,14 @@ public class CourseController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			String cId = (String) paramsMap.get("cId");
-			map.putAll(courseService.getDetails(cId));// 未进行空值校验，后期斟酌
+			map.putAll(courseService.getDetails(cId));// 未进行空值校验，后期斟酌s
+			int stusNum = sscService.countStudents(cId);
+			map.put("stusNum", stusNum);//学生数量
+			int pubWNum = publishWorkService.countPublishWorks(cId);
+			map.put("pubWNum", pubWNum);//活动数量
+			int pubENum =publishWorkService.countPublishEstimates(cId);
+			map.put("pubENum", pubENum);//活动数量
+			
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);

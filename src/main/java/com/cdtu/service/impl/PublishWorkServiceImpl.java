@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.cdtu.mapper.PublishWorkMapper;
 import com.cdtu.model.PublishWork;
 import com.cdtu.service.PublishWorkService;
+import com.cdtu.util.FormatDateToString;
 
 @Service("publishWorkService")
 public class PublishWorkServiceImpl implements PublishWorkService {
@@ -46,7 +47,11 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 	@Override
 	public List<Map<String, Object>> getPwDetails(String sId, String pwId) {
 		// TODO Auto-generated method stub
-		return publishWorkMapper.getPwDetails(sId,pwId);
+		List<Map<String,Object>> pwDetails = publishWorkMapper.getPwDetails(sId,pwId);
+		for (Map<String, Object> map : pwDetails) {
+			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));
+		}
+		return pwDetails;
 	}
 	@Override
 	public List<Map<String, Object>> getTFiles(String sId, String pwId) {
@@ -56,6 +61,16 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 	public List<Map<String, Object>> getSFiles(String sId, String pwId) {
 		// TODO Auto-generated method stub
 		return publishWorkMapper.getSFiles(sId,pwId);
+	}
+	@Override
+	public int countPublishWorks(String cId) {
+		// TODO Auto-generated method stub
+		return publishWorkMapper.countPublishWorks(cId);
+	}
+	@Override
+	public int countPublishEstimates(String cId) {
+		// TODO Auto-generated method stub
+		return publishWorkMapper.countPublishEstimates(cId);
 	}
 
 }
