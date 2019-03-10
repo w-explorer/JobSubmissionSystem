@@ -151,18 +151,13 @@ public class TeacherServiceImpl implements TeacherService {
 	 * @author LR
 	 */
 	@Override
-	public Integer PublishEstimate(PublishEstimate publishEstimate) {
+	public Integer PublishEstimate(PublishEstimate publishEstimate,String tId) {
 		if (publishEstimate != null) {
 			publishEstimate.setEpId(OAUtil.getId());
-			if (publishEstimate.getTscId() != null ) {
+			publishEstimate.setTscId(this.publishWorkMapper.selectTscid(publishEstimate.getcId(), tId));
 				this.publishEstimateMapper.insertByTscId(publishEstimate);
 				return 1;
-			}
-			else{
-				publishEstimate.setCtId(publishEstimate.getId());
-				this.publishEstimateMapper.insertByCtId(publishEstimate);
-				return 1;
-			}
+			
 		} else {
 			return -1;
 		}
@@ -173,6 +168,7 @@ public class TeacherServiceImpl implements TeacherService {
 	public Integer publishWork(PublishWork publishWork,String tId) {
 		if (publishWork != null) {
 			publishWork.setPwId(OAUtil.getId());
+			System.out.println(publishWork.getcId()+"                            "+tId);
 			publishWork.setTscId(this.publishWorkMapper.selectTscid(publishWork.getcId(), tId));
 			this.publishWorkMapper.insterBycId(publishWork);
 			return 1;

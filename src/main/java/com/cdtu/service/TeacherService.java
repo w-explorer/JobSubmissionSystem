@@ -75,7 +75,7 @@ public interface TeacherService {
 	 * @param publishEstimate
 	 * @return
 	 */
-	public Integer PublishEstimate(PublishEstimate publishEstimate);
+	public Integer PublishEstimate(PublishEstimate publishEstimate,String tId);
 
 	/**
 	 * 发布作业
