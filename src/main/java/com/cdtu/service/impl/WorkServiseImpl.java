@@ -45,19 +45,19 @@ public class WorkServiseImpl implements WorkService {
 	}
 
 	@Override
-	public List<Map<String, Object>> fuzzySearchWorkBySidAndCid(String sId, int cId,String pwName) {
+	public List<Map<String, Object>> fuzzySearchWorkBySidAndCid(String sId, String cId,String pwName) {
 		List<Map<String,Object>> maps =workMapper.fuzzySearchWorkBySidAndCid(sId,cId,pwName);
 		return maps;
 	}
 
 	@Override
-	public List<Map<String, Object>> fuzzySearchWorkByTidAndCid(String tId, int cId, String pwName) {
+	public List<Map<String, Object>> fuzzySearchWorkByTidAndCid(String tId, String cId, String pwName) {
 		List<Map<String,Object>> maps =workMapper.fuzzySearchWorkByTidAndCid(tId,cId,pwName);
 		return maps;
 	}
 
 	@Override
-	public List<Map<String, Object>> SearchPwByPwName(String tId, int cId, String pwName) {
+	public List<Map<String, Object>> SearchPwByPwName(String tId, String cId, String pwName) {
 		List<Map<String,Object>> maps =workMapper.SearchPwByPwName(tId,cId,pwName);
 		for (Map<String, Object> map : maps) {
 			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));//将时间秒变成字符串形式
@@ -74,7 +74,7 @@ public class WorkServiseImpl implements WorkService {
 	}
 
 	@Override
-	public List<Map<String, Object>> SsearchPwByPwName(String sId, int cId, String pwName) {
+	public List<Map<String, Object>> SsearchPwByPwName(String sId, String cId, String pwName) {
 		List<Map<String,Object>> maps =workMapper.SsearchPwByPwName(sId,cId,pwName);
 		for (Map<String, Object> map : maps) {
 			if(this.workMapper.selectWorkCount(sId, (String) map.get("pwId"))!=0){

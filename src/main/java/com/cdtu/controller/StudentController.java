@@ -367,7 +367,7 @@ public class StudentController {
 	@RequiresRoles({"student"})
 	public @ResponseBody Map<String,Object> fuzzySearchWork(@RequestBody Map<String, Object> paramsMap){
 		Map<String, Object> map = new HashMap<String, Object>();
-		int cId = Integer.parseInt((String) paramsMap.get("cId"));
+		String cId =  (String) paramsMap.get("cId");
 		String pwName = (String) paramsMap.get("pwName");
 		String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		try {
@@ -389,7 +389,7 @@ public class StudentController {
 	@RequiresRoles({"student"})
 	public @ResponseBody Map<String,Object> SearchPwByPwName(@RequestBody Map<String,Object> paramsMap){
 		Map<String, Object> map = new HashMap<String, Object>();
-		int cId = Integer.parseInt((String) paramsMap.get("cId"));
+		String cId =  (String) paramsMap.get("cId");
 		String pwName = (String) paramsMap.get("pwName");
 		String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		try {

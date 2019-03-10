@@ -31,6 +31,7 @@ import com.cdtu.model.PublishEstimate;
 import com.cdtu.model.PublishWork;
 import com.cdtu.model.Role;
 import com.cdtu.model.Work;
+import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.service.WorkService;
@@ -42,6 +43,7 @@ public class TeacherController {
 	private @Resource(name = "workService") WorkService workService;
 	private @Resource(name = "teacherService") TeacherService teacherService;
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
+	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 
 	/**
 	 * 老师统计作业提交情况，参数是发布作业码
@@ -464,7 +466,7 @@ public class TeacherController {
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String,Object> fuzzySearchWork(@RequestBody Map<String, Object> paramsMap){
 		Map<String, Object> map = new HashMap<String, Object>();
-		int cId = Integer.parseInt((String) paramsMap.get("cId"));
+		String cId = (String) paramsMap.get("cId");
 		String pwName = (String) paramsMap.get("pwName");
 		String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		try {
@@ -485,7 +487,7 @@ public class TeacherController {
 	@RequiresRoles({"teacher"})
 	public @ResponseBody Map<String,Object> SearchPwByPwName(@RequestBody Map<String,Object> paramsMap){
 		Map<String, Object> map = new HashMap<String, Object>();
-		int cId = Integer.parseInt((String) paramsMap.get("cId"));
+		String cId = (String) paramsMap.get("cId");
 		String pwName = (String) paramsMap.get("pwName");
 		String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		try {
@@ -516,6 +518,28 @@ public class TeacherController {
 			}	
 		
 		
+		return map;
+	}
+	
+	/**
+	 * 得到作业详情
+	 * @param paramsMap
+	 * @return
+	 */
+	@RequestMapping(value="getPwDetails.do")
+	@RequiresRoles({"teacher"})
+	public @ResponseBody Map<String,Object> PwDetails(@RequestBody Map<String,Object> paramsMap){
+		Map<String, Object> map = new HashMap<String, Object>();
+		String pwId = (String) paramsMap.get("pwId");
+		String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		try {
+			map.put("status", 200);
+			map.put("publishWork", publishWorkService.getPwDetails(tId,pwId));
+			map.put("teacherFiles", publishWorkService.getTFiles(tId,pwId));
+			map.put("studentFiles", publishWorkService.getSFiles(tId,pwId));
+		} catch (Exception e) {
+			handlException(map, e);
+		}
 		return map;
 	}
 }
