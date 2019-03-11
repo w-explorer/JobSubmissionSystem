@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Param;
 
 import com.cdtu.model.CourseStudent;
 import com.cdtu.model.CourseWapper;
-import com.cdtu.model.Student;
 
 public interface StudentSelectCourseMapper {
 	/**
