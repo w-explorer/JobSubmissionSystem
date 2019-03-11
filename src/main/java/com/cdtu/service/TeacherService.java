@@ -84,7 +84,7 @@ public interface TeacherService {
 	 * @param publishWork
 	 * @return
 	 */
-	public Integer publishWork(PublishWork publishWork,String tId);
+	public String publishWork(PublishWork publishWork,String tId);
 	/*
 	 *  查询发布的作业
 	 * @author LR
@@ -160,6 +160,7 @@ public interface TeacherService {
 	 * @param username
 	 */
 	public void updataAvatar(String path, String username);
+	public String updatepublishWork(PublishWork publishWork);
 
 	
 }

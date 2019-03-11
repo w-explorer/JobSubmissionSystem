@@ -250,21 +250,15 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> publishWork(@RequestBody PublishWork publishWork) {
 		Map<String, Object> msg = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
-		Role role = (Role) subject.getPrincipal();
-		Integer status = teacherService.publishWork(publishWork, role.getUsername());
-
-		System.out.println(publishWork.getPwContent());
-		if (status == 1)
+		try{
+			Role role = (Role) subject.getPrincipal();
+			String  ms= teacherService.publishWork(publishWork, role.getUsername());
+			System.out.println(publishWork.getPwContent());
 			msg.put("status", 200);
-		else {
-			if (status == -1) {
-				msg.put("status", -1);
-				msg.put("msg", "用户为空");
-			}
-			if (status == 0) {
-				msg.put("status", 0);
-				msg.put("msg", "错误信息");
-			}
+			msg.put("pwId", ms);
+		}catch (Exception e) {
+			msg.put("status", 0);
+			msg.put("msg", "错误信息");
 		}
 		return msg;
 	}
@@ -553,5 +547,28 @@ public class TeacherController {
 		}
 		return map;
 	}
-	
+	/**
+	 * 老师发布作业
+	 *
+	 * @author LR
+	 * @param publishWork
+	 * @return
+	 */
+	@RequestMapping(value = "updatepublishWork.do", method = RequestMethod.POST)
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> updatepublishWork(@RequestBody PublishWork publishWork) {
+		Map<String, Object> map = new HashMap<>();
+		Subject subject = SecurityUtils.getSubject();
+	try{
+		Role role = (Role) subject.getPrincipal();
+		 teacherService.updatepublishWork(publishWork);
+		System.out.println(publishWork.getPwContent());
+		map.put("status", 200);
+		
+	}catch (Exception e) {
+		map.put("status", 0);
+		map.put("msg", "错误信息");
+	}
+		return map;
+	}
 }

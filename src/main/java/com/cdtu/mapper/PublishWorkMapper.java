@@ -190,5 +190,6 @@ public interface PublishWorkMapper {
 	int countPublishWorks(@Param("cId")String cId);
 
 	int countPublishEstimates(@Param("cId")String cId);
+	 void  updatePublishWork(PublishWork publishwork);
 
 }
