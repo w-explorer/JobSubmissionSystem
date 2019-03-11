@@ -153,12 +153,7 @@ public interface TeacherService {
 	 * @return
 	 */
 	public Map<String, Object> demonPublishWork(CourseWapper courseWapper,String tId);
-	/**
-	 * 分页该课程查找学生
-	 * @param CourseStudent
-	 * @return
-	 */
-	public Map<String, Object> selectCourseStudents(CourseWapper courseWapper);
+	
 	/**
 	 * 老师修改头像
 	 * @param path

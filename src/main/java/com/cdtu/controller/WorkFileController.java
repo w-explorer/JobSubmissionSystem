@@ -1,8 +1,15 @@
 package com.cdtu.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.cdtu.model.Role;
+import com.cdtu.model.Work;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
 
@@ -121,6 +129,7 @@ public class WorkFileController {
 					File file=new File(filePath);
 					String filename =tfAdd.substring(tfAdd.lastIndexOf("\\") + 1);	
 					System.out.println(filename);
+                    response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
 					DownloadFile.downloadFile(file, filename, response);
 				}else{
 					String sfAdd=(String) map.get("sfAdd");
@@ -137,6 +146,46 @@ public class WorkFileController {
 	     map.put("status", 200);
 		return map;
 	}
-	
-	
+//	/**
+//	 * @author weiyuhang
+//	 * @param work
+//	 * @param response
+//	 * @throws IOException
+//	 */
+//	@RequestMapping(value = "downLoadAll.do")
+//	@RequiresRoles({ "teacher" })
+//	@ResponseBody
+//	public void downloadAll(@RequestBody Work work, HttpServletResponse response) throws IOException {
+//
+//		// 需要压缩的文件
+//		// 压缩后的文件
+//		String resourcesName = teacherService.selectPwIdname(work.getPwId()) + ".zip";
+//		ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream("D:/" + resourcesName));
+//		InputStream input = null;
+//
+//		for (String sId : work.getsIds()) {
+//			Work newWork = teacherService.selectStudentWork(sId, work.getPwId());
+//			File file = new File(newWork.getwAddr());
+//			input = new FileInputStream(file);
+//			zipOut.putNextEntry(new ZipEntry(sId + "_" + teacherService.selectStudentName(sId) + "_" + file.getName()));
+//			int temp = 0;
+//			while ((temp = input.read()) != -1)
+//				zipOut.write(temp);
+//			zipOut.closeEntry();
+//			input.close();
+//		}
+//		zipOut.close();
+//		File file = new File("D:/" + resourcesName);
+//		DownloadFile.downloadFile(file, resourcesName, response);
+//		 Path path=Paths.get(file.getName());
+//		 response.setContentType(MediaType.APPLICATION_OCTET_STREAM.toString());
+//		 response.setHeader("Content-Disposition", "attachment; filename=" +
+//		 URLEncoder.encode(resourcesName, "UTF-8"));
+//		 try {
+//		 Files.copy(path, response.getOutputStream());
+//		 } catch (IOException ex) {
+//		 }
+//		 return new
+//		 ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),headers,HttpStatus.CREATED);
+//	}
 }
