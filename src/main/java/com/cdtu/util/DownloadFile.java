@@ -16,10 +16,10 @@ import sun.misc.BASE64Encoder;
 public class DownloadFile {
 	public static void downloadFile(File file, String fileName, HttpServletResponse response,
 			HttpServletRequest request) {
-		// response.setContentType("application/octet-stream");  
-		//获得请求头中的User-Agent
+		// response.setContentType("application/octet-stream");
+		// 获得请求头中的User-Agent
 		String agent = request.getHeader("User-Agent");
-		//根据不同浏览器进行不同的编码
+		// 根据不同浏览器进行不同的编码
 		String fileNameEncoder = "";
 		try {
 			if (agent.contains("MSIE")) {
@@ -30,10 +30,9 @@ public class DownloadFile {
 				// 火狐浏览器
 				BASE64Encoder base64Encoder = new BASE64Encoder();
 				fileNameEncoder = "=?utf-8?B?" + base64Encoder.encode(fileName.getBytes("utf-8")) + "?=";
-			} else {
+			} else
 				// 其它浏览器
 				fileNameEncoder = URLEncoder.encode(fileName, "utf-8");
-			}
 
 			// 以流的形式下载文件。
 			BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file.getPath()));
@@ -44,8 +43,8 @@ public class DownloadFile {
 			response.reset();
 			OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
 			response.setContentType("application/octet-stream");
-			//告诉浏览器不解析文件
-			response.setHeader("Content-Disposition", "attachment;filename="+fileNameEncoder); 
+			// 告诉浏览器不解析文件
+			response.setHeader("Content-Disposition", "attachment;filename=" + fileNameEncoder);
 			toClient.write(buffer);
 			toClient.flush();
 			toClient.close();
