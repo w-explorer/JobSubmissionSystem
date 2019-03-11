@@ -72,5 +72,15 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 		// TODO Auto-generated method stub
 		return publishWorkMapper.countPublishEstimates(cId);
 	}
+	@Override
+	public List<Map<String, Object>> getTFilesImages(String sId, String pwId) {
+		// TODO Auto-generated method stub
+		return publishWorkMapper.getTFilesImages(sId,pwId);
+	}
+	@Override
+	public List<Map<String, Object>> getSFilesImages(String sId, String pwId) {
+		// TODO Auto-generated method stub
+		return publishWorkMapper.getSFilesImages(sId,pwId);
+	}
 
 }

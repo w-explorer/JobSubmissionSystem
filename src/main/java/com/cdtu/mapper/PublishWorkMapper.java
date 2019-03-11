@@ -191,4 +191,8 @@ public interface PublishWorkMapper {
 
 	int countPublishEstimates(@Param("cId")String cId);
 
+	List<Map<String, Object>> getTFilesImages(@Param("sId")String sId, @Param("pwId")String pwId);
+
+	List<Map<String, Object>> getSFilesImages(@Param("sId")String sId, @Param("pwId")String pwId);
+
 }
