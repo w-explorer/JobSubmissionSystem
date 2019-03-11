@@ -213,7 +213,7 @@
 		WORK(w_id,pw_id,s_id)
 		VALUES(#{wId},#{pwId},#{sId})
 	</insert>
-<select id="selectwId" parameterType="String">
+<select id="selectwId" parameterType="String" resultType="String">
 select work.w_id AS wId 
 from work
 where s_id=#{sId} and pw_id=#{pwId}

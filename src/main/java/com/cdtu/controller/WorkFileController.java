@@ -73,7 +73,11 @@ public class WorkFileController {
                              if(role.getRole()=="teacher"){
                              workService.insertTeacherFilewAddr(pwId,wAddr,filename,type,state);
                     	}else{
-                    		String wId=workService.selectwId(role.getUsername(),pwId);
+                    		String sId=role.getUsername();
+                    		System.out.println(sId);
+                    		System.out.println(pwId);
+                    		String wId=workService.selectwId(sId,pwId);
+                    		
                     		 workService.insertStudentFilewAddr(wId,wAddr,filename,type,state);
                     	}
                     }

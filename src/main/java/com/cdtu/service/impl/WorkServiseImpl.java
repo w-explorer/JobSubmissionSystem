@@ -137,7 +137,7 @@ public class WorkServiseImpl implements WorkService {
 
 	@Override
 	public String selectwId(String sId, String pwId) {
-		return workMapper.selectwId(pwId, sId);
+		return workMapper.selectwId(sId, pwId);
 	}
 
 	@Override

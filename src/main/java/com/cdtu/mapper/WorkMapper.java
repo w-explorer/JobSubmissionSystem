@@ -126,7 +126,7 @@ public interface WorkMapper {
    public void insertWorks(@Param("wId")String wId, @Param("pwId")String pwId,@Param("sId")String sId);
 
 
-   public String selectwId(@Param("pwId")String pwId,@Param("sId")String sId);
+   public String selectwId(@Param("sId")String sId,@Param("pwId")String pwId);
    /**
 	 * 存入学生文件地址
 	 * @author weiyuhang
