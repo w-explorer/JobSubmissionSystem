@@ -24,4 +24,8 @@ public interface WorkService {
 
 	public List<Map<String, Object>> SsearchPwByPwName(String sId, String cId, String pwName);
 
+	public String selectwId(String sId, String pwId);
+
+	public void insertStudentFilewAddr(String wId, String wAddr, String filename, String type, Boolean state);
+
 }

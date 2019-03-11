@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.cdtu.mapper.WorkMapper;
+import com.cdtu.model.Work;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.FormatDateToString;
 
@@ -132,5 +133,15 @@ public class WorkServiseImpl implements WorkService {
 	public void deleteStudentFile(Integer sfId) {
 		workMapper.deleteStudentFile(sfId);
 		
+	}
+
+	@Override
+	public String selectwId(String sId, String pwId) {
+		return workMapper.selectwId(pwId, sId);
+	}
+
+	@Override
+	public void insertStudentFilewAddr(String wId, String wAddr, String filename, String type, Boolean state) {
+		this.workMapper.insertStudentFilewAddr(wId, wAddr, filename, type, state);
 	}
 }

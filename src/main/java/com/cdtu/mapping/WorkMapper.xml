@@ -213,4 +213,15 @@
 		WORK(w_id,pw_id,s_id)
 		VALUES(#{wId},#{pwId},#{sId})
 	</insert>
+<select id="selectwId" parameterType="String">
+select work.w_id AS wId 
+from work
+where s_id=#{sId} and pw_id=#{pwId}
+</select>
+
+<insert id="insertStudentFilewAddr" >
+    INSERT INTO s_file(w_id,s_f_add,s_f_name,s_f_type,s_f_state)
+		VALUES(#{wId},#{wAddr},#{filename},#{type},#{state})
+    </insert>
+
 </mapper>

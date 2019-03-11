@@ -126,7 +126,11 @@ public interface WorkMapper {
    public void insertWorks(@Param("wId")String wId, @Param("pwId")String pwId,@Param("sId")String sId);
 
 
-
-
+   public String selectwId(@Param("pwId")String pwId,@Param("sId")String sId);
+   /**
+	 * 存入学生文件地址
+	 * @author weiyuhang
+	 */
+  public void insertStudentFilewAddr(@Param("wId")String wId, @Param("wAddr")String wAddr, @Param("filename")String filename,@Param("type")String type,@Param("state")Boolean state);
 
 }
