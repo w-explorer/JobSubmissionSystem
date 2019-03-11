@@ -208,5 +208,9 @@
 		ORDER BY work.w_time ASC
 	</select>
 	<!-- 李红兵end -->
-
+<insert id="insertWorks" parameterType="String">
+		INSERT INTO
+		WORK(w_id,pw_id,s_id)
+		VALUES(#{wId},#{pwId},#{sId})
+	</insert>
 </mapper>

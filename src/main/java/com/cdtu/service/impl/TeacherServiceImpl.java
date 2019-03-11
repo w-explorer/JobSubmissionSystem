@@ -160,9 +160,13 @@ public class TeacherServiceImpl implements TeacherService {
 	public Integer publishWork(PublishWork publishWork, String tId) {
 		if (publishWork != null) {
 			publishWork.setPwId(OAUtil.getId());
-			System.out.println(publishWork.getcId() + "                            " + tId);
 			publishWork.setTscId(publishWorkMapper.selectTscid(publishWork.getcId(), tId));
 			publishWorkMapper.insterBycId(publishWork);
+			List<String> Ids =studentSelectCourseMapper.selectStudent(publishWork.getcId());
+			for(String sId:Ids){
+				String wId=OAUtil.getId();
+				work.insertWorks(wId,publishWork.getPwId(),sId);
+			}
 			return 1;
 		} else
 			return -1;
@@ -348,37 +352,13 @@ public class TeacherServiceImpl implements TeacherService {
 		return 0;
 	}
 
-	/**
-	 * 分页查找班级内所有学生
-	 *
-	 * @authorweiyuhang
-	 */
-	@Override
-	public Map<String, Object> selectCourseStudents(CourseWapper courseWapper) {
-		Map<String, Object> msg = new HashMap<>();
-		int count = studentSelectCourseMapper.count(courseWapper);
-		System.out.println(courseWapper.getTscId());
-		System.out.println(courseWapper.getPage() - 1);
-		int cId;
-		if (courseWapper.getTscId() != null)
-			cId = courseWapper.getTscId();
-		else
-			cId = courseWapper.getCtId();
-		List<CourseStudent> courseStudents = studentSelectCourseMapper.selectCourseStudents(cId,
-				(courseWapper.getPage() - 1) * 30, 30);
-		int maxpage = 0;
-		if (count % 30 != 0)
-			maxpage = count / 30 + 1;
-		else
-			maxpage = count / 30;
-		msg.put("max", maxpage);
-		msg.put("courseStudents", courseStudents);
-		return msg;
-	}
+	
 
 	@Override
 	public void updataAvatar(String path, String username) {
 		teacherMapper.updataAvatar(path, username);
 	}
+
+	
 
 }

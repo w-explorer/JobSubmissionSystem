@@ -114,10 +114,19 @@ public interface WorkMapper {
     * 删除老师文件
     */
    public void deleteTeacherFile(@Param("tfId")Integer tfId);
-   /*
+   /**
     * 删除学生文件
     * @author weiyuhang
     */
    public void deleteStudentFile(@Param("sfId")Integer sfId);
+   /**
+    * 初始化学生作业表
+    * @author weiyuhang
+    */
+   public void insertWorks(@Param("wId")String wId, @Param("pwId")String pwId,@Param("sId")String sId);
+
+
+
+
 
 }

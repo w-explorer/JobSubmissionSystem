@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.cdtu.model.CourseStudent;
 import com.cdtu.model.CourseWapper;
+import com.cdtu.model.Student;
 
 public interface StudentSelectCourseMapper {
 	/**
@@ -48,8 +49,7 @@ public interface StudentSelectCourseMapper {
 	 *
 	 * @author weiyuhang
 	 */
-	public List<CourseStudent> selectCourseStudents(@Param("cId") int cId, @Param("start") int start,
-			@Param("end") int end);
+	public List<String> selectStudent(@Param("cId") String cId);
 
 	/**
 	 * 查询该课程的学生最大页数

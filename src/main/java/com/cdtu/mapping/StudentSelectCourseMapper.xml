@@ -96,4 +96,18 @@
 		resultType="Int"> SELECT COUNT(*) FROM student_select_course where <if test="tscId!=null"> 
 		student_select_course.tsc_id=#{tscId} </if> <if test="ctId!=null"> student_select_course.ct_id=#{ctId} 
 		</if> </select> -->
+		<!-- 查询班级内所有学生 -->
+	<select id="selectStudent" resultType="String">
+		SELECT 
+		 student.s_id AS sId
+		FROM student,
+		teacher_select_course, student_select_course
+		WHERE
+		teacher_select_course.c_id = #{cId}
+		AND student_select_course.tsc_id =
+		teacher_select_course.tsc_id
+		AND student_select_course.s_id =
+		student.s_id
+		ORDER BY sId ASC
+	</select>	
 </mapper>
