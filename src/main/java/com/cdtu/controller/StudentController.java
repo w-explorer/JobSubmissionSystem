@@ -237,6 +237,7 @@ public class StudentController {
 	public @ResponseBody Map<String, Object> workOn(@RequestBody Work work) {
 		Map<String, Object> msg = new HashMap<String, Object>();
 		Integer status = studentService.submitWork(work);
+		
 		if (status == 1) {
 			msg.put("status", 200);
 			return msg;

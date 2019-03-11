@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.cdtu.controller.WorkFileController;
 import com.cdtu.mapper.ClassCreateMapper;
 import com.cdtu.mapper.CourseMapper;
 import com.cdtu.mapper.PublishEstimateMapper;
@@ -171,6 +172,7 @@ public class TeacherServiceImpl implements TeacherService {
 			System.out.println(publishWork.getcId()+"                            "+tId);
 			publishWork.setTscId(this.publishWorkMapper.selectTscid(publishWork.getcId(), tId));
 			this.publishWorkMapper.insterBycId(publishWork);
+			WorkFileController.setId(publishWork.getPwId());;
 			return 1;
 		} else {
 			return -1;

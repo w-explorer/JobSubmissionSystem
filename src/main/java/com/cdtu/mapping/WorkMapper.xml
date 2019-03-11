@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cdtu.mapper.WorkMapper" >
 	<resultMap id="BaseResultMap" type="com.cdtu.model.Work">
-		<id column="id" property="id" jdbcType="CHAR" />
+		<id column="w_id" property="id" jdbcType="CHAR" />
 		<result column="pw_id" property="pwId" jdbcType="CHAR" />
 		<result column="w_time" property="wTime" jdbcType="DATE" />
 		<result column="w_context" property="wContext" jdbcType="VARCHAR" />
@@ -101,7 +101,7 @@
 	</select>
 	<!-- 添加作业 by:黎睿-->
 	<insert id="insertWork" parameterType="com.cdtu.model.Work">
-		INSERT INTO WORK(id,pw_id,w_time,w_context,w_problem,s_id)
+		INSERT INTO WORK(w_id,pw_id,w_time,w_context,w_problem,s_id)
 		VALUES(#{id},#{pwId},#{wTime},#{wContext},#{wProblem},#{sId})
 	</insert>
 	<!-- 学生修改作业 by:黎睿-->
@@ -131,5 +131,16 @@
 		AND student.s_id=#{sId}
 		AND publish_work.pw_id=#{pwId}
 	</select>
-	
+    <insert id="insertTeacherFilewAddr" parameterType="java.lang.String" >
+    INSERT INTO t_file(pw_id,t_f_add,t_f_name)
+		VALUES(#{pwId},#{wAddr},#{filename})
+    
+    </insert>
+    <delete id="deleteTeacherFile" parameterType="java.lang.Integer">
+    delete from t_file where t_f_id=#{tfId}
+    
+    </delete>	
+	<delete id="deleteStudentFile" parameterType="java.lang.Integer">
+    delete from s_file where s_f_id=#{sfId}
+    </delete>	
 </mapper>

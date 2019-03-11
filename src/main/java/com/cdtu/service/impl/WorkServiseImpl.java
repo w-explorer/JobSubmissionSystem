@@ -96,4 +96,28 @@ public class WorkServiseImpl implements WorkService {
 		}
 		return maps;
 	}
+
+	/**
+	 * 操作文件
+	 * @author weiyuhang
+	 * 
+	 */
+	@Override
+	public void insertTeacherFilewAddr(String pwId, String wAddr, String filename) {
+		System.out.println(pwId);
+		this.workMapper.insertTeacherFilewAddr(pwId, wAddr, filename);
+		
+	}
+
+	@Override
+	public void deleteTeacherFile(Integer tfId) {
+		workMapper.deleteTeacherFile(tfId);
+
+	}
+
+	@Override
+	public void deleteStudentFile(Integer sfId) {
+		workMapper.deleteStudentFile(sfId);
+		
+	}
 }

@@ -15,5 +15,10 @@ public interface WorkService {
 	public List<Map<String, Object>> SearchPwByPwName(String tId, int cId, String pwName);
 
 	public List<Map<String, Object>> SsearchPwByPwName(String sId, int cId, String pwName);
-
+	
+	public void insertTeacherFilewAddr (String pwId, String wAddr, String filename); 
+    
+	public void deleteTeacherFile(Integer tfId);
+	
+	public void deleteStudentFile(Integer sfId);
 }

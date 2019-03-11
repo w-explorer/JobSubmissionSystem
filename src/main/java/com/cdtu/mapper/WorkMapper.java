@@ -94,5 +94,18 @@ public interface WorkMapper {
 	public List<Map<String, Object>> SsearchPwByPwName(@Param("sId")String sId,  @Param("cId")int cId,@Param("pwName")String pwName);
 
 	public List<Map<String, Object>> getPwDetails(@Param("sId")String sId,@Param("pwId") String pwId);
-
+	/**
+	 * 存入老师文件地址
+	 * @author weiyuhang
+	 */
+   public void insertTeacherFilewAddr(@Param("pwId")String pwId, @Param("wAddr")String wAddr, @Param("filename")String filename);
+   /**
+    * 删除老师文件
+    */
+   public void deleteTeacherFile(@Param("tfId")Integer tfId);
+   /*
+    * 删除学生文件
+    * @author weiyuhang
+    */
+   public void deleteStudentFile(@Param("sfId")Integer sfId);
 }
