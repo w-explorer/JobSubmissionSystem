@@ -27,43 +27,35 @@ import com.cdtu.util.DownloadFile;
 @RequestMapping("work")
 public class WorkFileController {
 
-	static String Id;
 	
-	
-
-
-	public static String getId() {
-		return Id;
-	}
-
-
-	public static void setId(String id) {
-		Id = id;
-	}
-
-
+	static String[] fileType={"bmp","jpg","png","tif","gif","pcx","tga","exif","fpx","svg","psd","cdr","pcd","dxf","ufo","eps","ai","raw","WMF","webp","txt","doc","docx","XLS","XLSX","ppt","pptx"};
 	@Resource(name="workService")
 	private WorkService workService;
-	
-	
 	@RequestMapping("uploadFiles")
 	@RequiresRoles(value = {"teacher"})
-	public @ResponseBody Map<String, Object> upFiles(@RequestParam("files") CommonsMultipartFile[] files) {
-		System.out.println("uploadFiles-multipartResolver:" + files.length);
+	public @ResponseBody Map<String, Object> upFiles(@RequestParam("file") CommonsMultipartFile[] file,@RequestParam("pwId") String pwId) {
+		System.out.println("uploadFiles-multipartResolver:" + file.length);
         // 判断file数组不能为空并且长度大于0
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		Map<String, Object> map=new HashMap<String, Object>();
-        if (files != null && files.length > 0) {
+        if (file != null && file.length > 0) {
             // 循环获取file数组中得文件
             try {
-                for (int i = 0; i < files.length; i++) {
-                    MultipartFile file = files[i];
-                    // 保存文件
-                    if (!file.isEmpty()) {
+                for (int i = 0; i < file.length; i++) {
+                    MultipartFile file1 = file[i];
+                    // 保存文件s
+                    if (!file1.isEmpty()) { //w.txt   5    3 
                     	if(role.getRole()=="teacher"){
-                    		 String savePath = "D:\\"+ File.separator  + "uploadFile"+ File.separator +"works"+ File.separator +Id+File.separator +role.getRole()+ File.separator + role.getUsername();
-                             String filename = file.getOriginalFilename();
+                    		 String savePath = "D:\\"+ File.separator  + "uploadFile"+ File.separator +"works"+ File.separator +pwId+File.separator +role.getRole()+ File.separator + role.getUsername();
+                             String filename = file1.getOriginalFilename();
+                             String type = filename.substring(filename.lastIndexOf(".")+1);
+                             Boolean state =false;
+                             for (String fileType : fileType) {
+								if(fileType.equalsIgnoreCase(type)){
+									state=true;
+								}
+							}
                              filename = filename.substring(filename.lastIndexOf("\\") + 1);
                              // 得到上传文件的扩展名
                              String filePath = savePath + File.separator + filename;
@@ -73,11 +65,11 @@ public class WorkFileController {
                   			if (!storeDirectory.exists()) {
                   				storeDirectory.mkdirs();// 创建一个指定的目录
                   			}
-                             file.transferTo(new File(filePath));
-                             System.out.println(Id);
-                             String wAddr=File.separator +"workfile"+ File.separator +Id+ File.separator +role.getRole()+ File.separator + role.getUsername()+ File.separator +filename;
+                             file1.transferTo(new File(filePath));
+                             System.out.println(pwId);
+                             String wAddr=File.separator +"workfile"+ File.separator +pwId+ File.separator +role.getRole()+ File.separator + role.getUsername()+ File.separator +filename;
                              System.out.println(wAddr);
-                             workService.insertTeacherFilewAddr(Id,wAddr,filename);
+                             workService.insertTeacherFilewAddr(pwId,wAddr,filename,type,state);
                     	}
                     }
                 }

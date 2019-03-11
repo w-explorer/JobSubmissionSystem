@@ -157,9 +157,9 @@
 		AND
 		publish_work.pw_id=#{pwId}
 	</select>
-    <insert id="insertTeacherFilewAddr" parameterType="java.lang.String" >
-    INSERT INTO t_file(pw_id,t_f_add,t_f_name)
-		VALUES(#{pwId},#{wAddr},#{filename})
+    <insert id="insertTeacherFilewAddr" >
+    INSERT INTO t_file(pw_id,t_f_add,t_f_name,t_f_type,t_f_state)
+		VALUES(#{pwId},#{wAddr},#{filename},#{type},#{state})
     
     </insert>
     <delete id="deleteTeacherFile" parameterType="java.lang.Integer">

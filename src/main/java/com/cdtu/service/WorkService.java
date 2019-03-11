@@ -15,7 +15,7 @@ public interface WorkService {
 	public List<Map<String, Object>> fuzzySearchWorkByTidAndCid(String tId, String cId, String pwName);
 
 	
-	public void insertTeacherFilewAddr (String pwId, String wAddr, String filename); 
+	public void insertTeacherFilewAddr (String pwId, String wAddr, String filename,String type,Boolean state); 
     
 	public void deleteTeacherFile(Integer tfId);
 	

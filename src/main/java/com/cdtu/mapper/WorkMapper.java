@@ -109,7 +109,7 @@ public interface WorkMapper {
 	 * 存入老师文件地址
 	 * @author weiyuhang
 	 */
-   public void insertTeacherFilewAddr(@Param("pwId")String pwId, @Param("wAddr")String wAddr, @Param("filename")String filename);
+   public void insertTeacherFilewAddr(@Param("pwId")String pwId, @Param("wAddr")String wAddr, @Param("filename")String filename,@Param("type")String type,@Param("state")Boolean state);
    /**
     * 删除老师文件
     */

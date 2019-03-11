@@ -116,9 +116,9 @@ public class WorkServiseImpl implements WorkService {
 	 * 
 	 */
 	@Override
-	public void insertTeacherFilewAddr(String pwId, String wAddr, String filename) {
+	public void insertTeacherFilewAddr(String pwId, String wAddr, String filename,String type,Boolean state) {
 		System.out.println(pwId);
-		this.workMapper.insertTeacherFilewAddr(pwId, wAddr, filename);
+		this.workMapper.insertTeacherFilewAddr(pwId, wAddr, filename, type, state);
 		
 	}
 

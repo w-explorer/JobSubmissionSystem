@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.cdtu.controller.WorkFileController;
 import com.cdtu.mapper.EstimateMapper;
 import com.cdtu.mapper.PublishEstimateMapper;
 import com.cdtu.mapper.PublishWorkMapper;
@@ -229,7 +228,6 @@ public class StudentServiceImpl implements StudentService {
 	public Integer submitWork(Work work) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
-		WorkFileController.setId(work.getId());
 		if(work!=null){
 			if(this.workMapper.selectWork(work.getsId(), work.getPwId())==null){
 				work.setId(OAUtil.getId());

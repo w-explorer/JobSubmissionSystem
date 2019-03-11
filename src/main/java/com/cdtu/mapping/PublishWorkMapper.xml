@@ -615,7 +615,7 @@
 		AND work.s_id=ssc.s_id
 	</select>
 	<select id="getTFiles" resultType="java.util.HashMap">
-		SELECT   tf.t_f_add AS url,tf.t_f_name as name ,tf.t_f_id as tfId
+		SELECT   tf.t_f_add AS url,tf.t_f_name as name ,tf.t_f_id as tfId,tf.t_f_type as type,tf.t_f_state as state
 		FROM publish_work pw,student_select_course ssc,t_file tf
 		WHERE
 		ssc.s_id=#{sId}
@@ -624,7 +624,7 @@
 		AND pw.pw_id=tf.pw_id
 	</select>
 	<select id="getSFiles" resultType="java.util.HashMap">
-		SELECT   sf.s_f_add AS url,sf.s_f_name as name ,sf.s_f_id as sfId
+		SELECT   sf.s_f_add AS url,sf.s_f_name as name ,sf.s_f_id as sfId,sf.s_f_type as type,sf.s_f_state as state
 		FROM publish_work pw,student_select_course ssc,WORK,s_file sf
 		WHERE
 		ssc.s_id=#{sId}
