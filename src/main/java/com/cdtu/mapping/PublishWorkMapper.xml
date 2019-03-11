@@ -8,13 +8,13 @@
     <result column="pw_score" property="pwScore" jdbcType="INTEGER" />
     <result column="pw_end" property="pwEnd" jdbcType="DATE" />
     <result column="pw_state" property="pwState" jdbcType="BIT" />
-    <result column="pw_name" property="pwname" jdbcType="LONGVARCHAR" />
+    <result column="pw_name" property="pwName" jdbcType="LONGVARCHAR" />
     <result column="pw_content" property="pwContent" jdbcType="CHAR" />
     <result column="activityImgSrc" property="activityImgSrc" jdbcType="CHAR" />
     <result column="wScore" property="wScore" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.cdtu.model.PublishWork" extends="BaseResultMap" >
-    <result column="pw_name" property="pwname" jdbcType="LONGVARCHAR" />
+    <result column="pw_name" property="pwName" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -133,7 +133,7 @@
       pw_end, pw_state, pw_name
       )
     values (#{pwId,jdbcType=CHAR}, #{tscId,jdbcType=INTEGER}, #{ctId,jdbcType=INTEGER}, 
-      #{pwEnd,jdbcType=DATE}, #{pwState,jdbcType=BIT}, #{pwname,jdbcType=LONGVARCHAR}
+      #{pwEnd,jdbcType=DATE}, #{pwState,jdbcType=BIT}, #{pwName,jdbcType=LONGVARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.cdtu.model.PublishWork" >
@@ -154,7 +154,7 @@
       <if test="pwState != null" >
         pw_state,
       </if>
-      <if test="pwname != null" >
+      <if test="pwName != null" >
         pw_name,
       </if>
     </trim>
@@ -174,8 +174,8 @@
       <if test="pwState != null" >
         #{pwState,jdbcType=BIT},
       </if>
-      <if test="pwname != null" >
-        #{pwname,jdbcType=LONGVARCHAR},
+      <if test="pwName != null" >
+        #{pwName,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -203,8 +203,8 @@
       <if test="record.pwState != null" >
         pw_state = #{record.pwState,jdbcType=BIT},
       </if>
-      <if test="record.pwname != null" >
-        pw_name = #{record.pwname,jdbcType=LONGVARCHAR},
+      <if test="record.pwName != null" >
+        pw_name = #{record.pwName,jdbcType=LONGVARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -218,7 +218,7 @@
       ct_id = #{record.ctId,jdbcType=INTEGER},
       pw_end = #{record.pwEnd,jdbcType=DATE},
       pw_state = #{record.pwState,jdbcType=BIT},
-      pw_name = #{record.pwname,jdbcType=LONGVARCHAR}
+      pw_name = #{record.pwName,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -249,8 +249,8 @@
       <if test="pwState != null" >
         pw_state = #{pwState,jdbcType=BIT},
       </if>
-      <if test="pwname != null" >
-        pw_name = #{pwname,jdbcType=LONGVARCHAR},
+      <if test="pwName != null" >
+        pw_name = #{pwName,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where pw_id = #{pwId,jdbcType=CHAR}
@@ -261,7 +261,7 @@
       ct_id = #{ctId,jdbcType=INTEGER},
       pw_end = #{pwEnd,jdbcType=DATE},
       pw_state = #{pwState,jdbcType=BIT},
-      pw_name = #{pwname,jdbcType=LONGVARCHAR}
+      pw_name = #{pwName,jdbcType=LONGVARCHAR}
     where pw_id = #{pwId,jdbcType=CHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.cdtu.model.PublishWork" >
@@ -278,7 +278,7 @@
 	<insert id="insterBycId" parameterType="com.cdtu.model.PublishWork">
 		INSERT INTO
 		publish_work(pw_id,tsc_id,pw_name,pw_end,pw_state,pw_content,pw_score)
-		VALUES(#{pwId},#{tscId},#{pwname},#{pwEnd},#{pwState},#{pwContent},#{pwScore})
+		VALUES(#{pwId},#{tscId},#{pwName},#{pwEnd},#{pwState},#{pwContent},#{pwScore})
 	</insert>
   <!-- 教师查找tsc_id by:黎睿-->
 	<select id="selectTscid" parameterType="String" resultType="java.lang.Integer">
@@ -297,7 +297,7 @@
 																														<insert id="insterByctId" parameterType="com.cdtu.model.PublishWork">
 																															INSERT INTO
 																															publish_work(pw_id,ct_id,pw_name,pw_end,pw_state)
-																															VALUES(#{pwId},#{ctId},#{pwname},#{pwEnd},#{pwState})
+																															VALUES(#{pwId},#{ctId},#{pwName},#{pwEnd},#{pwState})
 																														</insert>-->
 																														<!-- 学生查询发布作业表通过课程号（cId） by:黎睿
 																														<select id="selectStudentPublishWorkBycId" resultMap="BaseResultMap">
@@ -603,7 +603,7 @@
 		UPDATE  publish_work SET pw_state =#{flag} WHERE pw_id=#{pwId}
 	</update>
 	<select id="getPwDetails" resultType="java.util.HashMap" >
-		SELECT  DISTINCT pw.pw_name AS pwname,pw.pw_end as pwEnd ,c.c_img_src AS activityImgSrc,pw.pw_content AS pwContent,work.w_context AS wContent,work.w_problem AS wProblem,work.s_w_state AS sWState,work.w_remark as wRemark,work.w_score as wScore,pw.pw_score as pwScore
+		SELECT  DISTINCT pw.pw_name AS pwName,pw.pw_end as pwEnd ,c.c_img_src AS activityImgSrc,pw.pw_content AS pwContent,work.w_context AS wContent,work.w_problem AS wProblem,work.s_w_state AS sWState,work.w_remark as wRemark,work.w_score as wScore,pw.pw_score as pwScore
 		FROM publish_work pw,student_select_course ssc ,teacher_select_course tsc,course c ,WORK
 		WHERE
 		ssc.s_id=#{sId}

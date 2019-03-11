@@ -11,7 +11,8 @@ import java.net.URLEncoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import sun.misc.BASE64Encoder;
+//import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 public class DownloadFile {
 	public static void downloadFile(File file, String fileName, HttpServletResponse response,
@@ -28,7 +29,7 @@ public class DownloadFile {
 				fileNameEncoder = fileNameEncoder.replace("+", " ");
 			} else if (agent.contains("Firefox")) {
 				// 火狐浏览器
-				BASE64Encoder base64Encoder = new BASE64Encoder();
+				Base64 base64Encoder = new Base64();
 				fileNameEncoder = "=?utf-8?B?" + base64Encoder.encode(fileName.getBytes("utf-8")) + "?=";
 			} else {
 				// 其它浏览器
