@@ -353,7 +353,7 @@ public class StudentController {
 			throws IOException {
 		File file = new File(work.getwAddr());
 		String fielName = work.getsId() + "_" + studentService.selectStudentName(work.getsId()) + "_" + file.getName();
-		DownloadFile.downloadFile(file, fielName, response);
+		DownloadFile.downloadFile(file, fielName, response,request);
 		// return new
 		// ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),
 		// headers, HttpStatus.CREATED);
