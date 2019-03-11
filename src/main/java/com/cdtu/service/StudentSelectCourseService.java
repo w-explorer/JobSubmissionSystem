@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 public interface StudentSelectCourseService {
-	public boolean isJoined(int cId, String sId);
+	public boolean isJoined(String cId, String sId);
 
-	public void joinCourse(int cId, String sId);
-	
-	public int countStudents(int cId);
+	public void joinCourse(String cId, String sId);
+
+	public int countStudents(String cId);
 
 	public List<Map<String, Object>> getJoinedCourses(String sId);
-	
-	public List<Map<String, Object>> getStudents(int cId, int page);
+
+	public List<Map<String, Object>> getStudents(String cId, int page);
 }

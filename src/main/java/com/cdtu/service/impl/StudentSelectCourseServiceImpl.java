@@ -20,7 +20,7 @@ public class StudentSelectCourseServiceImpl implements StudentSelectCourseServic
 	 * @author 李红兵
 	 */
 	@Override
-	public boolean isJoined(int cId, String sId) {
+	public boolean isJoined(String cId, String sId) {
 		return sscMapper.countBySIdAndCId(cId, sId) != 0;
 	}
 
@@ -30,7 +30,7 @@ public class StudentSelectCourseServiceImpl implements StudentSelectCourseServic
 	 * @author 李红兵
 	 */
 	@Override
-	public void joinCourse(int cId, String sId) {
+	public void joinCourse(String cId, String sId) {
 		sscMapper.insert(cId, sId);
 	}
 
@@ -43,14 +43,14 @@ public class StudentSelectCourseServiceImpl implements StudentSelectCourseServic
 	public List<Map<String, Object>> getJoinedCourses(String sId) {
 		return sscMapper.selectBySId(sId);
 	}
-	
+
 	/**
 	 * 分页查询该课程内的学生
 	 *
 	 * @author 李红兵
 	 */
 	@Override
-	public List<Map<String, Object>> getStudents(int cId, int page) {
+	public List<Map<String, Object>> getStudents(String cId, int page) {
 		return sscMapper.selectStudents(cId, (page - 1) * 30, page * 30);
 	}
 
@@ -60,7 +60,7 @@ public class StudentSelectCourseServiceImpl implements StudentSelectCourseServic
 	 * @author 李红兵
 	 */
 	@Override
-	public int countStudents(int cId) {
+	public int countStudents(String cId) {
 		return sscMapper.countStudents(cId);
 	}
 }

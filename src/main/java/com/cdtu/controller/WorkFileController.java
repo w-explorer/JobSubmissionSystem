@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import com.cdtu.model.PublishWork;
 import com.cdtu.model.Role;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
@@ -27,6 +26,7 @@ import com.cdtu.util.DownloadFile;
 @Controller
 @RequestMapping("work")
 public class WorkFileController {
+
 	static String Id;
 	
 	
@@ -85,13 +85,8 @@ public class WorkFileController {
                 e.printStackTrace();
             }
         }
-        
-    
-         
-		return null;
-
+		return map;
 	}
-	
 	@RequestMapping("deleteFiles")
 	@RequiresRoles(value = {"student", "teacher"}, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> deleteFiles(@RequestBody Map<String, Object> maps) {

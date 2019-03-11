@@ -13,4 +13,8 @@ public interface PublishWorkService {
 
 	List<Map<String,Object>> getSFiles(String sId, String pwId);
 
+	int countPublishWorks(String cId);
+
+	int countPublishEstimates(String string);
+
 }

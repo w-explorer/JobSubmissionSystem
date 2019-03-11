@@ -1,5 +1,7 @@
 package com.cdtu.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +16,6 @@ import com.cdtu.util.FormatDateToString;
 @Service(value = "workService")
 public class WorkServiseImpl implements WorkService {
 	private @Resource WorkMapper workMapper;
-	
 
 	/**
 	 * 统计作业提交情况
@@ -36,7 +37,7 @@ public class WorkServiseImpl implements WorkService {
 	 * @author 李红兵
 	 */
 	@Override
-	public List<Map<String, Object>> getAllWorks(String sId, int cId) {
+	public List<Map<String, Object>> getAllWorks(String sId, String cId) {
 		List<Map<String, Object>> maps = workMapper.selAllWorks(sId, cId);
 		maps.forEach(map -> {
 			map.put("submitted", "1".equals(map.get("submitted").toString()));
@@ -44,28 +45,41 @@ public class WorkServiseImpl implements WorkService {
 		return maps;
 	}
 
+	/**
+	 * 统计近多少天的作业分
+	 *
+	 * @author 李红兵
+	 */
 	@Override
-	public List<Map<String, Object>> fuzzySearchWorkBySidAndCid(String sId, int cId,String pwName) {
-		List<Map<String,Object>> maps =workMapper.fuzzySearchWorkBySidAndCid(sId,cId,pwName);
+	public List<Map<String, Object>> getScoreInLastDays(String sId, String cId, int days) {
+		Date curDate = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String start = formatter.format(curDate.getTime() - days * 24 * 60 * 60 * 1000);
+		String end = formatter.format(curDate);
+		return workMapper.selByDateSection(sId, cId, start, end);
+	}
+
+	@Override
+	public List<Map<String, Object>> fuzzySearchWorkBySidAndCid(String sId, String cId, String pwName) {
+		List<Map<String, Object>> maps = workMapper.fuzzySearchWorkBySidAndCid(sId, cId, pwName);
 		return maps;
 	}
 
 	@Override
-	public List<Map<String, Object>> fuzzySearchWorkByTidAndCid(String tId, int cId, String pwName) {
-		List<Map<String,Object>> maps =workMapper.fuzzySearchWorkByTidAndCid(tId,cId,pwName);
+	public List<Map<String, Object>> fuzzySearchWorkByTidAndCid(String tId, String cId, String pwName) {
+		List<Map<String, Object>> maps = workMapper.fuzzySearchWorkByTidAndCid(tId, cId, pwName);
 		return maps;
 	}
 
 	@Override
-	public List<Map<String, Object>> SearchPwByPwName(String tId, int cId, String pwName) {
-		List<Map<String,Object>> maps =workMapper.SearchPwByPwName(tId,cId,pwName);
+	public List<Map<String, Object>> SearchPwByPwName(String tId, String cId, String pwName) {
+		List<Map<String, Object>> maps = workMapper.SearchPwByPwName(tId, cId, pwName);
 		for (Map<String, Object> map : maps) {
-			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));//将时间秒变成字符串形式
-			if(((int)map.get("pwState"))==0){
+			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));// 将时间秒变成字符串形式
+			if ((int) map.get("pwState") == 0) {
 				map.put("pwStringState", "已结束");
 				map.put("pwBooleanState", false);
-			}
-			else{
+			} else {
 				map.put("pwStringState", "进行中");
 				map.put("pwBooleanState", true);
 			}
@@ -74,22 +88,21 @@ public class WorkServiseImpl implements WorkService {
 	}
 
 	@Override
-	public List<Map<String, Object>> SsearchPwByPwName(String sId, int cId, String pwName) {
-		List<Map<String,Object>> maps =workMapper.SsearchPwByPwName(sId,cId,pwName);
+	public List<Map<String, Object>> SsearchPwByPwName(String sId, String cId, String pwName) {
+		List<Map<String, Object>> maps = workMapper.SsearchPwByPwName(sId, cId, pwName);
 		for (Map<String, Object> map : maps) {
-			if(this.workMapper.selectWorkCount(sId, (String) map.get("pwId"))!=0){
-				map.put("wStringState","已参与");
+			if (workMapper.selectWorkCount(sId, (String) map.get("pwId")) != 0) {
+				map.put("wStringState", "已参与");
 				map.put("wBooleanState", true);
-			}else{
-				map.put("wStringState","未参与");
-				map.put("wBooleanState",false);
+			} else {
+				map.put("wStringState", "未参与");
+				map.put("wBooleanState", false);
 			}
-				map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));
-			if(!(boolean) map.get("pwState")){
+			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));
+			if (!(boolean) map.get("pwState")) {
 				map.put("pwStringState", "已结束");
 				map.put("pwBooleanState", false);
-			}
-			else{
+			} else {
 				map.put("pwStringState", "进行中");
 				map.put("pwBooleanState", true);
 			}

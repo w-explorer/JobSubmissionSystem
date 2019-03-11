@@ -187,4 +187,8 @@ public interface PublishWorkMapper {
 
 	List<Map<String, Object>> getSFiles(@Param("sId")String sId, @Param("pwId")String pwId);
 
+	int countPublishWorks(@Param("cId")String cId);
+
+	int countPublishEstimates(@Param("cId")String cId);
+
 }

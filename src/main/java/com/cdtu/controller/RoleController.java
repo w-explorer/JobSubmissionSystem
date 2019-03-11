@@ -226,7 +226,7 @@ public class RoleController {
 			String contentType = file.getContentType();
 			//获得文件后缀名称
 			String imageName = contentType.substring(contentType.indexOf("/") + 1);
-			path = "f:" + File.separator + "uploadFile" + File.separator + "avatar" + File.separator +role.getRole()+ File.separator +role.getUsername()+ File.separator + "studentavatar." + imageName;
+			path = "D:" + File.separator + "uploadFile" + File.separator + "avatar" + File.separator +role.getRole()+ File.separator +role.getUsername()+ File.separator + "studentavatar." + imageName;
 			File storeDirectory = new File(path);// 即代表文件又代表目录
 			if (!storeDirectory.exists()) {
 				storeDirectory.mkdirs();// 创建一个指定的目录

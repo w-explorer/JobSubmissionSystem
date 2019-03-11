@@ -1,41 +1,51 @@
 package com.cdtu.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.cdtu.model.Course;
-import com.cdtu.model.CourseExample;
+import com.cdtu.model.ClassCreate;
 import com.cdtu.model.CourseWapper;
 
 public interface CourseMapper {
-    int countByExample(CourseExample example);
+	/**
+	 * @author 李红兵
+	 */
+	public int countByCId(@Param("cId") String cId);
 
-    int deleteByExample(CourseExample example);
+	/**
+	 * @author 李红兵
+	 */
+	public Map<String, Object> selectByCId(@Param("cId") String cId, @Param("sId") String sId);
 
-    int deleteByPrimaryKey(String cId);
+	/**
+	 * @author 李红兵
+	 */
+	public Map<String, Object> selectDetails(@Param("cId") String cId);
 
-    int insert(Course record);
-
-    int insertSelective(Course record);
-
-    List<Course> selectByExample(CourseExample example);
-
-    Course selectByPrimaryKey(String cId);
-
-    int updateByExampleSelective(@Param("record") Course record, @Param("example") CourseExample example);
-
-    int updateByExample(@Param("record") Course record, @Param("example") CourseExample example);
-
-    int updateByPrimaryKeySelective(Course record);
-
-    int updateByPrimaryKey(Course record);
-    
-    /**
-	 *  教师查询非创建课程
+	/**
 	 * @author weiyuhang
-	 * @param id
-	 * @return
 	 */
 	List<CourseWapper> selectTeacherCourse(String id);
+
+	/**
+	 * @author weiyuhang
+	 */
+	int insertClassCreate(ClassCreate classcreate);
+
+	/**
+	 * @author weiyuhang
+	 */
+	List<CourseWapper> selectClassCreate(String id);
+
+	/**
+	 * @author weiyuhang
+	 */
+	int updateClassCreate(ClassCreate classcreate);
+
+	/**
+	 * @author weiyuhang
+	 */
+	int deleteClassCreate(int ctId);
 }

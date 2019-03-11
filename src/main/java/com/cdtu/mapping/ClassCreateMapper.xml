@@ -1,34 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cdtu.mapper.ClassCreateMapper">
-	<!-- 李红兵start -->
-	<select id="selectByCId" resultType="java.util.HashMap">
-		SELECT class_create.ct_id AS cId, class_create.ct_name AS cName, teacher.t_name AS tName, class_create.ct_img_src AS cImgSrc, class_create.ct_switch AS joinAble,
-		#{sId} IN (SELECT s_id FROM student_select_course WHERE ct_id = #{cId}) AS joined
-		FROM class_create, teacher
-		WHERE class_create.ct_id = #{cId}
-		AND teacher.t_id = class_create.t_id
-	</select>
-	
-	<select id="selectDetails" resultType="java.util.HashMap">
-		SELECT c_id AS cId, c_name AS cName, c_img_src AS cImgSrc
-		FROM course
-		WHERE c_id = #{cId}
-		UNION
-		SELECT ct_id AS cId, ct_name AS cName, ct_img_src AS cImgSrc
-		FROM class_create
-		WHERE ct_id = #{cId}
-	</select>
-
-	<select id="countByCId" resultType="java.lang.Integer">
-		SELECT count(*) from
-		class_create
-		WHERE class_create.ct_id = #{cId}
-		LIMIT 1
-	</select>
-	<!-- 李红兵end -->
-	
-	
 	<!--教师增添课程 by:魏宇航-->
 	<insert id="insertClassCreate" parameterType="com.cdtu.model.ClassCreate">
 		insert into class_create(t_id,ct_name,ct_switch)

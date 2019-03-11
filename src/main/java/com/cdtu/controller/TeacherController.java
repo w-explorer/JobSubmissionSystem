@@ -31,6 +31,7 @@ import com.cdtu.model.PublishEstimate;
 import com.cdtu.model.PublishWork;
 import com.cdtu.model.Role;
 import com.cdtu.model.Work;
+import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.service.WorkService;
@@ -42,6 +43,7 @@ public class TeacherController {
 	private @Resource(name = "workService") WorkService workService;
 	private @Resource(name = "teacherService") TeacherService teacherService;
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
+	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 
 	/**
 	 * 老师统计作业提交情况，参数是发布作业码
@@ -49,7 +51,7 @@ public class TeacherController {
 	 * @author 李红兵
 	 */
 	@ResponseBody
-	@RequiresRoles(value = {"teacher"})
+	@RequiresRoles(value = { "teacher" })
 	@RequestMapping(value = "/statistic.do")
 	public Map<String, Object> doStatistic(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
@@ -62,6 +64,11 @@ public class TeacherController {
 		return map;
 	}
 
+	/**
+	 * 统一异常处理
+	 *
+	 * @author 李红兵
+	 */
 	private void handlException(Map<String, Object> map, Exception e) {
 		e.printStackTrace();
 		map.put("status", 500);
@@ -73,23 +80,23 @@ public class TeacherController {
 	 * @author weiyuhang
 	 */
 	@RequestMapping("deleteCourse.do")
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> deleteClassCreateJsp(@RequestParam("cId") Integer cId) {
-		Map<String, Object> data = new HashMap<String, Object>();
-		try{
-        	String msg = teacherService.deleteClassCreateService(cId);
-    		if ("success".equals(msg)) {
-    			data.put("status", 200);
-    			data.put("msg", "删除成功");
-    		} else {
-    			data.put("status", 0);
-    			data.put("msg", "删除失败");
-    		}
-        }catch(Exception e){
-        	data.put("status", 0);
+		Map<String, Object> data = new HashMap<>();
+		try {
+			String msg = teacherService.deleteClassCreateService(cId);
+			if ("success".equals(msg)) {
+				data.put("status", 200);
+				data.put("msg", "删除成功");
+			} else {
+				data.put("status", 0);
+				data.put("msg", "删除失败");
+			}
+		} catch (Exception e) {
+			data.put("status", 0);
 			data.put("msg", "无法删除");
-        }
-		
+		}
+
 		return data;
 	}
 
@@ -98,12 +105,12 @@ public class TeacherController {
 	 *
 	 * @author weiyuhang
 	 */
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	@RequestMapping("selectCourseStudent.do")
 	public @ResponseBody Map<String, Object> selectCourseStudentJsp(@RequestBody CourseWapper coursewapper) {
 
 		List<CourseStudent> coursestudentslist;
-		Map<String, Object> data = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<>();
 		try {
 			coursestudentslist = teacherService.selectCourseStudentService(coursewapper);
 			data.put("status", 200);
@@ -124,13 +131,13 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping("selectClass.do")
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> selectAllCourse() {
-		
+
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		String tId = role.getUsername();
-		Map<String, Object> data = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<>();
 
 		List<CourseWapper> courseList;
 		try {
@@ -153,9 +160,9 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "createClass.do", method = RequestMethod.POST)
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> createClass(@RequestBody ClassCreate classcreate) {
-		Map<String, Object> data = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		classcreate.settId(role.getUsername());
@@ -181,9 +188,9 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping("updateClassCreate.do")
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, String> updateClassCreate(@RequestBody ClassCreate classcreate) {
-		Map<String, String> data = new HashMap<String, String>();
+		Map<String, String> data = new HashMap<>();
 		System.out.println("test");
 		try {
 			String msg = teacherService.updateClassCreateService(classcreate);
@@ -200,6 +207,7 @@ public class TeacherController {
 		}
 		return data;
 	}
+
 	/**
 	 * 老师发布评价
 	 *
@@ -208,15 +216,15 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "publishEstimate.do", method = RequestMethod.POST)
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> publishEstimate(@RequestBody PublishEstimate publishEstimate) {
-		Map<String, Object> msg = new HashMap<String, Object>();
+		Map<String, Object> msg = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
-		Integer status = teacherService.PublishEstimate(publishEstimate,role.getUsername());
-		if (status == 1) {
+		Integer status = teacherService.PublishEstimate(publishEstimate, role.getUsername());
+		if (status == 1)
 			msg.put("status", 200);
-		} else {
+		else {
 			if (status == -1) {
 				msg.put("status", -1);
 				msg.put("msg", "用户为空");
@@ -237,18 +245,17 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "publishWork.do", method = RequestMethod.POST)
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> publishWork(@RequestBody PublishWork publishWork) {
-		Map<String, Object> msg = new HashMap<String, Object>();
+		Map<String, Object> msg = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
-		Integer status = teacherService.publishWork(publishWork,role.getUsername());
-
+		Integer status = teacherService.publishWork(publishWork, role.getUsername());
 
 		System.out.println(publishWork.getPwContent());
-		if (status == 1) {
+		if (status == 1)
 			msg.put("status", 200);
-		} else {
+		else {
 			if (status == -1) {
 				msg.put("status", -1);
 				msg.put("msg", "用户为空");
@@ -270,11 +277,11 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "queryPublishWork.do", method = RequestMethod.POST)
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> queryPublishWork(@RequestBody CourseWapper courseWapper) {
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
-		Map<String, Object> msg = this.teacherService.demonPublishWork(courseWapper,role.getUsername());
+		Map<String, Object> msg = teacherService.demonPublishWork(courseWapper, role.getUsername());
 		if (msg != null) {
 			if (msg.get("publishWorks") != null) {
 				msg.put("status", 200);
@@ -283,7 +290,7 @@ public class TeacherController {
 			msg.put("status", 0);
 			return msg;
 		} else {
-			msg = new HashMap<String, Object>();
+			msg = new HashMap<>();
 			msg.put("status", 0);
 			msg.put("msg", "课程为空");
 			return msg;
@@ -299,14 +306,14 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "queryStudentsInWork.do", method = RequestMethod.POST)
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> queryStudentInWork(@RequestBody CourseWapper courseWapper) {
-		Map<String, Object> msg = this.teacherService.showStudentInWork(courseWapper);
+		Map<String, Object> msg = teacherService.showStudentInWork(courseWapper);
 		if (msg != null) {
 			msg.put("status", 200);
 			return msg;
 		} else {
-			msg = new HashMap<String, Object>();
+			msg = new HashMap<>();
 			msg.put("status", 0);
 			msg.put("msg", "课程为空");
 			return msg;
@@ -323,18 +330,17 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "remarkStudentWork.do", method = RequestMethod.POST)
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> remarkStudentWork(@RequestBody Work work) {
-		Map<String, Object> msg = new HashMap<String, Object>();
-		Integer status = this.teacherService.addWorkRemark(work);
-		if (status == 1) {
+		Map<String, Object> msg = new HashMap<>();
+		Integer status = teacherService.addWorkRemark(work);
+		if (status == 1)
 			msg.put("status", 200);
-		}
 		if (status == -1) {
 			msg.put("status", 0);
 			msg.put("msg", "输入值为空");
 		}
-		if(status==0){
+		if (status == 0) {
 			msg.put("status", 0);
 			msg.put("msg", "学生未提交作业");
 		}
@@ -350,10 +356,10 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "queryStudentWork.do", method = RequestMethod.POST)
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> queryStudentWork(@RequestBody Work work) {
-		Map<String, Object> msg = new HashMap<String, Object>();
-		Work newWork = this.teacherService.selectStudentWork(work.getsId(), work.getPwId());
+		Map<String, Object> msg = new HashMap<>();
+		Work newWork = teacherService.selectStudentWork(work.getsId(), work.getPwId());
 		if (newWork != null) {
 			msg.put("status", 200);
 			msg.put("work", newWork);
@@ -374,7 +380,7 @@ public class TeacherController {
 	 * @return
 	 */
 	@RequestMapping(value = "downloadteache.do")
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	public void download(@RequestBody Work work, HttpServletResponse response) throws IOException {
 		File file = new File(work.getwAddr());
 		String fileName = work.getsId() + "_" + teacherService.selectStudentName(work.getsId()) + "_" + file.getName();
@@ -395,25 +401,24 @@ public class TeacherController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "downLoadAll.do")
-	@RequiresRoles({"teacher"})
+	@RequiresRoles({ "teacher" })
 	@ResponseBody
 	public void downloadAll(@RequestBody Work work, HttpServletResponse response) throws IOException {
 
 		// 需要压缩的文件
 		// 压缩后的文件
-		String resourcesName = this.teacherService.selectPwIdname(work.getPwId()) + ".zip";
+		String resourcesName = teacherService.selectPwIdname(work.getPwId()) + ".zip";
 		ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream("D:/" + resourcesName));
 		InputStream input = null;
 
 		for (String sId : work.getsIds()) {
-			Work newWork = this.teacherService.selectStudentWork(sId, work.getPwId());
+			Work newWork = teacherService.selectStudentWork(sId, work.getPwId());
 			File file = new File(newWork.getwAddr());
 			input = new FileInputStream(file);
 			zipOut.putNextEntry(new ZipEntry(sId + "_" + teacherService.selectStudentName(sId) + "_" + file.getName()));
 			int temp = 0;
-			while ((temp = input.read()) != -1) {
+			while ((temp = input.read()) != -1)
 				zipOut.write(temp);
-			}
 			zipOut.closeEntry();
 			input.close();
 		}
@@ -431,10 +436,11 @@ public class TeacherController {
 		// return new
 		// ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),headers,HttpStatus.CREATED);
 	}
-	
+
 	/**
+	 *
+	 * 控制作业状态
 	 * 
-	 *控制作业状态
 	 * @author WYH
 	 * @param sIds
 	 * @param pwId
@@ -444,80 +450,106 @@ public class TeacherController {
 	 */
 	@RequestMapping(value = "changePublishWork.do", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> changePublishWork(@RequestBody PublishWork publishwork) {
-		Map<String, Object> msg = new HashMap<String, Object>();
+		Map<String, Object> msg = new HashMap<>();
 		try {
 			System.out.println(publishwork.getPwState());
-			this.teacherService.updatePublishwork(publishwork);
+			teacherService.updatePublishwork(publishwork);
 			msg.put("status", 200);
 		} catch (Exception e) {
 			msg.put("status", 0);
 			msg.put("msg", "服务器异常");
 		}
-		
+
 		return msg;
-}
+	}
+
 	/**
-	 * @author 文成
-	 * 模糊查询作业
+	 * @author 文成 模糊查询作业
 	 * @param paramsMap
 	 * @return
 	 */
-	@RequestMapping(value="fuzzySearchWorkNames.do")
-	@RequiresRoles({"teacher"})
-	public @ResponseBody Map<String,Object> fuzzySearchWork(@RequestBody Map<String, Object> paramsMap){
-		Map<String, Object> map = new HashMap<String, Object>();
-		int cId = Integer.parseInt((String) paramsMap.get("cId"));
+	@RequestMapping(value = "fuzzySearchWorkNames.do")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> fuzzySearchWork(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		String cId = (String) paramsMap.get("cId");
 		String pwName = (String) paramsMap.get("pwName");
 		String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		try {
 			map.put("status", 200);
-			map.put("fuzzySearchWorks", workService.fuzzySearchWorkByTidAndCid(tId, cId,pwName));
+			map.put("fuzzySearchWorks", workService.fuzzySearchWorkByTidAndCid(tId, cId, pwName));
 		} catch (Exception e) {
 			handlException(map, e);
 		}
 		return map;
 	}
+
 	/**
 	 * 按作业名字查询作业
+	 * 
 	 * @author wencheng
 	 * @param paramsMap
 	 * @return
 	 */
-	@RequestMapping(value="SearchPwByPwName.dotime")
-	@RequiresRoles({"teacher"})
-	public @ResponseBody Map<String,Object> SearchPwByPwName(@RequestBody Map<String,Object> paramsMap){
-		Map<String, Object> map = new HashMap<String, Object>();
-		int cId = Integer.parseInt((String) paramsMap.get("cId"));
+	@RequestMapping(value = "SearchPwByPwName.dotime")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> SearchPwByPwName(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		String cId = (String) paramsMap.get("cId");
 		String pwName = (String) paramsMap.get("pwName");
 		String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		try {
 			map.put("status", 200);
-			map.put("fuzzySearchWorks", workService.SearchPwByPwName(tId, cId,pwName));
+			map.put("fuzzySearchWorks", workService.SearchPwByPwName(tId, cId, pwName));
 		} catch (Exception e) {
 			handlException(map, e);
 		}
 		return map;
 	}
+
 	/**
 	 * 老师删除加错的学生
+	 * 
 	 * @author weiyuhang
 	 */
-	@RequestMapping(value="deleteCourseStudent.do")
-	@RequiresRoles({"teacher"})
-	public @ResponseBody Map<String,Object> deleteCourseStudent(@RequestBody CourseStudent courseStudent){
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-			try {
-				teacherService.deleteCourseStudent(courseStudent);
-				map.put("status", 200);
-				map.put("msg","删除成功");
-			} catch (Exception e) {
-				handlException(map, e);
-				map.put("status", 0);
-				map.put("msg","无法踢人");
-			}	
-		
-		
+	@RequestMapping(value = "deleteCourseStudent.do")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> deleteCourseStudent(@RequestBody CourseStudent courseStudent) {
+		Map<String, Object> map = new HashMap<>();
+
+		try {
+			teacherService.deleteCourseStudent(courseStudent);
+			map.put("status", 200);
+			map.put("msg", "删除成功");
+		} catch (Exception e) {
+			handlException(map, e);
+			map.put("status", 0);
+			map.put("msg", "无法踢人");
+		}
+
+		return map;
+	}
+
+	/**
+	 * 得到作业详情
+	 * 
+	 * @param paramsMap
+	 * @return
+	 */
+	@RequestMapping(value = "getPwDetails.do")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> PwDetails(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		String pwId = (String) paramsMap.get("pwId");
+		String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		try {
+			map.put("status", 200);
+			map.put("publishWork", publishWorkService.getPwDetails(tId, pwId));
+			map.put("teacherFiles", publishWorkService.getTFiles(tId, pwId));
+			map.put("studentFiles", publishWorkService.getSFiles(tId, pwId));
+		} catch (Exception e) {
+			handlException(map, e);
+		}
 		return map;
 	}
 }

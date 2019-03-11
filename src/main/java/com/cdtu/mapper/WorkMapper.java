@@ -9,14 +9,20 @@ import com.cdtu.model.Work;
 
 public interface WorkMapper {
 	/**
-	 * @Author 李红兵
+	 * @author 李红兵
 	 */
 	public List<Map<String, Object>> selSubCon(@Param("pwId") String pwId);
 
 	/**
-	 * @Author 李红兵
+	 * @author 李红兵
 	 */
-	public List<Map<String, Object>> selAllWorks(@Param("sId") String sId, @Param("cId") int cId);
+	public List<Map<String, Object>> selAllWorks(@Param("sId") String sId, @Param("cId") String cId);
+
+	/**
+	 * @author 李红兵
+	 */
+	public List<Map<String, Object>> selByDateSection(@Param("sId") String sId, @Param("cId") String cId,
+			@Param("start") String start, @Param("end") String end);
 
 	/**
 	 * 添加作业
@@ -81,19 +87,24 @@ public interface WorkMapper {
 
 	/**
 	 * 模糊查询作业名字
+	 *
 	 * @param sId
 	 * @param cId
 	 * @return
 	 */
-	public List<Map<String, Object>> fuzzySearchWorkBySidAndCid(@Param("sId")String sId, @Param("cId")int cId,@Param("pwName")String pwName) ;
+	public List<Map<String, Object>> fuzzySearchWorkBySidAndCid(@Param("sId") String sId, @Param("cId") String cId,
+			@Param("pwName") String pwName);
 
-	public List<Map<String, Object>> fuzzySearchWorkByTidAndCid(@Param("tId")String tId,  @Param("cId")int cId,@Param("pwName")String pwName);
+	public List<Map<String, Object>> fuzzySearchWorkByTidAndCid(@Param("tId") String tId, @Param("cId") String cId,
+			@Param("pwName") String pwName);
 
-	public List<Map<String, Object>> SearchPwByPwName(@Param("tId")String tId,  @Param("cId")int cId,@Param("pwName")String pwName);
+	public List<Map<String, Object>> SearchPwByPwName(@Param("tId") String tId, @Param("cId") String cId,
+			@Param("pwName") String pwName);
 
-	public List<Map<String, Object>> SsearchPwByPwName(@Param("sId")String sId,  @Param("cId")int cId,@Param("pwName")String pwName);
+	public List<Map<String, Object>> SsearchPwByPwName(@Param("sId") String sId, @Param("cId") String cId,
+			@Param("pwName") String pwName);
 
-	public List<Map<String, Object>> getPwDetails(@Param("sId")String sId,@Param("pwId") String pwId);
+	public List<Map<String, Object>> getPwDetails(@Param("sId") String sId, @Param("pwId") String pwId);
 	/**
 	 * 存入老师文件地址
 	 * @author weiyuhang
@@ -108,4 +119,5 @@ public interface WorkMapper {
     * @author weiyuhang
     */
    public void deleteStudentFile(@Param("sfId")Integer sfId);
+
 }
