@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cdtu.mapper.WorkMapper">
 	<resultMap id="BaseResultMap" type="com.cdtu.model.Work">
-		<id column="id" property="id" jdbcType="CHAR" />
+		<id column="w_id" property="id" jdbcType="CHAR" />
 		<result column="pw_id" property="pwId" jdbcType="CHAR" />
 		<result column="w_time" property="wTime" jdbcType="DATE" />
 		<result column="w_context" property="wContext"
@@ -157,6 +157,18 @@
 		AND
 		publish_work.pw_id=#{pwId}
 	</select>
+    <insert id="insertTeacherFilewAddr" parameterType="java.lang.String" >
+    INSERT INTO t_file(pw_id,t_f_add,t_f_name)
+		VALUES(#{pwId},#{wAddr},#{filename})
+    
+    </insert>
+    <delete id="deleteTeacherFile" parameterType="java.lang.Integer">
+    delete from t_file where t_f_id=#{tfId}
+    
+    </delete>	
+	<delete id="deleteStudentFile" parameterType="java.lang.Integer">
+    delete from s_file where s_f_id=#{sfId}
+    </delete>	
 
 	<!-- 李红兵start -->
 	<select id="selSubCon" resultType="java.util.HashMap">
@@ -183,6 +195,17 @@
 		WHERE student_select_course.s_id =
 		#{sId}
 		AND student_select_course.tsc_id = publish_work.tsc_id
+	</select>
+
+	<select id="selByDateSection" resultType="java.lang.Integer">
+		SELECT work.w_score AS wScore
+		FROM WORK, publish_work, teacher_select_course
+		WHERE work.s_id = #{sId}
+		AND publish_work.pw_id = work.pw_id
+		AND teacher_select_course.tsc_id = publish_work.tsc_id
+		AND teacher_select_course.c_id = #{cId}
+		AND work.w_time BETWEEN #{start} AND #{end}
+		ORDER BY work.w_time ASC
 	</select>
 	<!-- 李红兵end -->
 
