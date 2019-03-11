@@ -33,7 +33,7 @@ public class WorkFileController {
 	@Resource(name="workService")
 	private WorkService workService;
 	@RequestMapping("uploadFiles")
-	@RequiresRoles(value = {"teacher"})
+	@RequiresRoles(value = {"student", "teacher"}, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> upFiles(@RequestParam("file") CommonsMultipartFile[] file,@RequestParam("pwId") String pwId) {
 		System.out.println("uploadFiles-multipartResolver:" + file.length);
         // 判断file数组不能为空并且长度大于0
@@ -47,7 +47,7 @@ public class WorkFileController {
                     MultipartFile file1 = file[i];
                     // 保存文件s
                     if (!file1.isEmpty()) { //w.txt   5    3 
-                    	if(role.getRole()=="teacher"){
+                    	
                     		 String savePath = "D:\\"+ File.separator  + "uploadFile"+ File.separator +"works"+ File.separator +pwId+File.separator +role.getRole()+ File.separator + role.getUsername();
                              String filename = file1.getOriginalFilename();
                              String type = filename.substring(filename.lastIndexOf(".")+1);
@@ -70,7 +70,15 @@ public class WorkFileController {
                              System.out.println(pwId);
                              String wAddr=File.separator +"workfile"+ File.separator +pwId+ File.separator +role.getRole()+ File.separator + role.getUsername()+ File.separator +filename;
                              System.out.println(wAddr);
+                             if(role.getRole()=="teacher"){
                              workService.insertTeacherFilewAddr(pwId,wAddr,filename,type,state);
+                    	}else{
+                    		String sId=role.getUsername();
+                    		System.out.println(sId);
+                    		System.out.println(pwId);
+                    		String wId=workService.selectwId(sId,pwId);
+                    		
+                    		 workService.insertStudentFilewAddr(wId,wAddr,filename,type,state);
                     	}
                     }
                 }
