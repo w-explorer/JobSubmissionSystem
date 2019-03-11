@@ -1,11 +1,11 @@
 package com.cdtu.controller;
 
 import java.io.File;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
@@ -29,7 +29,7 @@ import com.cdtu.util.DownloadFile;
 public class WorkFileController {
 
 	
-	static String[] fileType={"bmp","jpg","png","tif","gif","pcx","tga","exif","fpx","svg","psd","cdr","pcd","dxf","ufo","eps","ai","raw","WMF","webp","txt","doc","docx","XLS","XLSX","ppt","pptx"};
+	static String[] fileType={"jpg","png","gif","psd","webp","txt","doc","docx","XLS","XLSX","ppt","pptx"};
 	@Resource(name="workService")
 	private WorkService workService;
 	@RequestMapping("uploadFiles")
@@ -109,7 +109,7 @@ public class WorkFileController {
 	
 	@RequestMapping("downloadFile")
 	@RequiresRoles(value = {"student", "teacher"}, logical = Logical.OR)
-	public @ResponseBody Map<String, Object> downloadFiles(@RequestBody Map<String, Object> maps, HttpServletResponse response) {
+	public @ResponseBody Map<String, Object> downloadFiles(@RequestBody Map<String, Object> maps, HttpServletResponse response,HttpServletRequest request) {
 		Map<String, Object> map=new HashMap<String, Object>();
 	       try {
 	    	   if(maps.get("tfAdd")!=null){
@@ -120,17 +120,17 @@ public class WorkFileController {
 					String filePath=workFile+tfAdd.substring(9);
 					System.out.println(filePath);
 					File file=new File(filePath);
-					String filename =tfAdd.substring(tfAdd.lastIndexOf("\\") + 1);	
-					System.out.println(filename);
-                    response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
-					DownloadFile.downloadFile(file, filename, response);
+					String fileName =tfAdd.substring(tfAdd.lastIndexOf("\\") + 1);	
+					System.out.println(fileName);
+                    //response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
+					DownloadFile.downloadFile(file,fileName , response,request);
 				}else{
 					String sfAdd=(String) map.get("sfAdd");
 					String workFile ="D:" + File.separator + "uploadFile" + File.separator + "works";
 					String filePath=workFile+sfAdd.substring(9);
 					File file=new File(filePath);
-					String filename =sfAdd.substring(sfAdd.lastIndexOf("\\") + 1);
-					DownloadFile.downloadFile(file, filename, response);
+					String fileName =sfAdd.substring(sfAdd.lastIndexOf("\\") + 1);
+					DownloadFile.downloadFile(file, fileName, response,request);
 				}
 		} catch (Exception e) {
 		map.put("status", 0);

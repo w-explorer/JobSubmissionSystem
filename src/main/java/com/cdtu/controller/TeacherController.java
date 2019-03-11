@@ -12,6 +12,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
@@ -381,10 +382,10 @@ public class TeacherController {
 	 */
 	@RequestMapping(value = "downloadteache.do")
 	@RequiresRoles({ "teacher" })
-	public void download(@RequestBody Work work, HttpServletResponse response) throws IOException {
+	public void download(@RequestBody Work work, HttpServletResponse response,HttpServletRequest request) throws IOException {
 		File file = new File(work.getwAddr());
 		String fileName = work.getsId() + "_" + teacherService.selectStudentName(work.getsId()) + "_" + file.getName();
-		DownloadFile.downloadFile(file, fileName, response);
+		DownloadFile.downloadFile(file, fileName, response,request);
 		// return new
 		// ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),
 		// path, HttpStatus.CREATED);
@@ -403,7 +404,7 @@ public class TeacherController {
 	@RequestMapping(value = "downLoadAll.do")
 	@RequiresRoles({ "teacher" })
 	@ResponseBody
-	public void downloadAll(@RequestBody Work work, HttpServletResponse response) throws IOException {
+	public void downloadAll(@RequestBody Work work, HttpServletResponse response,HttpServletRequest request) throws IOException {
 
 		// 需要压缩的文件
 		// 压缩后的文件
@@ -424,7 +425,7 @@ public class TeacherController {
 		}
 		zipOut.close();
 		File file = new File("D:/" + resourcesName);
-		DownloadFile.downloadFile(file, resourcesName, response);
+		DownloadFile.downloadFile(file, resourcesName, response,request);
 		// Path path=Paths.get(file.getName());
 		// response.setContentType(MediaType.APPLICATION_OCTET_STREAM.toString());
 		// response.setHeader("Content-Disposition", "attachment; filename=" +
