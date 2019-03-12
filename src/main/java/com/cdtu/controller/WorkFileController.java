@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -156,14 +157,14 @@ public class WorkFileController {
 	 */
 	@RequestMapping(value = "downLoadAll.do")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	@ResponseBody
-	public void downloadAll(@RequestBody List<String> Addrs, HttpServletResponse response,
+	public @ResponseBody void downloadAll(@RequestBody Map<String, Object> maps, HttpServletResponse response,
 			HttpServletRequest request) {
 
 		// 需要压缩的文件
 		// 压缩后的文件
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
+		List<String> Addrs=(List<String>) maps.get("Addrs");
 		String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works"+File.separator +role.getUsername();
 		String resourcesName = workFile+ ".zip";
 		String zipname=role.getUsername()+".zip";
@@ -171,7 +172,9 @@ public class WorkFileController {
 			ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(resourcesName));
 			InputStream input = null;
 			for (String Addr : Addrs) {
-				File file = new File(Addr);
+				String works = "D:" + File.separator + "uploadFile" + File.separator + "works";
+				String filePath = works + Addr.substring(9);
+				File file = new File(filePath);
 				input = new FileInputStream(file);
 			    String	filename = Addr.substring(Addr.lastIndexOf("\\") + 1);
 			    	zipOut.putNextEntry(new ZipEntry(workService.selecttfNameService(Addr)+filename));
