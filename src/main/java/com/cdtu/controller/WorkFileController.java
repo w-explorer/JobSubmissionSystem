@@ -28,15 +28,14 @@ import com.cdtu.util.OAUtil;
 @Controller
 @RequestMapping(value = "work")
 public class WorkFileController {
-	private @Resource(name = "workService") WorkService workService;
-	private static String[] fileType = { "jpg", "png", "gif", "psd", "webp", "txt", "doc", "docx", "XLS", "XLSX", "ppt",
-			"pptx" };
 
-	@ResponseBody
-	@RequestMapping(value = "/uploadFiles")
-	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	public Map<String, Object> upFiles(@RequestParam("file") CommonsMultipartFile[] file,
-			@RequestParam("pwId") String pwId) {
+	
+	static String[] fileType={"jpg","png","gif","psd","webp","txt","doc","docx","XLS","XLSX","ppt","pptx","pdf"};
+	@Resource(name="workService")
+	private WorkService workService;
+	@RequestMapping("uploadFiles")
+	@RequiresRoles(value = {"student", "teacher"}, logical = Logical.OR)
+	public @ResponseBody Map<String, Object> upFiles(@RequestParam("file") CommonsMultipartFile[] file,@RequestParam("pwId") String pwId) {
 		System.out.println("uploadFiles-multipartResolver:" + file.length);
 		// 判断file数组不能为空并且长度大于0
 		Subject subject = SecurityUtils.getSubject();
