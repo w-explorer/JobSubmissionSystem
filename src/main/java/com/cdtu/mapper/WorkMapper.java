@@ -132,5 +132,10 @@ public interface WorkMapper {
 	 * @author weiyuhang
 	 */
   public void insertStudentFilewAddr(@Param("wId")String wId, @Param("wAddr")String wAddr, @Param("filename")String filename,@Param("type")String type,@Param("state")Boolean state);
-
+  /**
+   * 查询文件名
+   * @author weiyuhang
+   */
+  public String selecttfName(@Param("tfAdd")String tfAdd);
+  public String selectsfName(@Param("sfAdd")String sfAdd);
 }

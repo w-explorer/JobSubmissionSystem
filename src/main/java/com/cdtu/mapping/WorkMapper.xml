@@ -223,5 +223,12 @@ where s_id=#{sId} and pw_id=#{pwId}
     INSERT INTO s_file(w_id,s_f_add,s_f_name,s_f_type,s_f_state)
 		VALUES(#{wId},#{wAddr},#{filename},#{type},#{state})
     </insert>
-
+<select id="selecttfName" resultType="String">
+select t_f_name AS tfName from t_file where t_f_add=#{tfAdd}
+union
+select s_f_name AS sfName from s_file where s_f_add=#{tfAdd}
+</select>
+<select id="selectsfName" resultType="String">
+select s_f_name AS sfName from s_file where s_f_add=#{sfAdd}
+</select>
 </mapper>
