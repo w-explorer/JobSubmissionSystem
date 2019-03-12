@@ -548,9 +548,9 @@ public class TeacherController {
 		return map;
 	}
 	/**
-	 * 老师发布作业
+	 * 老师修改发布作业
 	 *
-	 * @author LR
+	 * @author weiyuhang
 	 * @param publishWork
 	 * @return
 	 */

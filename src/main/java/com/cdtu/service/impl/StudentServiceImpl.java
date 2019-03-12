@@ -239,6 +239,7 @@ public class StudentServiceImpl implements StudentService {
 			}
 			if(this.workMapper.selectWork(work.getsId(), work.getPwId())!=null){
 				String nowDate = dateFormat.format(date);
+				work.setsWState(true);
 				work.setwTime(nowDate);
 				this.workMapper.studentUpdateWork(work);
 				return 1;

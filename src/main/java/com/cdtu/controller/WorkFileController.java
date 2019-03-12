@@ -23,6 +23,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.cdtu.model.Role;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
+import com.cdtu.util.OAUtil;
 
 @Controller
 @RequestMapping("work")
@@ -59,7 +60,7 @@ public class WorkFileController {
 							}
                              filename = filename.substring(filename.lastIndexOf("\\") + 1);
                              // 得到上传文件的扩展名
-                             String filePath = savePath + File.separator + filename;
+                             String filePath = savePath + File.separator +OAUtil.getId()+"."+type;
                              System.out.println("uploadFiles-filePath:" + filePath);
                              // 转存文件
                              File storeDirectory = new File(filePath);// 即代表文件又代表目录
