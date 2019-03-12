@@ -32,6 +32,12 @@
 		set s_img_src=#{sImgSrc}
 		where s_id=#{sId}
 	</update>
+	<select id="fuzzySearchStudentByNameOrId" resultType="java.util.HashMap">
+		
+	</select>
+	<select id="SearchStudentById" resultType="java.util.HashMap">
+	
+	</select>
 	<!-- 文成end -->
 	
 	

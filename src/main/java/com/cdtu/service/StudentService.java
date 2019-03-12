@@ -108,6 +108,10 @@ public interface StudentService {
 	 Map<String, Object> demonPublishWork(StudentSelectCourse studentSelectCourse, String sId);
 
 	public void updataAvatar(String path, String username);
+
+	public List<Map<String, Object>> fuzzySearchStudentByNameOrId(String nameOrId, String cId);
+
+	public List<Map<String, Object>> SearchStudentById(String sId);
 	 
 	 
 
