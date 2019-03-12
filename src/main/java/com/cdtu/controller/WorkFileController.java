@@ -1,8 +1,15 @@
 package com.cdtu.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +40,7 @@ public class WorkFileController {
 	static String[] fileType={"jpg","png","gif","psd","webp","txt","doc","docx","XLS","XLSX","ppt","pptx","pdf"};
 	@Resource(name="workService")
 	private WorkService workService;
-	@RequestMapping("uploadFiles")
+	@RequestMapping("uploadFiles.do")
 	@RequiresRoles(value = {"student", "teacher"}, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> upFiles(@RequestParam("file") CommonsMultipartFile[] file,@RequestParam("pwId") String pwId) {
 		System.out.println("uploadFiles-multipartResolver:" + file.length);
@@ -94,7 +101,7 @@ public class WorkFileController {
 		return map;
 	}
 
-	@RequestMapping("/deleteFiles")
+	@RequestMapping("/deleteFiles.do")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> deleteFiles(@RequestBody Map<String, Object> maps) {
 		Subject subject = SecurityUtils.getSubject();
@@ -110,7 +117,7 @@ public class WorkFileController {
 			workService.deleteTeacherFile(tfId);
 		} else {
 			Integer sfId = (Integer) maps.get("sfId");
-			String sfAdd = (String) map.get("sfAdd");
+			String sfAdd = (String) maps.get("sfAdd");
 			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
 			String filePath = workFile + sfAdd.substring(9);
 			File file = new File(filePath);
@@ -122,33 +129,18 @@ public class WorkFileController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/downloadFile")
+	@RequestMapping(value = "/downloadFile.do")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public Map<String, Object> downloadFiles(@RequestBody Map<String, Object> maps, HttpServletResponse response,
 			HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
+		String Addr=(String) maps.get("tfAdd");
 		try {
-			if (maps.get("tfAdd") != null) {
-				String tfAdd = (String) maps.get("tfAdd");
-				System.out.println(tfAdd);
+			String fileName = workService.selecttfNameService(Addr);
 				String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
-				System.out.println(workFile);
-				String filePath = workFile + tfAdd.substring(9);
-				System.out.println(filePath);
+				String filePath = workFile + Addr.substring(9);
 				File file = new File(filePath);
-				String fileName = tfAdd.substring(tfAdd.lastIndexOf("\\") + 1);
-				System.out.println(fileName);
-				// response.addHeader("Content-Disposition", "attachment; filename=" +
-				// URLEncoder.encode(fileName, "UTF-8"));
 				DownloadFile.downloadFile(file, fileName, response, request);
-			} else {
-				String sfAdd = (String) map.get("sfAdd");
-				String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
-				String filePath = workFile + sfAdd.substring(9);
-				File file = new File(filePath);
-				String fileName = sfAdd.substring(sfAdd.lastIndexOf("\\") + 1);
-				DownloadFile.downloadFile(file, fileName, response, request);
-			}
 		} catch (Exception e) {
 			map.put("status", 0);
 			map.put("msg", "下载失败");
@@ -156,46 +148,46 @@ public class WorkFileController {
 		map.put("status", 200);
 		return map;
 	}
-//	/**
-//	 * @author weiyuhang
-//	 * @param work
-//	 * @param response
-//	 * @throws IOException
-//	 */
-//	@RequestMapping(value = "downLoadAll.do")
-//	@RequiresRoles({ "teacher" })
-//	@ResponseBody
-//	public void downloadAll(@RequestBody Work work, HttpServletResponse response) throws IOException {
-//
-//		// 需要压缩的文件
-//		// 压缩后的文件
-//		String resourcesName = teacherService.selectPwIdname(work.getPwId()) + ".zip";
-//		ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream("D:/" + resourcesName));
-//		InputStream input = null;
-//
-//		for (String sId : work.getsIds()) {
-//			Work newWork = teacherService.selectStudentWork(sId, work.getPwId());
-//			File file = new File(newWork.getwAddr());
-//			input = new FileInputStream(file);
-//			zipOut.putNextEntry(new ZipEntry(sId + "_" + teacherService.selectStudentName(sId) + "_" + file.getName()));
-//			int temp = 0;
-//			while ((temp = input.read()) != -1)
-//				zipOut.write(temp);
-//			zipOut.closeEntry();
-//			input.close();
-//		}
-//		zipOut.close();
-//		File file = new File("D:/" + resourcesName);
-//		DownloadFile.downloadFile(file, resourcesName, response);
-//		 Path path=Paths.get(file.getName());
-//		 response.setContentType(MediaType.APPLICATION_OCTET_STREAM.toString());
-//		 response.setHeader("Content-Disposition", "attachment; filename=" +
-//		 URLEncoder.encode(resourcesName, "UTF-8"));
-//		 try {
-//		 Files.copy(path, response.getOutputStream());
-//		 } catch (IOException ex) {
-//		 }
-//		 return new
-//		 ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),headers,HttpStatus.CREATED);
-//	}
+	/**
+	 * @author weiyuhang
+	 * @param work
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "downLoadAll.do")
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	@ResponseBody
+	public void downloadAll(@RequestBody List<String> Addrs, HttpServletResponse response,
+			HttpServletRequest request) {
+
+		// 需要压缩的文件
+		// 压缩后的文件
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works"+File.separator +role.getUsername();
+		String resourcesName = workFile+ ".zip";
+		String zipname=role.getUsername()+".zip";
+		try{
+			ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(resourcesName));
+			InputStream input = null;
+			for (String Addr : Addrs) {
+				File file = new File(Addr);
+				input = new FileInputStream(file);
+			    String	filename = Addr.substring(Addr.lastIndexOf("\\") + 1);
+			    	zipOut.putNextEntry(new ZipEntry(workService.selecttfNameService(Addr)+filename));
+				int temp = 0;
+				while ((temp = input.read()) != -1)
+					zipOut.write(temp);
+				zipOut.closeEntry();
+				input.close();
+			}
+			zipOut.close();
+			File file = new File(resourcesName);
+			DownloadFile.downloadFile(file, zipname,response, request);
+		}catch (Exception e) {
+			
+		}
+		
+		
+	}	
 }

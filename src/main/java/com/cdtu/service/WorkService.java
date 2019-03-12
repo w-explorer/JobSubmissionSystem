@@ -3,6 +3,8 @@ package com.cdtu.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 public interface WorkService {
 	public List<Map<String, Object>> staSubCon(String pwId);
 
@@ -27,5 +29,12 @@ public interface WorkService {
 	public String selectwId(String sId, String pwId);
 
 	public void insertStudentFilewAddr(String wId, String wAddr, String filename, String type, Boolean state);
+  /**
+   * @author weiyuhang
+   * 查询文件名
+   */
+	 public String selecttfNameService(String tfAdd);
+	  public String selectsfNameService(String sfAdd);
 
+	
 }

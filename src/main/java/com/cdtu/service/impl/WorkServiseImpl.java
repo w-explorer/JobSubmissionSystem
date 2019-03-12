@@ -144,4 +144,16 @@ public class WorkServiseImpl implements WorkService {
 	public void insertStudentFilewAddr(String wId, String wAddr, String filename, String type, Boolean state) {
 		workMapper.insertStudentFilewAddr(wId, wAddr, filename, type, state);
 	}
+
+	@Override
+	public String selecttfNameService(String tfAdd) {
+		
+		return workMapper.selecttfName(tfAdd);
+	}
+
+	@Override
+	public String selectsfNameService(String sfAdd) {
+		// TODO Auto-generated method stub
+		return workMapper.selectsfName(sfAdd);
+	}
 }
