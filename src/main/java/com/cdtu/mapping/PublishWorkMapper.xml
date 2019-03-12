@@ -615,17 +615,20 @@
 		AND work.s_id=ssc.s_id
 	</select>
 	<select id="getTFiles" resultType="java.util.HashMap">
-		SELECT   tf.t_f_add AS url,tf.t_f_name as name ,tf.t_f_id as tfId,tf.t_f_type as type,tf.t_f_state as state
-		FROM publish_work pw,student_select_course ssc,t_file tf
+		SELECT DISTINCT  tf.t_f_add AS url,tf.t_f_name AS name ,tf.t_f_id AS tfId,tf.t_f_type AS TYPE,tf.t_f_state AS state
+		FROM publish_work pw,student_select_course ssc,t_file tf,img_type it
 		WHERE
 		ssc.s_id=#{sId}
 		AND pw.pw_id = #{pwId}
 		AND ssc.tsc_id=pw.tsc_id
 		AND pw.pw_id=tf.pw_id
+		AND tf.t_f_type NOT IN (
+			SELECT img_type.i_t_typt FROM img_type
+		)
 	</select>
 	<select id="getSFiles" resultType="java.util.HashMap">
-		SELECT   sf.s_f_add AS url,sf.s_f_name as name ,sf.s_f_id as sfId,sf.s_f_type as type,sf.s_f_state as state
-		FROM publish_work pw,student_select_course ssc,WORK,s_file sf
+		SELECT  DISTINCT sf.s_f_add AS url,sf.s_f_name AS name ,sf.s_f_id AS sfId,sf.s_f_type AS type,sf.s_f_state AS state
+		FROM publish_work pw,student_select_course ssc,WORK,s_file sf,img_type it
 		WHERE
 		ssc.s_id=#{sId}
 		AND pw.pw_id = #{pwId}
@@ -633,6 +636,9 @@
 		AND pw.pw_id=work.pw_id
 		AND work.w_id=sf.w_id
 		AND work.s_id=ssc.s_id
+		AND sf.s_f_type NOT IN (
+			SELECT img_type.i_t_typt FROM img_type
+		)
 	</select>
 	<select id="countPublishWorks" resultType="java.lang.Integer">
 		SELECT COUNT(*) 
@@ -647,6 +653,32 @@
 		WHERE c.c_id=#{cId}
 		AND tsc.c_id=c.c_id
 		AND pe.tsc_id=tsc.tsc_id
+	</select>
+	<select id="getTFilesImages" resultType="java.util.HashMap">
+		SELECT DISTINCT  tf.t_f_add AS url,tf.t_f_name AS name ,tf.t_f_id AS tfId,tf.t_f_type AS type,tf.t_f_state AS state
+		FROM publish_work pw,student_select_course ssc,t_file tf,img_type it
+		WHERE
+		ssc.s_id=#{sId}
+		AND pw.pw_id = #{pwId}
+		AND ssc.tsc_id=pw.tsc_id
+		AND pw.pw_id=tf.pw_id
+		AND tf.t_f_type IN (
+			SELECT img_type.i_t_typt FROM img_type
+		)
+	</select>
+	<select id="getSFilesImages" resultType="java.util.HashMap">
+		SELECT  DISTINCT sf.s_f_add AS url,sf.s_f_name AS name ,sf.s_f_id AS sfId,sf.s_f_type AS type,sf.s_f_state AS state
+		FROM publish_work pw,student_select_course ssc,WORK,s_file sf,img_type it
+		WHERE
+		ssc.s_id=#{sId}
+		AND pw.pw_id = #{pwId}
+		AND ssc.tsc_id=pw.tsc_id
+		AND pw.pw_id=work.pw_id
+		AND work.w_id=sf.w_id
+		AND work.s_id=ssc.s_id
+		AND sf.s_f_type IN (
+			SELECT img_type.i_t_typt FROM img_type
+		)
 	</select>
 	<!-- 文成end -->
 	

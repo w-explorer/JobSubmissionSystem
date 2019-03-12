@@ -26,18 +26,19 @@ import com.cdtu.util.DownloadFile;
 import com.cdtu.util.OAUtil;
 
 @Controller
-@RequestMapping("work")
+@RequestMapping(value = "work")
 public class WorkFileController {
+	private @Resource(name = "workService") WorkService workService;
+	private static String[] fileType = { "jpg", "png", "gif", "psd", "webp", "txt", "doc", "docx", "XLS", "XLSX", "ppt",
+			"pptx" };
 
-	
-	static String[] fileType={"jpg","png","gif","psd","webp","txt","doc","docx","XLS","XLSX","ppt","pptx"};
-	@Resource(name="workService")
-	private WorkService workService;
-	@RequestMapping("uploadFiles")
-	@RequiresRoles(value = {"student", "teacher"}, logical = Logical.OR)
-	public @ResponseBody Map<String, Object> upFiles(@RequestParam("file") CommonsMultipartFile[] file,@RequestParam("pwId") String pwId) {
+	@ResponseBody
+	@RequestMapping(value = "/uploadFiles")
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	public Map<String, Object> upFiles(@RequestParam("file") CommonsMultipartFile[] file,
+			@RequestParam("pwId") String pwId) {
 		System.out.println("uploadFiles-multipartResolver:" + file.length);
-        // 判断file数组不能为空并且长度大于0
+		// 判断file数组不能为空并且长度大于0
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		Map<String, Object> map=new HashMap<String, Object>();
@@ -85,67 +86,74 @@ public class WorkFileController {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                map.put("status", 0);
+                map.put("msg", "上传失败");
             }
         }
+        map.put("status", 200);
 		return map;
 	}
-	@RequestMapping("deleteFiles")
-	@RequiresRoles(value = {"student", "teacher"}, logical = Logical.OR)
+
+	@RequestMapping("/deleteFiles")
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> deleteFiles(@RequestBody Map<String, Object> maps) {
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
-		Map<String, Object> map=new HashMap<String, Object>();
-		if(role.getRole()=="teacher"){
-			Integer tfId= (Integer) maps.get("tfId");
-			String tfAdd=(String) maps.get("tfAdd");
-			String workFile ="D:" + File.separator + "uploadFile" + File.separator + "works";
-			String filePath=workFile+tfAdd.substring(9);
-			File file=new File(filePath);
+		Map<String, Object> map = new HashMap<>();
+		if (role.getRole() == "teacher") {
+			Integer tfId = (Integer) maps.get("tfId");
+			String tfAdd = (String) maps.get("tfAdd");
+			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
+			String filePath = workFile + tfAdd.substring(9);
+			File file = new File(filePath);
 			file.delete();
 			workService.deleteTeacherFile(tfId);
-		}else{
-			Integer sfId= (Integer) maps.get("sfId");
-			String sfAdd=(String) map.get("sfAdd");
-			String workFile ="D:" + File.separator + "uploadFile" + File.separator + "works";
-			String filePath=workFile+sfAdd.substring(9);
-			File file=new File(filePath);
+		} else {
+			Integer sfId = (Integer) maps.get("sfId");
+			String sfAdd = (String) map.get("sfAdd");
+			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
+			String filePath = workFile + sfAdd.substring(9);
+			File file = new File(filePath);
 			file.delete();
 			workService.deleteStudentFile(sfId);
 		}
 		map.put("status", 200);
 		return map;
 	}
-	
-	@RequestMapping("downloadFile")
-	@RequiresRoles(value = {"student", "teacher"}, logical = Logical.OR)
-	public @ResponseBody Map<String, Object> downloadFiles(@RequestBody Map<String, Object> maps, HttpServletResponse response,HttpServletRequest request) {
-		Map<String, Object> map=new HashMap<String, Object>();
-	       try {
-	    	   if(maps.get("tfAdd")!=null){
-					String tfAdd=(String) maps.get("tfAdd");
-					System.out.println(tfAdd);
-					String workFile ="D:" + File.separator + "uploadFile" + File.separator + "works";
-					System.out.println(workFile);
-					String filePath=workFile+tfAdd.substring(9);
-					System.out.println(filePath);
-					File file=new File(filePath);
-					String fileName =tfAdd.substring(tfAdd.lastIndexOf("\\") + 1);	
-					System.out.println(fileName);
-                    //response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
-					DownloadFile.downloadFile(file,fileName , response,request);
-				}else{
-					String sfAdd=(String) map.get("sfAdd");
-					String workFile ="D:" + File.separator + "uploadFile" + File.separator + "works";
-					String filePath=workFile+sfAdd.substring(9);
-					File file=new File(filePath);
-					String fileName =sfAdd.substring(sfAdd.lastIndexOf("\\") + 1);
-					DownloadFile.downloadFile(file, fileName, response,request);
-				}
+
+	@ResponseBody
+	@RequestMapping(value = "/downloadFile")
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	public Map<String, Object> downloadFiles(@RequestBody Map<String, Object> maps, HttpServletResponse response,
+			HttpServletRequest request) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			if (maps.get("tfAdd") != null) {
+				String tfAdd = (String) maps.get("tfAdd");
+				System.out.println(tfAdd);
+				String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
+				System.out.println(workFile);
+				String filePath = workFile + tfAdd.substring(9);
+				System.out.println(filePath);
+				File file = new File(filePath);
+				String fileName = tfAdd.substring(tfAdd.lastIndexOf("\\") + 1);
+				System.out.println(fileName);
+				// response.addHeader("Content-Disposition", "attachment; filename=" +
+				// URLEncoder.encode(fileName, "UTF-8"));
+				DownloadFile.downloadFile(file, fileName, response, request);
+			} else {
+				String sfAdd = (String) map.get("sfAdd");
+				String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
+				String filePath = workFile + sfAdd.substring(9);
+				File file = new File(filePath);
+				String fileName = sfAdd.substring(sfAdd.lastIndexOf("\\") + 1);
+				DownloadFile.downloadFile(file, fileName, response, request);
+			}
 		} catch (Exception e) {
-		map.put("status", 0);
-		map.put("msg", "下载失败");
+			map.put("status", 0);
+			map.put("msg", "下载失败");
 		}
-	     map.put("status", 200);
+		map.put("status", 200);
 		return map;
 	}
 //	/**

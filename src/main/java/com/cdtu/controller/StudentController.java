@@ -444,7 +444,9 @@ public class StudentController {
 			map.put("status", 200);
 			map.put("publishWork", publishWorkService.getPwDetails(sId, pwId));
 			map.put("teacherFiles", publishWorkService.getTFiles(sId, pwId));
+			map.put("teacherFilesImages", publishWorkService.getTFilesImages(sId, pwId));
 			map.put("studentFiles", publishWorkService.getSFiles(sId, pwId));
+			map.put("studentFilesImages", publishWorkService.getSFilesImages(sId, pwId));
 		} catch (Exception e) {
 			handlException(map, e);
 		}

@@ -17,4 +17,8 @@ public interface PublishWorkService {
 
 	int countPublishEstimates(String string);
 
+	List<Map<String,Object>> getTFilesImages(String sId, String pwId);
+
+	List<Map<String,Object>> getSFilesImages(String sId, String pwId);
+
 }
