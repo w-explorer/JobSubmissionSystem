@@ -29,7 +29,7 @@ import com.cdtu.util.DownloadFile;
 public class WorkFileController {
 
 	
-	static String[] fileType={"jpg","png","gif","psd","webp","txt","doc","docx","XLS","XLSX","ppt","pptx"};
+	static String[] fileType={"jpg","png","gif","psd","webp","txt","doc","docx","XLS","XLSX","ppt","pptx","pdf"};
 	@Resource(name="workService")
 	private WorkService workService;
 	@RequestMapping("uploadFiles")
