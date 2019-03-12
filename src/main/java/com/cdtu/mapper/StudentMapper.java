@@ -37,5 +37,7 @@ public interface StudentMapper {
 	public void updataAvatar(@Param("sImgSrc")String path,@Param("sId") String username);
 	public List<Map<String, Object>> fuzzySearchStudentByNameOrId(@Param("nameOrId")String nameOrId, @Param("cId")String cId);
 	public List<Map<String, Object>> SearchStudentById(@Param("sId")String sId);
+	public void CreatStudentTableDescRank(@Param("cId")String cId,@Param("tId")String tId);
+	public List<Map<String, Object>> selectStudents();
 	
 }

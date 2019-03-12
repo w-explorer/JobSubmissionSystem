@@ -96,21 +96,21 @@ public class WorkFileController {
 
 	@RequestMapping("/deleteFiles")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	public @ResponseBody Map<String, Object> deleteFiles(@RequestBody Map<String, Object> maps) {
+	public @ResponseBody Map<String, Object> deleteFiles(@RequestBody Map<String, Object> paramsMap) {
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		Map<String, Object> map = new HashMap<>();
 		if (role.getRole() == "teacher") {
-			Integer tfId = (Integer) maps.get("tfId");
-			String tfAdd = (String) maps.get("tfAdd");
+			Integer tfId = (Integer) paramsMap.get("tfId");
+			String tfAdd = (String) paramsMap.get("tfAdd");
 			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
 			String filePath = workFile + tfAdd.substring(9);
 			File file = new File(filePath);
 			file.delete();
 			workService.deleteTeacherFile(tfId);
 		} else {
-			Integer sfId = (Integer) maps.get("sfId");
-			String sfAdd = (String) map.get("sfAdd");
+			Integer sfId = (Integer) paramsMap.get("tfId");
+			String sfAdd = (String) paramsMap.get("tfAdd");
 			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
 			String filePath = workFile + sfAdd.substring(9);
 			File file = new File(filePath);
@@ -124,12 +124,12 @@ public class WorkFileController {
 	@ResponseBody
 	@RequestMapping(value = "/downloadFile")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	public Map<String, Object> downloadFiles(@RequestBody Map<String, Object> maps, HttpServletResponse response,
+	public Map<String, Object> downloadFiles(@RequestBody Map<String, Object> paramsMap, HttpServletResponse response,
 			HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			if (maps.get("tfAdd") != null) {
-				String tfAdd = (String) maps.get("tfAdd");
+			if (paramsMap.get("tfAdd") != null) {
+				String tfAdd = (String) paramsMap.get("tfAdd");
 				System.out.println(tfAdd);
 				String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
 				System.out.println(workFile);

@@ -112,6 +112,10 @@ public interface StudentService {
 	public List<Map<String, Object>> fuzzySearchStudentByNameOrId(String nameOrId, String cId);
 
 	public List<Map<String, Object>> SearchStudentById(String sId);
+
+	public void CreatStudentTableDescRank(String cId,String tId);
+
+	public List<Map<String, Object>> selectStudents();
 	 
 	 
 
