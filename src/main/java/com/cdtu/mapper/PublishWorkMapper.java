@@ -190,6 +190,7 @@ public interface PublishWorkMapper {
 	int countPublishWorks(@Param("cId")String cId);
 
 	int countPublishEstimates(@Param("cId")String cId);
+	 void  updatePublishWork(PublishWork publishwork);
 
 	List<Map<String, Object>> getTFilesImages(@Param("sId")String sId, @Param("pwId")String pwId);
 

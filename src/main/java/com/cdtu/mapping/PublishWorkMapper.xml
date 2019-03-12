@@ -681,4 +681,9 @@
 		)
 	</select>
 	<!-- 文成end -->
+	
+	<update id="updatePublishWork" parameterType="com.cdtu.model.PublishWork">
+	update publish_work set pw_name=#{pwName} , pw_end=#{pwEnd} , pw_state=#{pwState} , pw_content=#{pwContent}
+	, pw_score=#{pwScore} where pw_id=#{pwId}
+	</update>
 </mapper>

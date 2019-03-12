@@ -155,7 +155,7 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public Integer publishWork(PublishWork publishWork, String tId) {
+	public String publishWork(PublishWork publishWork, String tId) {
 		if (publishWork != null) {
 			publishWork.setPwId(OAUtil.getId());
 			publishWork.setTscId(publishWorkMapper.selectTscid(publishWork.getcId(), tId));
@@ -165,9 +165,9 @@ public class TeacherServiceImpl implements TeacherService {
 				String wId=OAUtil.getId();
 				work.insertWorks(wId,publishWork.getPwId(),sId);
 			}
-			return 1;
+			return publishWork.getPwId();
 		} else
-			return -1;
+			return "-1";
 	}
 
 	@Override
@@ -355,6 +355,12 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public void updataAvatar(String path, String username) {
 		teacherMapper.updataAvatar(path, username);
+	}
+
+	@Override
+	public String updatepublishWork(PublishWork publishWork) {
+		publishWorkMapper.updatePublishWork(publishWork);
+		return null;
 	}
 
 	
