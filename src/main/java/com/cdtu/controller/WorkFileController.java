@@ -15,11 +15,16 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -130,7 +135,7 @@ public class WorkFileController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/downloadFile.do")
+	@RequestMapping(value = "/downloadFiles.do")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public Map<String, Object> downloadFiles(@RequestBody Map<String, Object> maps, HttpServletResponse response,
 			HttpServletRequest request) {
@@ -138,15 +143,18 @@ public class WorkFileController {
 		String Addr=(String) maps.get("tfAdd");
 		try {
 			String fileName = workService.selecttfNameService(Addr);
+		
 				String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
 				String filePath = workFile + Addr.substring(9);
 				File file = new File(filePath);
 				DownloadFile.downloadFile(file, fileName, response, request);
+				
+				map.put("status", 200);
 		} catch (Exception e) {
 			map.put("status", 0);
 			map.put("msg", "下载失败");
 		}
-		map.put("status", 200);
+		
 		return map;
 	}
 	/**
@@ -187,11 +195,34 @@ public class WorkFileController {
 			zipOut.close();
 			File file = new File(resourcesName);
 			DownloadFile.downloadFile(file, zipname,response, request);
+			map.put("status", 200);
 		}catch (Exception e) {
 			map.put("status", 0);
 			map.put("msg", "下载失败");
 		}
-		map.put("status", 200);
+		
 		return map;
 	}	
+	
+	
+	@RequestMapping(value = "downloadFile.do")
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	public  ResponseEntity<byte[]> downloadFile (@RequestBody Map<String, Object> maps, HttpServletResponse response,
+			HttpServletRequest request)throws IOException {
+		Map<String, Object> map = new HashMap<>();
+		String Addr=(String) maps.get("tfAdd");
+		System.out.println("clksdnlkjsdbkj");
+			String fileName = workService.selecttfNameService(Addr);
+				String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
+				String filePath = workFile + Addr.substring(9);
+				    HttpHeaders headers = new HttpHeaders();
+				    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);   
+				    headers.setContentDispositionFormData("attachment", fileName);  
+				    return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(new File(filePath)),    
+                            headers, HttpStatus.CREATED);    
+		
+	
+		
+		
+	}
 }

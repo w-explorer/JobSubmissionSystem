@@ -46,6 +46,7 @@ public class DownloadFile {
 			response.setContentType("application/octet-stream");
 			// 告诉浏览器不解析文件
 			response.setHeader("Content-Disposition", "attachment;filename=" + fileNameEncoder);
+			
 			toClient.write(buffer);
 			toClient.flush();
 			toClient.close();
