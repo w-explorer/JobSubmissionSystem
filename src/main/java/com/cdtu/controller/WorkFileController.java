@@ -157,11 +157,11 @@ public class WorkFileController {
 	 */
 	@RequestMapping(value = "downLoadAll.do")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	public @ResponseBody void downloadAll(@RequestBody Map<String, Object> maps, HttpServletResponse response,
+	public @ResponseBody Map<String, Object> downloadAll(@RequestBody Map<String, Object> maps, HttpServletResponse response,
 			HttpServletRequest request) {
-
 		// 需要压缩的文件
 		// 压缩后的文件
+		Map<String, Object> map = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		List<String> Addrs=(List<String>) maps.get("Addrs");
@@ -188,9 +188,10 @@ public class WorkFileController {
 			File file = new File(resourcesName);
 			DownloadFile.downloadFile(file, zipname,response, request);
 		}catch (Exception e) {
-			
+			map.put("status", 0);
+			map.put("msg", "下载失败");
 		}
-		
-		
+		map.put("status", 200);
+		return map;
 	}	
 }
