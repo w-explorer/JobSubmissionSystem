@@ -211,18 +211,23 @@
 	<select id="selectPublishEstimateBytscId" resultMap="BaseResultMap">
 		SELECT
 		publish_estimate.*
-		FROM student,student_select_course,publish_estimate
+		FROM student,student_select_course,publish_estimate,course c,teacher_select_course tsc
 		WHERE student.s_id=student_select_course.s_id
 		AND student_select_course.tsc_id=publish_estimate.tsc_id
 		AND student.s_id=#{sId}
-		AND student_select_course.tsc_id=#{tscId}
+		AND student_select_course.tsc_id=tsc.tsc_id
+		AND tsc.c_id=c.c_id
+		AND c.c_id=#{cId}
 		AND publish_estimate.ep_id NOT IN(SELECT estimate.ep_id
-		FROM student,student_select_course,publish_estimate,estimate
+		FROM student,student_select_course,publish_estimate,estimate,course c,teacher_select_course tsc
 		WHERE student.s_id=student_select_course.s_id
 		AND estimate.ep_id=publish_estimate.ep_id
 		AND student_select_course.tsc_id=publish_estimate.tsc_id
 		AND student.s_id=#{sId}
-		AND student_select_course.tsc_id=#{tscId})
+		AND student_select_course.tsc_id=tsc.tsc_id
+		AND tsc.c_id=c.c_id
+		AND c.c_id=#{cId}
+		)
 	</select>
 	<!-- 查询发布点评表通过ct_id和s_id by:黎睿-->
 	<select id="selectPublishEstimateByctId" resultMap="BaseResultMap">

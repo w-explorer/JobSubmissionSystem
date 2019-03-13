@@ -38,6 +38,7 @@ public interface StudentMapper {
 	public List<Map<String, Object>> fuzzySearchStudentByNameOrId(@Param("nameOrId")String nameOrId, @Param("cId")String cId);
 	public List<Map<String, Object>> SearchStudentById(@Param("sId")String sId);
 	public void CreatStudentTableDescRank(@Param("cId")String cId,@Param("tId")String tId);
-	public List<Map<String, Object>> selectStudents();
+	public List<Map<String, Object>> selectStudents( @Param("start") int start,
+			@Param("end") int end);
 	
 }
