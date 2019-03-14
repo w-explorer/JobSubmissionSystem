@@ -125,7 +125,7 @@
 		parameterType="com.cdtu.model.Work">
 		UPDATE WORK
 		SET
-		w_time=#{wTime},w_context=#{wContext},w_problem=#{wProblem}
+		w_time=#{wTime},w_context=#{wContext},w_problem=#{wProblem},s_w_state=#{sWState}
 		WHERE
 		pw_id=#{pwId} AND s_id=#{sId}
 	</update>

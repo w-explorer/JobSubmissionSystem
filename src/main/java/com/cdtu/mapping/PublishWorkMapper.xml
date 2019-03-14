@@ -12,6 +12,7 @@
     <result column="pw_content" property="pwContent" jdbcType="CHAR" />
     <result column="activityImgSrc" property="activityImgSrc" jdbcType="CHAR" />
     <result column="wScore" property="wScore" jdbcType="INTEGER" />
+    <result column="wState" property="wState" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.cdtu.model.PublishWork" extends="BaseResultMap" >
     <result column="pw_name" property="pwName" jdbcType="LONGVARCHAR" />
@@ -338,24 +339,18 @@
 																														</select>-->
 	<!-- 学生查询发布作业表通过c_id和s_id by:黎睿-->
 	<select id="selectStudentPublishWorkBycId" resultMap="BaseResultMap">
-		SELECT DISTINCT 
-		publish_work.*,course.c_img_src as activityImgSrc,work.w_score as wScore
-		FROM student,student_select_course,publish_work,teacher_select_course,course,work
+			SELECT DISTINCT 
+		pw.*,c.c_img_src AS activityImgSrc,w.w_score AS wScore,w.s_w_state AS wState
+		FROM student s,student_select_course ssc,publish_work pw,teacher_select_course tsc,course c,WORK w
 		WHERE
-		student.s_id=student_select_course.s_id
-		AND
-		student_select_course.tsc_id=publish_work.tsc_id
-		AND
-		student_select_course.tsc_id=teacher_select_course.tsc_id
-		AND
-		teacher_select_course.c_id=course.c_id
-		AND
-		publish_work.pw_id = work.pw_id
-		AND
-		student.s_id=#{sId}
-		AND course.c_id=#{cId}
+		ssc.`tsc_id`=tsc.`tsc_id`
+		AND tsc.`c_id`=c.`c_id`
+		AND pw.`tsc_id`=tsc.`tsc_id`
+		AND pw.`pw_id`=w.`pw_id`
+		AND s.s_id=#{sId}
+		AND c.c_id=#{cId}
 		<if test="pwState!=null">
-			AND publish_work.pw_state=#{pwState}
+			AND pw.pw_state=#{pwState}
 		</if>
 		LIMIT #{start}, #{end}
 	</select>

@@ -110,7 +110,7 @@ public class StudentServiceImpl implements StudentService {
 			publishWorks.put("countall",
 					publishWorkMapper.selectStudentPublishWorkCount(sId, studentSelectCourse.getcId(), null));
 			for (PublishWork publishWork : publishWorkLs) {
-				if (workMapper.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId()) != 0) {
+				if (publishWork.getwState()) {
 					publishWork.setwStringState("已参与");
 					publishWork.setwBooleanState(true);
 				} else {

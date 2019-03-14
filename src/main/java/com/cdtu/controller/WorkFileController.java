@@ -107,7 +107,7 @@ public class WorkFileController {
 		return map;
 	}
 
-	@RequestMapping("/deleteFiles.do")
+	@RequestMapping("/deleteFiles")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> deleteFiles(@RequestBody Map<String, Object> paramsMap) {
 		Subject subject = SecurityUtils.getSubject();
@@ -135,7 +135,7 @@ public class WorkFileController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/downloadFile")
+	@RequestMapping(value = "/downloadFile.do")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public Map<String, Object> downloadFiles(@RequestBody Map<String, Object> paramsMap, HttpServletResponse response,
 			HttpServletRequest request) {
@@ -205,7 +205,7 @@ public class WorkFileController {
 	}	
 	
 	
-	@RequestMapping(value = "downloadFile.do")
+	@RequestMapping(value = "downloadFile")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public  ResponseEntity<byte[]> downloadFile (@RequestBody Map<String, Object> maps, HttpServletResponse response,
 			HttpServletRequest request)throws IOException {
