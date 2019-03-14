@@ -222,21 +222,11 @@ public class StudentServiceImpl implements StudentService {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		if (work != null) {
-			if (workMapper.selectWork(work.getsId(), work.getPwId()) == null) {
-				work.setId(OAUtil.getId());
-				String nowDate = dateFormat.format(date);
-				work.setwTime(nowDate);
-				workMapper.insertWork(work);
-				return 1;
-			}
-			if (workMapper.selectWork(work.getsId(), work.getPwId()) != null) {
 				String nowDate = dateFormat.format(date);
 				work.setsWState(true);
 				work.setwTime(nowDate);
 				workMapper.studentUpdateWork(work);
 				return 1;
-			}
-			return -1;
 		} else
 			return -1;
 	}
@@ -276,6 +266,30 @@ public class StudentServiceImpl implements StudentService {
 	public void updataAvatar(String path, String username) {
 		studentMapper.updataAvatar(path, username);
 
+	}
+
+	@Override
+	public List<Map<String, Object>> fuzzySearchStudentByNameOrId(String nameOrId,String cId) {
+		// TODO Auto-generated method stub
+		return studentMapper.fuzzySearchStudentByNameOrId(nameOrId,cId);
+	}
+
+	@Override
+	public List<Map<String, Object>> SearchStudentById(String sId) {
+		// TODO Auto-generated method stub
+		return studentMapper.SearchStudentById(sId);
+	}
+
+	@Override
+	public void CreatStudentTableDescRank(String cId,String tId) {
+		// TODO Auto-generated method stub
+		studentMapper.CreatStudentTableDescRank(cId,tId);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectStudents() {
+		// TODO Auto-generated method stub
+		return studentMapper.selectStudents();
 	}
 
 }

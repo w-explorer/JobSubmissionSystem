@@ -258,6 +258,9 @@ public class StudentController {
 	@RequiresRoles({ "student" })
 	public @ResponseBody Map<String, Object> workOn(@RequestBody Work work) {
 		Map<String, Object> msg = new HashMap<>();
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		work.setsId(role.getUsername());
 		Integer status = studentService.submitWork(work);
 		
 		if (status == 1) {

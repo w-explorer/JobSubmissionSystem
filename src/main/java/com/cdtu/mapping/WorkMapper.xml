@@ -116,7 +116,7 @@
 	<!-- 添加作业 by:黎睿 -->
 	<insert id="insertWork" parameterType="com.cdtu.model.Work">
 		INSERT INTO
-		WORK(id,pw_id,w_time,w_context,w_problem,s_id)
+		WORK(w_id,pw_id,w_time,w_context,w_problem,s_id)
 		VALUES(#{id},#{pwId},#{wTime},#{wContext},#{wProblem},#{sId})
 	</insert>
 

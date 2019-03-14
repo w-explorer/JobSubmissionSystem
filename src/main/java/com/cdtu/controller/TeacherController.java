@@ -34,6 +34,7 @@ import com.cdtu.model.Role;
 import com.cdtu.model.Work;
 import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.StudentSelectCourseService;
+import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
@@ -45,6 +46,7 @@ public class TeacherController {
 	private @Resource(name = "teacherService") TeacherService teacherService;
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
 	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
+	private @Resource(name = "studentService") StudentService studentService;
 
 	/**
 	 * 老师统计作业提交情况，参数是发布作业码
@@ -558,17 +560,85 @@ public class TeacherController {
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> updatepublishWork(@RequestBody PublishWork publishWork) {
 		Map<String, Object> map = new HashMap<>();
-		Subject subject = SecurityUtils.getSubject();
-	try{
-		Role role = (Role) subject.getPrincipal();
+
+		try{
+		
 		 teacherService.updatepublishWork(publishWork);
 		System.out.println(publishWork.getPwContent());
 		map.put("status", 200);
 		
 	}catch (Exception e) {
-		map.put("status", 0);
-		map.put("msg", "错误信息");
+		handlException(map, e);
 	}
 		return map;
 	}
+	/**
+	 *模糊查询学生
+	 * @author 文成
+	 * @param paramsMap
+	 * @return
+	 */
+	@RequestMapping(value="fuzzySearchStudent.do")
+	@RequiresRoles({"teacher"})
+	public @ResponseBody Map<String,Object> fuzzySearchStudentsByNameOrId(@RequestBody Map<String,Object> paramsMap){
+		Map<String,Object> map = new HashMap<String,Object>();
+		String nameOrId = (String) paramsMap.get("nameOrId");
+		String cId = (String) paramsMap.get("cId");
+		try {
+			map.put("students", studentService.fuzzySearchStudentByNameOrId(nameOrId,cId));
+			map.put("status", 200);
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
+	/**
+	 * 根据学号查询学生
+	 * @author 文成
+	 * @param paramsMap
+	 * @return
+	 */
+	@RequestMapping(value="SearchStudent.do")
+	@RequiresRoles({"teacher"})
+	public @ResponseBody Map<String,Object> SearchStudentById(@RequestBody Map<String,Object> paramsMap){
+		Map<String,Object> map = new HashMap<String,Object>();
+		String sId = (String) paramsMap.get("sId");
+		try {
+			map.put("student", studentService.SearchStudentById(sId));
+			map.put("status", 200);
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
+	/**
+	 * 通过建立一张临时表 存储班级成绩排名 每个同学的总分(sql 高级排名  开启mybatis 一次执行多条SQL )
+	 * 怎么开启呢？在拼装mysql链接的url时，为其加上allowMultiQueries参数，设置为true，如下：
+	 * jdbc.jdbcUrl=jdbc:mysql://127.0.0.1:3306/database?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+	 * @author 文成
+	 * @param paramsMap
+	 * @return
+	 */
+	@RequestMapping(value="SearchStudents.do")
+	@RequiresRoles({"teacher"})
+	public @ResponseBody Map<String,Object> SearchStudentsBycId(@RequestBody Map<String,Object> paramsMap){
+		Map<String,Object> map = new HashMap<String,Object>();
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String tId = role.getUsername();
+		String cId = (String) paramsMap.get("cId");
+		try {
+			map.put("student", studentService.selectStudents());
+		} catch (Exception e) {
+			try {
+				studentService.CreatStudentTableDescRank(cId,tId);
+				map.put("student", studentService.selectStudents());
+			} catch (Exception e1) {
+				handlException(map, e);
+			}
+		}
+		map.put("status", 200);
+		return map;
+	}
+	
 }

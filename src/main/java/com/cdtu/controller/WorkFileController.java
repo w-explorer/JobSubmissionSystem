@@ -109,21 +109,21 @@ public class WorkFileController {
 
 	@RequestMapping("/deleteFiles.do")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	public @ResponseBody Map<String, Object> deleteFiles(@RequestBody Map<String, Object> maps) {
+	public @ResponseBody Map<String, Object> deleteFiles(@RequestBody Map<String, Object> paramsMap) {
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		Map<String, Object> map = new HashMap<>();
 		if (role.getRole() == "teacher") {
-			Integer tfId = (Integer) maps.get("tfId");
-			String tfAdd = (String) maps.get("tfAdd");
+			Integer tfId = (Integer) paramsMap.get("tfId");
+			String tfAdd = (String) paramsMap.get("tfAdd");
 			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
 			String filePath = workFile + tfAdd.substring(9);
 			File file = new File(filePath);
 			file.delete();
 			workService.deleteTeacherFile(tfId);
 		} else {
-			Integer sfId = (Integer) maps.get("sfId");
-			String sfAdd = (String) maps.get("sfAdd");
+			Integer sfId = (Integer) paramsMap.get("tfId");
+			String sfAdd = (String) paramsMap.get("tfAdd");
 			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
 			String filePath = workFile + sfAdd.substring(9);
 			File file = new File(filePath);
@@ -137,18 +137,18 @@ public class WorkFileController {
 	@ResponseBody
 	@RequestMapping(value = "/downloadFiles.do")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	public Map<String, Object> downloadFiles(@RequestBody Map<String, Object> maps, HttpServletResponse response,
+	public Map<String, Object> downloadFiles(@RequestBody Map<String, Object> paramsMap, HttpServletResponse response,
 			HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
-		String Addr=(String) maps.get("tfAdd");
+		String Addr=(String) paramsMap.get("tfAdd");
 		try {
 			String fileName = workService.selecttfNameService(Addr);
 		
+			
 				String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
 				String filePath = workFile + Addr.substring(9);
 				File file = new File(filePath);
 				DownloadFile.downloadFile(file, fileName, response, request);
-				
 				map.put("status", 200);
 		} catch (Exception e) {
 			map.put("status", 0);

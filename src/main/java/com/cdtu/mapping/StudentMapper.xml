@@ -32,6 +32,54 @@
 		set s_img_src=#{sImgSrc}
 		where s_id=#{sId}
 	</update>
+	<select id="fuzzySearchStudentByNameOrId" resultType="java.util.HashMap">
+		SELECT DISTINCT * 
+		FROM secondView
+		WHERE sId LIKE '%${nameOrId}%'
+			OR sName LIKE '%${nameOrId}%'
+	</select>
+	<select id="SearchStudentById" resultType="java.util.HashMap">
+		SELECT DISTINCT * 
+		FROM secondView
+		WHERE sId = #{sId}
+	</select>
+	<select id="CreatStudentTableDescRank">
+		CREATE TEMPORARY TABLE firstView (sId VARCHAR(10) NOT NULL,sName VARCHAR(10) NOT NULL,sImgSrc TEXT NOT NULL,sumScore INT(3)NOT NULL);
+		INSERT INTO firstView(sId,sName,sImgSrc,sumScore)
+		SELECT  w.s_id AS sId,s.s_name AS sName,s.s_img_src AS sImgSrc ,SUM(w.w_score) AS sumScore
+			FROM WORK w,student s
+				WHERE w.s_id IN (
+					SELECT   s.s_id 
+					FROM student s,course c,teacher_select_course tsc,student_select_course ssc,publish_work pw,WORK w
+					WHERE
+					tsc.t_id=#{tId}
+					AND tsc.c_id=#{cId}
+					AND ssc.tsc_id=tsc.tsc_id
+					AND s.s_id=ssc.s_id
+					AND pw.tsc_id=tsc.tsc_id
+					AND w.pw_id=pw.pw_id
+					AND w.s_id=s.s_id
+					GROUP BY  s.s_id 
+				)
+				AND w.s_id=s.s_id
+				GROUP BY w.s_id;
+	
+		CREATE TEMPORARY TABLE secondView (sId VARCHAR(10) NOT NULL,sName VARCHAR(10) NOT NULL,sImgSrc TEXT NOT NULL,sumScore INT(3)NOT NULL,rank INT(3)NOT NULL);
+		INSERT INTO secondView(sId,sName,sImgSrc,sumScore,rank)
+		SELECT sId,sName,sImgSrc,sumScore ,
+		CASE 
+		WHEN @prevRank = sumScore THEN @curRank 
+		WHEN @prevRank := sumScore THEN @curRank := @curRank + 1
+		END AS rank
+		FROM firstView p, 
+		(SELECT @curRank :=0, @prevRank := NULL) r
+		ORDER BY sumScore DESC;
+		
+		DROP TABLE firstView
+	</select>
+	<select id="selectStudents" resultType="java.util.HashMap">
+		SELECT DISTINCT * FROM secondView ORDER BY secondView.sumScore DESC
+	</select>
 	<!-- 文成end -->
 	
 	
@@ -41,6 +89,8 @@
 		from student
 		where s_id=#{id}
 	</select>
+	
+	
 	
 	
 </mapper>

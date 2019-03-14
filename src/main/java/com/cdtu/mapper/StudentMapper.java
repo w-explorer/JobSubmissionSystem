@@ -1,5 +1,8 @@
 package com.cdtu.mapper;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.cdtu.model.Role;
@@ -32,5 +35,9 @@ public interface StudentMapper {
      */
     String selectStudentName(String id);
 	public void updataAvatar(@Param("sImgSrc")String path,@Param("sId") String username);
+	public List<Map<String, Object>> fuzzySearchStudentByNameOrId(@Param("nameOrId")String nameOrId, @Param("cId")String cId);
+	public List<Map<String, Object>> SearchStudentById(@Param("sId")String sId);
+	public void CreatStudentTableDescRank(@Param("cId")String cId,@Param("tId")String tId);
+	public List<Map<String, Object>> selectStudents();
 	
 }
