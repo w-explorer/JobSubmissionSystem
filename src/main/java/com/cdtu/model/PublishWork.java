@@ -18,7 +18,17 @@ public class PublishWork {
 	private Boolean wState;
 	private Integer pwScore;
 	private Integer wScore;
+	private Integer finishedNum;//完成作业的总人数
 	
+	
+	public Integer getFinishedNum() {
+		return finishedNum;
+	}
+
+	public void setFinishedNum(Integer finishedNum) {
+		this.finishedNum = finishedNum;
+	}
+
 	public Boolean getwState() {
 		return wState;
 	}

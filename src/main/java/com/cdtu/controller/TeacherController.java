@@ -274,7 +274,7 @@ public class TeacherController {
 	 * @param state
 	 * @return
 	 */
-	@RequestMapping(value = "queryPublishWork.do", method = RequestMethod.POST)
+	@RequestMapping(value = "queryPublishWork.dotime", method = RequestMethod.POST)
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> queryPublishWork(@RequestBody CourseWapper courseWapper) {
 		Subject subject = SecurityUtils.getSubject();

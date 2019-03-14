@@ -73,6 +73,7 @@ public class StudentServiceImpl implements StudentService {
 	public Integer submitEvaluation(Estimate estimate) {
 		if (estimate != null) {
 			estimate.seteId(OAUtil.getId());
+			estimate.setsEState(true);
 			estimateMapper.insertEstimate(estimate);
 			return 1;
 		} else

@@ -13,6 +13,7 @@
     <result column="activityImgSrc" property="activityImgSrc" jdbcType="CHAR" />
     <result column="wScore" property="wScore" jdbcType="INTEGER" />
     <result column="wState" property="wState" />
+    <result column="finishedNum" property="finishedNum" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.cdtu.model.PublishWork" extends="BaseResultMap" >
     <result column="pw_name" property="pwName" jdbcType="LONGVARCHAR" />
@@ -339,19 +340,27 @@
 																														</select>-->
 	<!-- 学生查询发布作业表通过c_id和s_id by:黎睿-->
 	<select id="selectStudentPublishWorkBycId" resultMap="BaseResultMap">
-			SELECT DISTINCT 
-		pw.*,c.c_img_src AS activityImgSrc,w.w_score AS wScore,w.s_w_state AS wState
-		FROM student s,student_select_course ssc,publish_work pw,teacher_select_course tsc,course c,WORK w
+		 SELECT COUNT(w.pw_id) AS finishedNum ,pw.*,w.w_score AS wScore,w.s_w_state AS wState,pw.pw_img_src AS activityImgSrc
+        FROM WORK w,publish_work pw
 		WHERE
-		ssc.`tsc_id`=tsc.`tsc_id`
-		AND tsc.`c_id`=c.`c_id`
-		AND pw.`tsc_id`=tsc.`tsc_id`
-		AND pw.`pw_id`=w.`pw_id`
-		AND s.s_id=#{sId}
-		AND c.c_id=#{cId}
+		w.s_id IN(SELECT DISTINCT w.s_id
+				FROM student s,student_select_course ssc ,teacher_select_course tsc ,course c,publish_work pw,WORK w
+				WHERE 
+				ssc.tsc_id=tsc.tsc_id
+				AND tsc.c_id=c.c_id
+				AND pw.tsc_id=tsc.tsc_id
+				AND pw.pw_id=w.pw_id
+				AND s.s_id=#{sId}
+				AND c.c_id=#{cId}
+				<if test="pwState!=null">
+					AND pw.pw_state=#{pwState}
+				</if>)
+		AND pw.pw_id=w.pw_id
+		AND w.s_w_state=1
 		<if test="pwState!=null">
 			AND pw.pw_state=#{pwState}
 		</if>
+		GROUP BY w.pw_id
 		LIMIT #{start}, #{end}
 	</select>
 	<!-- 学生查询发布作业表通过课程号（cId）数量 by:黎睿-->

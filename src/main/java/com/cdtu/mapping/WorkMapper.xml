@@ -49,41 +49,45 @@
 	</select>
 
 	<select id="SearchPwByPwName" resultType="java.util.HashMap">
-		SELECT DISTINCT
-		pw.pw_id AS pwId,pw.tsc_id AS cId,pw.pw_name AS pwName,pw.pw_end AS
-		pwEnd,pw.pw_state AS pwState,c.c_img_src AS activityImgSrc
-		FROM
-		publish_work pw,teacher_select_course tsc,course c
+		SELECT COUNT(w.pw_id) AS finishedNum ,pw.pw_id AS pwId,pw.tsc_id AS cId,pw.pw_name AS pwName,pw.pw_end AS
+		pwEnd,pw.pw_state AS pwState,pw.pw_img_src AS activityImgSrc
+		FROM WORK w,publish_work pw
 		WHERE
-		tsc.t_id=#{tId}
-		AND pw.pw_name = #{pwName}
-		AND tsc.c_id=c.c_id
-		AND
-		c.c_id=#{cId}
-		AND tsc.tsc_id=pw.tsc_id
-		AND tsc.c_id=c.c_id
+		w.s_id IN(SELECT DISTINCT w.s_id
+			FROM student_select_course ssc ,teacher_select_course tsc ,course c,publish_work pw,WORK w
+			WHERE 
+			ssc.tsc_id=tsc.tsc_id
+			AND tsc.c_id=c.c_id
+			AND pw.tsc_id=tsc.tsc_id
+			AND pw.pw_id=w.pw_id
+			AND tsc.`t_id`#{tId}
+			AND c.c_id=#{cId}
+			)
+		AND pw.pw_id=w.pw_id
+		AND w.s_w_state=1
+		AND pw.pw_name=#{pwName}
+		GROUP BY w.pw_id
 	</select>
 
 	<select id="SsearchPwByPwName" resultType="java.util.HashMap">
-		SELECT DISTINCT
-		pw.pw_id AS pwId,pw.tsc_id AS cId,pw.pw_name AS pwName,pw.pw_end AS
-		pwEnd,pw.pw_state AS pwState,c.c_img_src AS activityImgSrc
-		FROM
-		publish_work pw,student_select_course ssc ,teacher_select_course
-		tsc,course c
+	SELECT COUNT(w.pw_id) AS finishedNum ,pw.pw_id AS pwId,pw.tsc_id AS cId,pw.pw_name AS pwName,pw.pw_end AS
+		pwEnd,pw.pw_state AS pwState,pw.pw_img_src AS activityImgSrc
+		FROM WORK w,publish_work pw
 		WHERE
-		ssc.s_id=#{sId}
-		AND pw.pw_name = #{pwName}
-		AND
-		c.c_id=#{cId}
-		AND
+		w.s_id IN(SELECT DISTINCT w.s_id
+			FROM student s,student_select_course ssc ,teacher_select_course tsc ,course c,publish_work pw,WORK w
+		WHERE 
 		ssc.tsc_id=tsc.tsc_id
 		AND tsc.c_id=c.c_id
-		AND
-		ssc.tsc_id=pw.tsc_id
-		AND
-		pw.tsc_id=tsc.tsc_id
-		AND tsc.c_id=c.c_id
+		AND pw.tsc_id=tsc.tsc_id
+		AND pw.pw_id=w.pw_id
+		AND s.s_id=#{sId}
+		AND c.c_id=#{cId}	
+		)
+		AND pw.pw_id=w.pw_id
+		AND w.s_w_state=1
+		AND pw.pw_name=#{pwName}
+		GROUP BY w.pw_id
 	</select>
 	<!-- 文成end -->
 

@@ -210,7 +210,7 @@
 	<!-- 查询发布点评表通过c_id和s_id by:黎睿-->                       
 	<select id="selectPublishEstimateBytscId" resultType="java.util.HashMap">
 			SELECT
-		publish_estimate.ep_id AS epId,publish_estimate.ep_start_time AS epStartTime,publish_estimate.ep_img_src AS epImgSrc,c.c_name AS cName
+		publish_estimate.ep_id AS epId,publish_estimate.ep_start_time AS epStartTime,publish_estimate.ep_img_src AS activityImgSrc,c.c_name AS cName
 		FROM student,student_select_course,publish_estimate,course c,teacher_select_course tsc
 		WHERE student.s_id=student_select_course.s_id
 		AND student_select_course.tsc_id=publish_estimate.tsc_id

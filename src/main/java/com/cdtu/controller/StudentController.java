@@ -24,7 +24,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.cdtu.model.CourseStudent;
 import com.cdtu.model.CourseWapper;
 import com.cdtu.model.Estimate;
-import com.cdtu.model.PublishEstimate;
 import com.cdtu.model.Role;
 import com.cdtu.model.StudentSelectCourse;
 import com.cdtu.model.Work;
@@ -214,6 +213,9 @@ public class StudentController {
 	@RequiresRoles({ "student" })
 	public @ResponseBody Map<String, Object> remarkOn(@RequestBody Estimate estimate) {
 		Map<String, Object> msg = new HashMap<>();
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		estimate.setsId(role.getUsername());
 		Integer status = studentService.submitEvaluation(estimate);
 		if (status == 1) {
 			msg.put("status", 200);
