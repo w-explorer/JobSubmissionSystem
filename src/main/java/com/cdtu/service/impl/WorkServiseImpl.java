@@ -156,4 +156,21 @@ public class WorkServiseImpl implements WorkService {
 		// TODO Auto-generated method stub
 		return workMapper.selectsfName(sfAdd);
 	}
+	@Override
+	public List<Map<String, Object>> selectWorkAllAddr(String pwId) {
+		return workMapper.selectWorkAllAddr(pwId);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectWorkId(String pwId) {
+		
+		return workMapper.selectWorkId(pwId);
+	}
+
+	@Override
+	public Map<String, Object> selectcName(String pwId) {
+		// TODO Auto-generated method stub
+		return workMapper.selectcName(pwId);
+	}
+
 }

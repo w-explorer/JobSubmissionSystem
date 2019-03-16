@@ -138,4 +138,8 @@ public interface WorkMapper {
    */
   public String selecttfName(@Param("tfAdd")String tfAdd);
   public String selectsfName(@Param("sfAdd")String sfAdd);
+  public List<Map<String, Object>> selectWorkAllAddr(@Param("pwId")String pwId);
+  public List<Map<String, Object>> selectWorkId(@Param("pwId")String pwId);
+  public Map<String, Object> selectcName(@Param("pwId")String pwId);
+  
 }
