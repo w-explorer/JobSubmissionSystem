@@ -197,6 +197,7 @@ public class RoleController {
 	/**
 	 * 1请求所有菜单 2根据角色请求菜单
 	 */
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	@RequestMapping(value = "/getMenuList.do")
 	public @ResponseBody Map<String, Object> getMenusByRole(HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();

@@ -235,7 +235,7 @@ public class StudentController {
 	 * @param state
 	 * @return
 	 */
-	@RequestMapping("selectPw.do")
+	@RequestMapping("selectPw.dotime")
 	@RequiresRoles({ "student" })
 	public @ResponseBody Map<String, Object> selectPW(@RequestBody StudentSelectCourse studentSelectCourse) {
 		Subject subject = SecurityUtils.getSubject();
