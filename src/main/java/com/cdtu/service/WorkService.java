@@ -35,6 +35,11 @@ public interface WorkService {
    */
 	 public String selecttfNameService(String tfAdd);
 	  public String selectsfNameService(String sfAdd);
-
-	
+	  /**
+	    * 查询作业的所有文件地址
+	    * @author weiyuhang
+	    */
+		public List<Map<String, Object>> selectWorkAllAddr(String pwId);
+		public List<Map<String, Object>> selectWorkId(String pwId);
+		public Map<String, Object> selectcName(String pwId);
 }

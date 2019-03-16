@@ -161,6 +161,6 @@ public interface TeacherService {
 	 */
 	public void updataAvatar(String path, String username);
 	public String updatepublishWork(PublishWork publishWork);
-
+  
 	
 }

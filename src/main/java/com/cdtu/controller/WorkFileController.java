@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.cdtu.model.Role;
+import com.cdtu.service.TeacherService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
 import com.cdtu.util.OAUtil;
@@ -220,9 +221,66 @@ public class WorkFileController {
 				    headers.setContentDispositionFormData("attachment", fileName);  
 				    return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(new File(filePath)),    
                             headers, HttpStatus.CREATED);    
+	}
+	@RequestMapping(value = "downloadFileWork.do")
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	public  ResponseEntity<byte[]> downloadFileWork (@RequestBody Map<String, Object> maps, HttpServletResponse response,
+			HttpServletRequest request)throws IOException {
+		Map<String, Object> map = new HashMap<>();
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String pwId=(String) maps.get("pwId");
+		String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works"
+		+File.separator+File.separator +pwId+"45";
+		String resourcesName = workFile+ ".zip";
+		List<Map<String,Object>> Addrs=workService.selectWorkAllAddr(pwId);
+		List<Map<String,Object>> wId=workService.selectWorkId(pwId);
+		Map<String,Object> name=workService.selectcName(pwId);
+		ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(resourcesName));
+		InputStream input = null;
+		for (Map<String,Object> w: wId) {
+			String workFilezip = "D:" + File.separator + "uploadFile" + File.separator + "works"+ File.separator +"zip"
+					+ File.separator +w.get("w_id");
+			ZipOutputStream zipOutstudent = new ZipOutputStream(new FileOutputStream(workFilezip+".zip"));
+			for (Map<String,Object> Addr : Addrs) {
+				System.out.println(Addr.get("w_id"));
+				String ws=(String) Addr.get("w_id");
+				if(w.get("w_id").equals(ws)){
+					String works = "D:" + File.separator + "uploadFile" + File.separator + "works";
+					String Addra=(String) Addr.get("s_f_add");
+					String filename=(String)Addr.get("s_f_add");
+					String filen=filename.substring(filename.lastIndexOf("\\") + 1);
+					String filenames=filen.substring(0,5)+Addr.get("s_f_name");
+					String filePath = works + Addra.substring(9);
+					System.out.println(filePath);
+					File files = new File(filePath);
+					input = new FileInputStream(files);
+					zipOutstudent.putNextEntry(new ZipEntry(filenames));
+					int temp = 0;
+					while ((temp = input.read()) != -1)
+						zipOutstudent.write(temp);
+					zipOutstudent.closeEntry();
+					input .close();
+				}
+			}
+			zipOutstudent.close();
+			File file = new File(workFilezip+".zip");
+			input = new FileInputStream(file);
+		    	zipOut.putNextEntry(new ZipEntry(w.get("s_name")+".zip"));
+			int temp = 0;
+			while ((temp = input.read()) != -1)
+				zipOut.write(temp);
+			zipOut.closeEntry();
+			input.close();
+		}
 		
-	
-		
-		
+		System.out.println(name.get("c_name"));
+		String filename=(String) name.get("c_name")+(String) name.get("pw_name")+".zip";
+		zipOut.close();
+				    HttpHeaders headers = new HttpHeaders();
+				    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);   
+				    headers.setContentDispositionFormData("attachment",filename);  
+				    return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(new File(resourcesName)),    
+                            headers, HttpStatus.CREATED);    
 	}
 }

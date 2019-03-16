@@ -231,4 +231,34 @@ select s_f_name AS sfName from s_file where s_f_add=#{tfAdd}
 <select id="selectsfName" resultType="String">
 select s_f_name AS sfName from s_file where s_f_add=#{sfAdd}
 </select>
+
+<select id="selectWorkAllAddr" resultType="java.util.HashMap">
+SELECT work.w_id ,s_file.`s_f_add`,s_file.`s_f_name`,student.`s_name`,student.`s_id`,publish_work.`pw_name`
+FROM WORK,s_file,student,publish_work
+WHERE
+work.`pw_id`=#{pwId}
+AND work.`w_id`=s_file.`w_id`
+AND student.`s_id`=work.`s_id`
+AND work.`pw_id`=publish_work.`pw_id`
+</select>
+<select id="selectWorkId" resultType="java.util.HashMap">
+SELECT  DISTINCT work.w_id ,student.`s_name`,student.`s_id`,publish_work.`pw_name`,course.`c_name`
+FROM WORK,s_file,student,publish_work,teacher_select_course,course
+WHERE
+work.`pw_id`=#{pwId}
+AND work.`w_id`=s_file.`w_id`
+AND student.`s_id`=work.`s_id`
+AND work.`pw_id`=publish_work.`pw_id`
+AND publish_work.`tsc_id`=teacher_select_course.`tsc_id`
+AND teacher_select_course.`c_id`=course.`c_id`
+</select>
+<select id="selectcName" resultType="java.util.HashMap">
+SELECT  DISTINCT publish_work.`pw_name`,course.`c_name`
+FROM publish_work,teacher_select_course,course
+WHERE
+publish_work.`pw_id`=1
+AND publish_work.`tsc_id`=teacher_select_course.`tsc_id`
+AND teacher_select_course.`c_id`=course.`c_id`
+
+</select>
 </mapper>
