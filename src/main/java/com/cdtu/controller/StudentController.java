@@ -24,7 +24,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.cdtu.model.CourseStudent;
 import com.cdtu.model.CourseWapper;
 import com.cdtu.model.Estimate;
-import com.cdtu.model.PublishEstimate;
 import com.cdtu.model.Role;
 import com.cdtu.model.StudentSelectCourse;
 import com.cdtu.model.Work;
@@ -186,18 +185,21 @@ public class StudentController {
 	 */
 	@RequestMapping("selectPE.do")
 	@RequiresRoles({ "student" })
-	public @ResponseBody Map<String, Object> selectPE(@RequestBody StudentSelectCourse studentSelectCourse) {
-		Map<String, Object> msg = new HashMap<>();
-		List<PublishEstimate> publishEstimates = studentService.selectPublishEstimate(studentSelectCourse);
-		if (publishEstimates == null) {
-			msg.put("status", 0);
-			msg.put("msg", "信息错误");
-			return msg;
-		} else {
-			msg.put("status", 200);
-			msg.put("publishEstimates", publishEstimates);
-			return msg;
+	public @ResponseBody Map<String, Object> selectPE(@RequestBody Map<String,Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String sId=role.getUsername();
+		String cId = (String)paramsMap.get("cId");
+		try {
+			map.put("publishEstimates",studentService.selectPublishEstimate(cId,sId)) ;
+			map.put("status", 200);
+		} catch (Exception e) {
+			handlException(map, e);
+			e.printStackTrace();
 		}
+		return map;
+		
 	}
 
 	/**
@@ -211,6 +213,9 @@ public class StudentController {
 	@RequiresRoles({ "student" })
 	public @ResponseBody Map<String, Object> remarkOn(@RequestBody Estimate estimate) {
 		Map<String, Object> msg = new HashMap<>();
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		estimate.setsId(role.getUsername());
 		Integer status = studentService.submitEvaluation(estimate);
 		if (status == 1) {
 			msg.put("status", 200);

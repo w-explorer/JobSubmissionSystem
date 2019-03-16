@@ -10,7 +10,7 @@
 
 	<!-- 教师查询非创建课程by:魏宇航 start -->
 	<resultMap type="com.cdtu.model.CourseWapper" id="courselist">
-		<result column="c_id" property="id" jdbcType="INTEGER" />
+		<result column="c_id" property="cId" jdbcType="INTEGER" />
 		<result column="c_name" property="cName" />
 		<result column="t_name" property="tName" />
 		<result column="sc_name" property="scName" />
@@ -22,7 +22,7 @@
 	<select id="selectTeacherCourse" parameterType="String"
 		resultMap="courselist">
 		SELECT
-		teacher_select_course.tsc_id,teacher.t_name,teacher.t_img_src,course.c_id,course.c_name,course.c_img_src,school.sc_name
+		teacher.t_name,teacher.t_img_src,course.c_id,course.c_name,course.c_img_src,school.sc_name
 		FROM
 		teacher_select_course,teacher,course,school
 		WHERE

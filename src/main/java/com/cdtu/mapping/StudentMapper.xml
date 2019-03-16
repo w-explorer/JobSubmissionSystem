@@ -78,7 +78,7 @@
 		DROP TABLE firstView
 	</select>
 	<select id="selectStudents" resultType="java.util.HashMap">
-		SELECT DISTINCT * FROM secondView ORDER BY secondView.sumScore DESC
+		SELECT DISTINCT * FROM secondView ORDER BY secondView.sumScore DESC LIMIT #{start}, #{end}
 	</select>
 	<!-- 文成end -->
 	

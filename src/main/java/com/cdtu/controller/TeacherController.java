@@ -38,6 +38,7 @@ import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
+import com.cdtu.util.MaxPage;
 
 @Controller
 @RequestMapping(value = "teacher")
@@ -273,7 +274,7 @@ public class TeacherController {
 	 * @param state
 	 * @return
 	 */
-	@RequestMapping(value = "queryPublishWork.do", method = RequestMethod.POST)
+	@RequestMapping(value = "queryPublishWork.dotime", method = RequestMethod.POST)
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> queryPublishWork(@RequestBody CourseWapper courseWapper) {
 		Subject subject = SecurityUtils.getSubject();
@@ -603,7 +604,9 @@ public class TeacherController {
 	public @ResponseBody Map<String,Object> SearchStudentById(@RequestBody Map<String,Object> paramsMap){
 		Map<String,Object> map = new HashMap<String,Object>();
 		String sId = (String) paramsMap.get("sId");
+		
 		try {
+			
 			map.put("student", studentService.SearchStudentById(sId));
 			map.put("status", 200);
 		} catch (Exception e) {
@@ -627,12 +630,18 @@ public class TeacherController {
 		Role role = (Role) subject.getPrincipal();
 		String tId = role.getUsername();
 		String cId = (String) paramsMap.get("cId");
+		int page = Integer.parseInt((String) paramsMap.get("page"));
+		int stusNum = sscService.countStudents(cId);
 		try {
-			map.put("student", studentService.selectStudents());
+			map.put("students", studentService.selectStudents(page));
+			map.put("stusNum", stusNum);
+			map.put("pageNum", MaxPage.getMaxPage(stusNum, 30));
 		} catch (Exception e) {
 			try {
 				studentService.CreatStudentTableDescRank(cId,tId);
-				map.put("student", studentService.selectStudents());
+				map.put("students", studentService.selectStudents(page));
+				map.put("stusNum", stusNum);
+				map.put("pageNum", MaxPage.getMaxPage(stusNum, 30));
 			} catch (Exception e1) {
 				handlException(map, e);
 			}

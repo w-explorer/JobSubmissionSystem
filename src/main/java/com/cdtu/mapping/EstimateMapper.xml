@@ -238,11 +238,11 @@
       e_suggest = #{eSuggest,jdbcType=VARCHAR},
       e_difficult = #{eDifficult,jdbcType=CHAR},
       s_e_state = #{sEState,jdbcType=BIT}
-    where e_id = #{eId,jdbcType=CHAR}
+    where e_id = #{eId,jdbcType=CHAR}s
   </update>
   
    <!-- 添加点评信息 by:黎睿-->
   <insert id="insertEstimate" parameterType="com.cdtu.model.Estimate">
-  		INSERT INTO estimate VALUES(#{eId},#{epId},#{eSpeed},#{eFile},#{eSuggest},#{eDifficult},#{sEState},#{sId})
+  		INSERT INTO estimate(e_id,ep_id,e_speed,e_feel,e_suggest,e_difficult,s_e_state,s_id) VALUES(#{eId},#{epId},#{eSpeed},#{eFeel},#{eSuggest},#{eDifficult},#{sEState},#{sId})
   </insert>
 </mapper>

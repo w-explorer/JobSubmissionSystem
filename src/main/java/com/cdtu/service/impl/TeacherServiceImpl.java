@@ -76,7 +76,7 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public List<CourseWapper> selectAllCourceService(String id) {
 		List<CourseWapper> courseWappers = new ArrayList<>();
-		courseWappers.addAll(courseMapper.selectClassCreate(id));
+//		courseWappers.addAll(courseMapper.selectClassCreate(id));
 		courseWappers.addAll(coursemapper.selectTeacherCourse(id));
 		return courseWappers;
 	}

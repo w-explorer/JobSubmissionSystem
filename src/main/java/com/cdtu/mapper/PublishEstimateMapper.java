@@ -3,6 +3,8 @@ package com.cdtu.mapper;
 import com.cdtu.model.PublishEstimate;
 import com.cdtu.model.PublishEstimateExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface PublishEstimateMapper {
@@ -47,7 +49,7 @@ public interface PublishEstimateMapper {
      * @param cstId
      * @return
      */
-    List<PublishEstimate> selectPublishEstimateBytscId(@Param("sId") String sId,@Param("tscId") Integer tscId);
+    List<Map<String,Object>> selectPublishEstimateBytscId(@Param("cId") String cId,@Param("sId") String sId);
     /**
      * 查询发布点评表通过s_id和ct_id
      * @author LR

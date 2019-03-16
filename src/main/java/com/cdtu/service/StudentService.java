@@ -35,7 +35,7 @@ public interface StudentService {
 	 * @param studentSelectCourse
 	 * @return
 	 */
-	public List<PublishEstimate> selectPublishEstimate(StudentSelectCourse studentSelectCourse);
+	public List<Map<String,Object>> selectPublishEstimate(String cId,String sId);
 	/**
 	 * 提交点评
 	 * @author LR
@@ -115,7 +115,7 @@ public interface StudentService {
 
 	public void CreatStudentTableDescRank(String cId,String tId);
 
-	public List<Map<String, Object>> selectStudents();
+	public List<Map<String, Object>> selectStudents(int page);
 	 
 	 
 

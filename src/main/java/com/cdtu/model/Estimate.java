@@ -5,18 +5,68 @@ public class Estimate {
 
     private String epId;
 
-    private String eSpeed;
+    private int eSpeed;
 
-    private String eFile;
+    private int eFeel;
 
     private String eSuggest;
 
-    private String eDifficult;
+    private int eDifficult;
     private String sId;
 
     private Boolean sEState;
 
-    public String getsId() {
+	public String geteId() {
+		return eId;
+	}
+
+	public void seteId(String eId) {
+		this.eId = eId;
+	}
+
+	public String getEpId() {
+		return epId;
+	}
+
+	public void setEpId(String epId) {
+		this.epId = epId;
+	}
+
+	public int geteSpeed() {
+		return eSpeed;
+	}
+
+	public void seteSpeed(int eSpeed) {
+		this.eSpeed = eSpeed;
+	}
+
+	
+
+	public int geteFeel() {
+		return eFeel;
+	}
+
+	public void seteFeel(int eFeel) {
+		this.eFeel = eFeel;
+	}
+
+	public String geteSuggest() {
+		return eSuggest;
+	}
+
+	public void seteSuggest(String eSuggest) {
+		this.eSuggest = eSuggest;
+	}
+
+	public int geteDifficult() {
+		return eDifficult;
+	}
+
+	public void seteDifficult(int eDifficult) {
+		this.eDifficult = eDifficult;
+	}
+
+	public String getsId() {
 		return sId;
 	}
 
@@ -24,59 +74,13 @@ public class Estimate {
 		this.sId = sId;
 	}
 
-	public String geteId() {
-        return eId;
-    }
+	public Boolean getsEState() {
+		return sEState;
+	}
 
-    public void seteId(String eId) {
-        this.eId = eId == null ? null : eId.trim();
-    }
+	public void setsEState(Boolean sEState) {
+		this.sEState = sEState;
+	}
 
-    public String getEpId() {
-        return epId;
-    }
 
-    public void setEpId(String epId) {
-        this.epId = epId == null ? null : epId.trim();
-    }
-
-    public String geteSpeed() {
-        return eSpeed;
-    }
-
-    public void seteSpeed(String eSpeed) {
-        this.eSpeed = eSpeed == null ? null : eSpeed.trim();
-    }
-
-    public String geteFile() {
-        return eFile;
-    }
-
-    public void seteFile(String eFile) {
-        this.eFile = eFile == null ? null : eFile.trim();
-    }
-
-    public String geteSuggest() {
-        return eSuggest;
-    }
-
-    public void seteSuggest(String eSuggest) {
-        this.eSuggest = eSuggest == null ? null : eSuggest.trim();
-    }
-
-    public String geteDifficult() {
-        return eDifficult;
-    }
-
-    public void seteDifficult(String eDifficult) {
-        this.eDifficult = eDifficult == null ? null : eDifficult.trim();
-    }
-
-    public Boolean getsEState() {
-        return sEState;
-    }
-
-    public void setsEState(Boolean sEState) {
-        this.sEState = sEState;
-    }
 }

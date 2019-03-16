@@ -20,7 +20,6 @@ import com.cdtu.mapper.WorkMapper;
 import com.cdtu.model.CourseStudent;
 import com.cdtu.model.CourseWapper;
 import com.cdtu.model.Estimate;
-import com.cdtu.model.PublishEstimate;
 import com.cdtu.model.PublishWork;
 import com.cdtu.model.Role;
 import com.cdtu.model.Student;
@@ -61,21 +60,20 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public List<PublishEstimate> selectPublishEstimate(StudentSelectCourse studentSelectCourse) {
-		if (studentSelectCourse.getTscId() != null)
-			return publishEstimateMapper.selectPublishEstimateBytscId(studentSelectCourse.getsId(),
-					studentSelectCourse.getTscId());
-		else {
-			studentSelectCourse.setCtId(studentSelectCourse.getId());
-			return publishEstimateMapper.selectPublishEstimateByctId(studentSelectCourse.getsId(),
-					studentSelectCourse.getCtId());
-		}
+	public List<Map<String,Object>> selectPublishEstimate(String cId,String sId) {
+			return publishEstimateMapper.selectPublishEstimateBytscId(cId,sId);
+//		else {
+//			studentSelectCourse.setCtId(studentSelectCourse.getId());
+//			return publishEstimateMapper.selectPublishEstimateByctId(studentSelectCourse.getsId(),
+//					studentSelectCourse.getCtId());
+//		}
 	}
 
 	@Override
 	public Integer submitEvaluation(Estimate estimate) {
 		if (estimate != null) {
 			estimate.seteId(OAUtil.getId());
+			estimate.setsEState(true);
 			estimateMapper.insertEstimate(estimate);
 			return 1;
 		} else
@@ -113,7 +111,7 @@ public class StudentServiceImpl implements StudentService {
 			publishWorks.put("countall",
 					publishWorkMapper.selectStudentPublishWorkCount(sId, studentSelectCourse.getcId(), null));
 			for (PublishWork publishWork : publishWorkLs) {
-				if (workMapper.selectWorkCount(studentSelectCourse.getsId(), publishWork.getPwId()) != 0) {
+				if (publishWork.getwState()) {
 					publishWork.setwStringState("已参与");
 					publishWork.setwBooleanState(true);
 				} else {
@@ -287,9 +285,9 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectStudents() {
+	public List<Map<String, Object>> selectStudents(int page) {
 		// TODO Auto-generated method stub
-		return studentMapper.selectStudents();
+		return studentMapper.selectStudents((page - 1) * 30, page * 30);
 	}
 
 }
