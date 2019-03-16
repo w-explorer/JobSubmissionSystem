@@ -265,4 +265,13 @@ AND publish_work.`tsc_id`=teacher_select_course.`tsc_id`
 AND teacher_select_course.`c_id`=course.`c_id`
 
 </select>
+
+<update id="teacherupdatework" parameterType="java.util.HashMap">
+UPDATE WORK SET w_remark=#{map.wRemark}
+<if test="map.wScore!=null">
+,w_score=#{map.wScore},
+t_w_state=1
+</if>
+WHERE w_id=#{map.wId}
+</update>
 </mapper>

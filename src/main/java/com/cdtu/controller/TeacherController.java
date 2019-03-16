@@ -650,4 +650,19 @@ public class TeacherController {
 		return map;
 	}
 	
+	@RequestMapping(value = "TeacherUpadteWork.do")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> teacherupadtework(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			this.workService.teacherupdatework(paramsMap);
+			map.put("status", 200);
+		} catch (Exception e) {
+			handlException(map, e);
+			map.put("status", 0);
+			map.put("msg", "批阅失败");
+			
+		}
+		return map;
+	}
 }

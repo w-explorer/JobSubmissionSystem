@@ -173,4 +173,10 @@ public class WorkServiseImpl implements WorkService {
 		return workMapper.selectcName(pwId);
 	}
 
+	@Override
+	public void teacherupdatework(Map<String, Object> map) {
+		this.workMapper.teacherupdatework(map);
+		
+	}
+
 }
