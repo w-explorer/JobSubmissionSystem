@@ -142,5 +142,5 @@ public interface WorkMapper {
   public List<Map<String, Object>> selectWorkId(@Param("pwId")String pwId);
   public Map<String, Object> selectcName(@Param("pwId")String pwId);
   public void teacherupdatework(@Param("map")Map<String,Object> map);
-  
+  public Map<String,Object> selectestimate(@Param("epId")String epId);
 }

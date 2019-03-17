@@ -274,4 +274,38 @@ t_w_state=1
 </if>
 WHERE w_id=#{map.wId}
 </update>
+<resultMap type="java.util.HashMap" id="team">
+<id column="ep_id" property="epId" />
+
+		<collection property="eSppeedList" javaType="List" ofType="java.util.HashMap" autoMapping="true">
+		<id column="e_speed" property="stareSppeed"/>
+		<result column="e_speeds" property="numeSpeed"/>
+		</collection>
+		<collection property="eFeelsList" javaType="List" ofType="java.util.HashMap" autoMapping="true">
+		<id column="e_feel" property="stareFeels" />
+	    <result column="e_feels" property="numeFeels" />
+		</collection>
+		<collection property="eDifficultsList" javaType="List" ofType="java.util.HashMap" autoMapping="true">
+		<id column="e_difficult" property="stareDifficults"/>
+		<result column="e_difficults" property="numeDifficults" />
+		</collection>
+</resultMap>
+<select id="selectestimate" resultMap="team">
+SELECT A.ep_id,A.e_speeds,A.e_speed,B.e_feels,C.e_difficult,B.e_feel,C.e_difficults
+FROM
+(SELECT ep_id,e_speed AS e_speed,COUNT(e_speed) AS e_speeds
+FROM estimate
+WHERE ep_id=#{epId}
+GROUP BY e_speed) AS A,
+(SELECT ep_id,e_feel AS e_feel,COUNT(e_feel)AS e_feels
+FROM estimate
+WHERE ep_id=#{epId}
+GROUP BY e_feel) AS B,
+(SELECT ep_id,e_difficult AS e_difficult,COUNT(e_difficult)AS e_difficults
+FROM estimate
+WHERE ep_id=#{epId}
+GROUP BY e_feel) AS C
+</select>
+
+
 </mapper>

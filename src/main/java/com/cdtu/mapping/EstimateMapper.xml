@@ -245,4 +245,34 @@
   <insert id="insertEstimate" parameterType="com.cdtu.model.Estimate">
   		INSERT INTO estimate(e_id,ep_id,e_speed,e_feel,e_suggest,e_difficult,s_e_state,s_id) VALUES(#{eId},#{epId},#{eSpeed},#{eFeel},#{eSuggest},#{eDifficult},#{sEState},#{sId})
   </insert>
+  <!-- 查询点评信息  ：魏宇航-->
+  <select id="selecteDifficult"  resultType="java.util.HashMap">
+SELECT e_difficult AS StareDifficult,COUNT(e_difficult)AS NumeDifficults
+FROM estimate
+WHERE ep_id=#{epId}
+GROUP BY e_feel
+ORDER BY e_difficult DESC
+</select>
+
+<select id="selecteFeel"  resultType="java.util.HashMap">
+SELECT e_feel AS StareFeel,COUNT(e_feel)AS NumeFeels
+FROM estimate
+WHERE ep_id=#{epId}
+GROUP BY e_feel
+ORDER BY e_feel DESC
+</select>
+<select id="selecteSpeed"  resultType="java.util.HashMap">
+SELECT e_speed AS StareSpeed,COUNT(e_speed) AS NumeSpeeds
+FROM estimate
+WHERE ep_id=#{epId}
+GROUP BY e_speed
+ORDER BY e_speed DESC
+</select>
+<select  id="selecteSuggest" resultType="java.util.HashMap">
+SELECT e_suggest AS eSuggest
+FROM estimate
+WHERE ep_id=1
+AND
+e_suggest IS NOT NULL
+</select>
 </mapper>

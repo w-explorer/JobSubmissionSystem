@@ -3,6 +3,8 @@ package com.cdtu.mapper;
 import com.cdtu.model.Estimate;
 import com.cdtu.model.EstimateExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface EstimateMapper {
@@ -34,4 +36,10 @@ public interface EstimateMapper {
      * @param estimate
      */
     void insertEstimate(Estimate estimate);
+  public List<Map<String,Object>> selecteDifficult(@Param("epId") String epId);
+  public List<Map<String,Object>> selecteFeel(@Param("epId") String epId);
+  public List<Map<String,Object>> selecteSpeed(@Param("epId") String epId);
+  public List<Map<String,Object>> selecteSuggest(@Param("epId") String epId);
+    
+ 
 }

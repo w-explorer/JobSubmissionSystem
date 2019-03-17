@@ -179,4 +179,10 @@ public class WorkServiseImpl implements WorkService {
 		
 	}
 
+	@Override
+	public Map<String, Object> selectestimate(String epId) {
+		// TODO Auto-generated method stub
+		return workMapper.selectestimate(epId);
+	}
+
 }

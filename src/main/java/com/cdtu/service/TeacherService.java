@@ -161,6 +161,11 @@ public interface TeacherService {
 	 */
 	public void updataAvatar(String path, String username);
 	public String updatepublishWork(PublishWork publishWork);
-  
-	
+    /**
+     * 老师查询评价
+     * @author weiyuhang
+     * @param epId
+     * @return
+     */
+	public Map<String,Object> selectEstimate(String epId);
 }

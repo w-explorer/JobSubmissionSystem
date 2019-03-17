@@ -665,4 +665,20 @@ public class TeacherController {
 		}
 		return map;
 	}
+	@RequestMapping(value = "selectEstimate.do")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> selectEstimate(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			
+			map.put("da", this.teacherService.selectEstimate((String) paramsMap.get("epId")));
+			map.put("status", 200);
+		} catch (Exception e) {
+			handlException(map, e);
+			map.put("status", 0);
+			map.put("msg", "查询失败");
+			
+		}
+		return map;
+	}
 }

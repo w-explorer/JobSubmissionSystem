@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.cdtu.mapper.CourseMapper;
+import com.cdtu.mapper.EstimateMapper;
 import com.cdtu.mapper.PublishEstimateMapper;
 import com.cdtu.mapper.PublishWorkMapper;
 import com.cdtu.mapper.StudentMapper;
@@ -38,7 +39,7 @@ public class TeacherServiceImpl implements TeacherService {
 	private @Resource PublishWorkMapper publishWorkMapper;
 	private @Resource PublishEstimateMapper publishEstimateMapper;
 	private @Resource StudentSelectCourseMapper studentSelectCourseMapper;
-
+    private @Resource EstimateMapper estimateMapper;
 	@Override
 	public Teacher getTeacherBytIdAndtPassword(Role role) {
 		return teacherMapper.getTeacherBytIdAndtPassword(role);
@@ -361,6 +362,16 @@ public class TeacherServiceImpl implements TeacherService {
 	public String updatepublishWork(PublishWork publishWork) {
 		publishWorkMapper.updatePublishWork(publishWork);
 		return null;
+	}
+
+	@Override
+	public Map<String, Object> selectEstimate(String epId) {
+		Map<String,Object> map=new HashMap<String, Object>();
+		map.put("eDifficults",this.estimateMapper.selecteDifficult(epId) );
+		map.put("eSpeeds",this.estimateMapper.selecteSpeed(epId) );
+		map.put("eFeels",this.estimateMapper.selecteFeel(epId) );
+		map.put("eSuggests",this.estimateMapper.selecteSuggest(epId) );
+		return map;
 	}
 
 	

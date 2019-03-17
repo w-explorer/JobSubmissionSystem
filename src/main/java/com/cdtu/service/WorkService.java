@@ -43,4 +43,5 @@ public interface WorkService {
 		public List<Map<String, Object>> selectWorkId(String pwId);
 		public Map<String, Object> selectcName(String pwId);
 		public void teacherupdatework(Map<String,Object> map);
+		public Map<String, Object> selectestimate(String epId);
 }
