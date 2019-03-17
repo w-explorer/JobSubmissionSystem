@@ -166,6 +166,28 @@ public class StudentController {
 	}
 
 	/**
+	 * 学生统计某一门课程的所有作业的平均分
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequiresRoles(value = { "student" })
+	@RequestMapping(value = "/staWorkInfo.do")
+	public Map<String, Object> doStaWorkInfo(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			String cId = (String) paramsMap.get("cId");
+			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+			map.put("averScore", workService.getAverScore(sId, cId));
+			map.putAll(workService.getSubInfo(sId, cId));
+			map.put("status", 200);
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
+
+	/**
 	 * 统一异常处理
 	 *
 	 * @author 李红兵
@@ -185,21 +207,21 @@ public class StudentController {
 	 */
 	@RequestMapping("selectPE.do")
 	@RequiresRoles({ "student" })
-	public @ResponseBody Map<String, Object> selectPE(@RequestBody Map<String,Object> paramsMap) {
+	public @ResponseBody Map<String, Object> selectPE(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
-		String sId=role.getUsername();
-		String cId = (String)paramsMap.get("cId");
+		String sId = role.getUsername();
+		String cId = (String) paramsMap.get("cId");
 		try {
-			map.put("publishEstimates",studentService.selectPublishEstimate(cId,sId)) ;
+			map.put("publishEstimates", studentService.selectPublishEstimate(cId, sId));
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);
 			e.printStackTrace();
 		}
 		return map;
-		
+
 	}
 
 	/**
@@ -267,7 +289,7 @@ public class StudentController {
 		Role role = (Role) subject.getPrincipal();
 		work.setsId(role.getUsername());
 		Integer status = studentService.submitWork(work);
-		
+
 		if (status == 1) {
 			msg.put("status", 200);
 			return msg;
@@ -361,7 +383,7 @@ public class StudentController {
 			throws IOException {
 		File file = new File(work.getwAddr());
 		String fielName = work.getsId() + "_" + studentService.selectStudentName(work.getsId()) + "_" + file.getName();
-		DownloadFile.downloadFile(file, fielName, response,request);
+		DownloadFile.downloadFile(file, fielName, response, request);
 		// return new
 		// ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),
 		// headers, HttpStatus.CREATED);
