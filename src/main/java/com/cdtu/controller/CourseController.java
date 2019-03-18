@@ -4,14 +4,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cdtu.model.Role;
 import com.cdtu.service.CourseService;
 import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.StudentSelectCourseService;
@@ -32,16 +37,27 @@ public class CourseController {
 	@ResponseBody
 	@RequestMapping(value = "/details.do")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	public Map<String, Object> doDetails(@RequestBody Map<String, Object> paramsMap) {
+	public Map<String, Object> doDetails(@RequestBody Map<String, Object> paramsMap,HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
+		HttpSession session = request.getSession();
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		int pubENum=0;
 		try {
 			String cId = (String) paramsMap.get("cId");
 			map.putAll(courseService.getDetails(cId));// 未进行空值校验，后期斟酌s
 			int stusNum = sscService.countStudents(cId);
 			map.put("stusNum", stusNum);//学生数量
 			int pubWNum = publishWorkService.countPublishWorks(cId);
+			if("teacher".equals(role.getRole())){
+				pubENum=publishWorkService.countPublishEstimates(cId);
+			}
+			else if("student".equals(role.getRole())){
+				String sId=role.getUsername();
+				pubENum=publishWorkService.countSPublishEstimates(cId,sId);
+			}
+			session.setAttribute("pubENum", pubENum);
 			map.put("pubWNum", pubWNum);//活动数量
-			int pubENum =publishWorkService.countPublishEstimates(cId);
 			map.put("pubENum", pubENum);//活动数量
 			
 			map.put("status", 200);

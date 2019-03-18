@@ -60,8 +60,8 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public List<Map<String,Object>> selectPublishEstimate(String cId,String sId) {
-			return publishEstimateMapper.selectPublishEstimateBytscId(cId,sId);
+	public List<Map<String,Object>> selectPublishEstimate(String cId,String sId,int start,int end) {
+			return publishEstimateMapper.selectPublishEstimateBytscId(cId,sId,start,end);
 //		else {
 //			studentSelectCourse.setCtId(studentSelectCourse.getId());
 //			return publishEstimateMapper.selectPublishEstimateByctId(studentSelectCourse.getsId(),

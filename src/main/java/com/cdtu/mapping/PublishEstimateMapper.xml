@@ -228,6 +228,7 @@
 		AND tsc.c_id=c.c_id
 		AND c.c_id=#{cId}
 		)
+		limit #{start},#{end};
 	</select>
 	<!-- 查询发布点评表通过ct_id和s_id by:黎睿-->
 	<select id="selectPublishEstimateByctId" resultMap="BaseResultMap">

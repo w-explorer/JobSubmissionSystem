@@ -694,6 +694,62 @@
 			SELECT img_type.i_t_typt FROM img_type
 		)
 	</select>
+	<select id="countSPublishEstimates" resultType="java.lang.Integer">
+		SELECT
+		COUNT(*)
+		FROM student,student_select_course,publish_estimate,course c,teacher_select_course tsc
+		WHERE student.s_id=student_select_course.s_id
+		AND student_select_course.tsc_id=publish_estimate.tsc_id
+		AND student.s_id=#{sId}
+		AND student_select_course.tsc_id=tsc.tsc_id
+		AND tsc.c_id=c.c_id
+		AND c.c_id=#{cId}
+		AND publish_estimate.ep_id NOT IN(SELECT estimate.ep_id
+		FROM student,student_select_course,publish_estimate,estimate,course c,teacher_select_course tsc
+		WHERE student.s_id=student_select_course.s_id
+		AND estimate.ep_id=publish_estimate.ep_id
+		AND student_select_course.tsc_id=publish_estimate.tsc_id
+		AND student.s_id=#{sId}
+		AND student_select_course.tsc_id=tsc.tsc_id
+		AND tsc.c_id=c.c_id
+		AND c.c_id=#{cId}
+		)
+	</select>
+	<select id="getTPwDetails" resultType="java.util.HashMap">
+		SELECT	pw.`pw_img_src` AS activityImgSrc,pw.`pw_name` AS pwName,pw.`pw_content` AS pwContent,pw.`pw_end` pwEnd,pw.`pw_score` pwScore
+		FROM publish_work pw
+		WHERE pw.`pw_id`=#{pwId}
+	</select>
+	<select id="getTTFiles" resultType="java.util.HashMap">
+		SELECT	DISTINCT tf.t_f_name AS name, tf.t_f_add AS url,tf.t_f_state AS state,tf.t_f_type AS type,tf.t_f_id AS tfId
+		FROM publish_work pw,t_file tf,img_type 
+		WHERE pw.pw_id=#{pwId}
+		AND pw.pw_id=tf.pw_id
+		AND tf.t_f_type NOT IN (SELECT img_type.i_t_typt FROM img_type)
+	</select>
+	<select id="getTTFilesImages" resultType="java.util.HashMap">
+		SELECT	DISTINCT tf.t_f_name AS name, tf.t_f_add AS url,tf.t_f_state AS state,tf.t_f_type AS type,tf.t_f_id AS tfId
+		FROM publish_work pw,t_file tf,img_type 
+		WHERE pw.pw_id=#{pwId}
+		AND pw.pw_id=tf.pw_id
+		AND tf.t_f_type IN (SELECT img_type.i_t_typt FROM img_type)
+	</select>
+	<select id="getTStudentsByPwId" resultType="java.util.HashMap">
+		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId
+		FROM publish_work pw,WORK w,student s
+		WHERE pw.pw_id=#{pwId}
+		AND pw.pw_id=w.pw_id
+		AND w.s_id=s.s_id
+		ORDER  BY  sId 
+	</select>
+	<select id="getWorkDetails" resultType="java.util.HashMap">
+		SELECT	w.w_context AS wContext,w.w_problem AS wProblem,w.w_score AS wScore,w.w_remark wRemark,w.s_w_state AS swState,w.t_w_state AS twState,w.w_time AS wTime,w.w_id AS wId
+		FROM publish_work pw,WORK w
+		WHERE pw.pw_id=#{pwId}
+		AND pw.pw_id=w.pw_id
+		AND w.s_id=#{sId}
+	</select>
+	
 	<!-- 文成end -->
 	
 	<update id="updatePublishWork" parameterType="com.cdtu.model.PublishWork">

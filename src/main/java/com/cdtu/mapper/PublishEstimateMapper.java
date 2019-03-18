@@ -49,7 +49,7 @@ public interface PublishEstimateMapper {
      * @param cstId
      * @return
      */
-    List<Map<String,Object>> selectPublishEstimateBytscId(@Param("cId") String cId,@Param("sId") String sId);
+    List<Map<String,Object>> selectPublishEstimateBytscId(@Param("cId") String cId,@Param("sId") String sId,@Param("start")int start,@Param("end")int end);
     /**
      * 查询发布点评表通过s_id和ct_id
      * @author LR

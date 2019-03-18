@@ -33,6 +33,7 @@ import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
+import com.cdtu.util.MaxPage;
 import com.cdtu.util.UploadFileUtil;
 
 @Controller
@@ -185,14 +186,17 @@ public class StudentController {
 	 */
 	@RequestMapping("selectPE.do")
 	@RequiresRoles({ "student" })
-	public @ResponseBody Map<String, Object> selectPE(@RequestBody Map<String,Object> paramsMap) {
+	public @ResponseBody Map<String, Object> selectPE(@RequestBody Map<String,Object> paramsMap,HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		String sId=role.getUsername();
 		String cId = (String)paramsMap.get("cId");
+		int page = (int)paramsMap.get("page");
+		int pubENum = (int) request.getSession().getAttribute("pubENum");
 		try {
-			map.put("publishEstimates",studentService.selectPublishEstimate(cId,sId)) ;
+			map.put("publishEstimates",studentService.selectPublishEstimate(cId,sId,(page-1)*5,page)) ;
+			map.put("max",  MaxPage.getMaxPage(pubENum, 5));
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);

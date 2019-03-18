@@ -6,7 +6,6 @@ import java.util.Map;
 import com.cdtu.model.CourseStudent;
 import com.cdtu.model.CourseWapper;
 import com.cdtu.model.Estimate;
-import com.cdtu.model.PublishEstimate;
 import com.cdtu.model.Role;
 import com.cdtu.model.Student;
 import com.cdtu.model.StudentSelectCourse;
@@ -35,7 +34,7 @@ public interface StudentService {
 	 * @param studentSelectCourse
 	 * @return
 	 */
-	public List<Map<String,Object>> selectPublishEstimate(String cId,String sId);
+	public List<Map<String,Object>> selectPublishEstimate(String cId,String sId,int start,int end);
 	/**
 	 * 提交点评
 	 * @author LR

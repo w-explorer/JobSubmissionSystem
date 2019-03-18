@@ -196,4 +196,16 @@ public interface PublishWorkMapper {
 
 	List<Map<String, Object>> getSFilesImages(@Param("sId")String sId, @Param("pwId")String pwId);
 
+	int countSPublishEstimates(@Param("cId")String cId, @Param("sId")String sId);
+
+	List<Map<String, Object>> getTPwDetails(@Param("pwId")String pwId);
+
+	List<Map<String, Object>> getTTFiles(@Param("pwId")String pwId);
+
+	List<Map<String, Object>> getTTFilesImages(@Param("pwId")String pwId);
+
+	List<Map<String, Object>> getTStudentsByPwId(@Param("pwId")String pwId);
+
+	List<Map<String, Object>> getWorkDetails(@Param("sId")String sId,@Param("pwId") String pwId);
+
 }

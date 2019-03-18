@@ -675,9 +675,22 @@ public class TeacherController {
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);
-			map.put("status", 0);
-			map.put("msg", "查询失败");
-			
+		}
+		return map;
+	}
+	@RequestMapping(value = "getWorkDetails.do")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> getPwDetails(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String pwId = (String) paramsMap.get("pwId");
+		try {
+			map.put("publishWork", publishWorkService.getTPwDetails(pwId));//发布作业详情
+			map.put("teacherFiles", publishWorkService.getTTFiles(pwId));//发布作业老师附件
+			map.put("teacherFilesImages", publishWorkService.getTTFilesImages(pwId));
+			map.put("students", publishWorkService.getTStudents(pwId));
+			map.put("status", 200);
+		} catch (Exception e) {
+			handlException(map, e);
 		}
 		return map;
 	}
