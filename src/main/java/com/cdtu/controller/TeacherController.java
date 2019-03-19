@@ -671,7 +671,7 @@ public class TeacherController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			
-			map.put("da", this.teacherService.selectEstimate((String) paramsMap.get("epId")));
+			map.put("Estimate", this.teacherService.selectEstimate((String) paramsMap.get("epId")));
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);

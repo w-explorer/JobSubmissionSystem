@@ -28,6 +28,7 @@ import com.cdtu.model.Work;
 import com.cdtu.service.TeacherService;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
+import com.sun.javafx.image.impl.IntArgb;
 
 @Service("teacherService")
 public class TeacherServiceImpl implements TeacherService {
@@ -366,10 +367,52 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public Map<String, Object> selectEstimate(String epId) {
+		List<Map<String,Object>> eSpeed=this.estimateMapper.selecteSpeed(epId);
+		List<Map<String,Object>> eSpeeds=new ArrayList<Map<String, Object>>();
+		int[] a=new int[5]; 
+		for (Map<String, Object> map2: eSpeed) {
+			int q= (int) map2.get("StareSpeed");
+			long s=(long) map2.get("NumeSpeeds"); 
+			a[q-1]= (int) s;
+			}
+		for(int i=1;i<=5;i++){
+			Map<String,Object> map=new HashMap<String, Object>();
+			map.put("StareSpeed", i);
+			map.put("NumeSpeeds", a[i-1]); 
+			eSpeeds.add(map);
+			}
+		List<Map<String,Object>> eDifficult=this.estimateMapper.selecteDifficult(epId);
+		List<Map<String,Object>> eDifficults=new ArrayList<Map<String, Object>>();
+		int[] b=new int[5];  
+		for (Map<String, Object> map2:  eDifficult) {
+			int q=(int)map2.get("StareDifficult");
+			long w=(long)map2.get("NumeDifficults");
+			b[q-1]=(int) w;
+			}
+		for(int i=1;i<=5;i++){
+			Map<String,Object> map=new HashMap<String, Object>();
+			map.put("StareDifficult", i);
+			map.put("NumeDifficults", b[i-1]); 
+			eDifficults.add(map);
+			}
+		List<Map<String,Object>> eFeel=this.estimateMapper.selecteFeel(epId);
+		List<Map<String,Object>> eFeels=new ArrayList<Map<String, Object>>();
+		int[] c=new int[5]; 
+		for (Map<String, Object> map2:  eFeel) {
+			int q=(int)map2.get("StareFeel");
+			long w=(long)map2.get("NumeFeels");
+			c[q-1]=(int) w;
+			}
+		for(int i=1;i<=5;i++){
+			Map<String,Object> map=new HashMap<String, Object>();
+			map.put("StareFeel", i);
+			map.put("NumeFeels", c[i-1]); 
+			eFeels.add(map);
+			}
 		Map<String,Object> map=new HashMap<String, Object>();
-		map.put("eDifficults",this.estimateMapper.selecteDifficult(epId) );
-		map.put("eSpeeds",this.estimateMapper.selecteSpeed(epId) );
-		map.put("eFeels",this.estimateMapper.selecteFeel(epId) );
+		map.put("eDifficults", eDifficults);
+		map.put("eSpeeds",eSpeeds);
+		map.put("eFeels",eFeels);
 		map.put("eSuggests",this.estimateMapper.selecteSuggest(epId) );
 		return map;
 	}
