@@ -161,43 +161,68 @@
 		AND
 		publish_work.pw_id=#{pwId}
 	</select>
+	
     <insert id="insertTeacherFilewAddr" >
-    INSERT INTO t_file(pw_id,t_f_add,t_f_name,t_f_type,t_f_state)
+    	INSERT INTO t_file(pw_id,t_f_add,t_f_name,t_f_type,t_f_state)
 		VALUES(#{pwId},#{wAddr},#{filename},#{type},#{state})
-    
     </insert>
-    <delete id="deleteTeacherFile" parameterType="java.lang.Integer">
-    delete from t_file where t_f_id=#{tfId}
     
+    <delete id="deleteTeacherFile" parameterType="java.lang.Integer">
+    	delete from t_file where t_f_id=#{tfId}
     </delete>	
+    
 	<delete id="deleteStudentFile" parameterType="java.lang.Integer">
-    delete from s_file where s_f_id=#{sfId}
+    	delete from s_file where s_f_id=#{sfId}
     </delete>	
 
 	<!-- 李红兵start -->
+	<select id="selectAverScore" resultType="java.lang.Double">
+		SELECT ROUND(AVG(IF(work.s_w_state, w_score, 0)), 2)
+		FROM teacher_select_course, publish_work, work
+		WHERE teacher_select_course.c_id = #{cId}
+		AND publish_work.tsc_id = teacher_select_course.tsc_id
+		AND work.pw_id = publish_work.pw_id
+		AND work.s_id = #{sId}
+	</select>
+
+	<select id="selectSubInfo" resultType="java.util.HashMap">
+		DROP TEMPORARY TABLE IF EXISTS work_info;
+		CREATE TEMPORARY TABLE work_info(to_submit INT(3), submitted INT(3));
+		INSERT INTO work_info(to_submit)
+		SELECT COUNT(*)
+		FROM teacher_select_course, publish_work, student_select_course
+		WHERE teacher_select_course.c_id = #{cId}
+		AND publish_work.tsc_id = teacher_select_course.tsc_id
+		AND student_select_course.tsc_id = teacher_select_course.tsc_id
+		AND student_select_course.s_id = #{sId};
+		UPDATE work_info INNER JOIN(
+		SELECT COUNT(*) AS submitted
+		FROM teacher_select_course, publish_work, work
+		WHERE teacher_select_course.c_id = #{cId}
+		AND publish_work.tsc_id = teacher_select_course.tsc_id
+		AND work.pw_id = publish_work.pw_id
+		AND work.s_id = #{sId}
+		AND work.s_w_state = 1) s
+		SET work_info.submitted = s.submitted;
+		SELECT * FROM work_info;
+		DROP TEMPORARY TABLE IF EXISTS work_info
+	</select>
+
 	<select id="selSubCon" resultType="java.util.HashMap">
-		SELECT student.s_id AS sId,
-		student.s_name AS sName, IF(student.s_id IN (SELECT work.s_id FROM
-		WORK WHERE work.pw_id = publish_work.pw_id), 1, 0) AS submitted
-		FROM
-		student_select_course, publish_work, student
-		WHERE publish_work.pw_id =
-		#{pwId}
+		SELECT student.s_id AS sId, student.s_name AS sName, IF(student.s_id IN (SELECT work.s_id
+		FROM WORK WHERE work.pw_id = publish_work.pw_id), 1, 0) AS submitted
+		FROM student_select_course, publish_work, student
+		WHERE publish_work.pw_id = #{pwId}
 		AND publish_work.tsc_id = student_select_course.tsc_id
-		AND
-		student.s_id = student_select_course.s_id
+		AND student.s_id = student_select_course.s_id
 	</select>
 
 	<select id="selAllWorks" resultType="java.util.HashMap">
-		SELECT publish_work.pw_id AS
-		pwId, publish_work.pw_name AS pwName, publish_work.pw_end AS pwEnd,
-		publish_work.pw_state AS pwState,
-		#{sId} IN (SELECT work.s_id FROM work
-		WHERE work.pw_id = publish_work.pw_id) AS submitted
-		FROM
-		student_select_course, publish_work
-		WHERE student_select_course.s_id =
-		#{sId}
+		SELECT publish_work.pw_id AS pwId, publish_work.pw_name AS pwName,
+		publish_work.pw_end AS pwEnd, publish_work.pw_state AS pwState,
+		#{sId} IN (SELECT work.s_id FROM work WHERE work.pw_id = publish_work.pw_id) AS submitted
+		FROM student_select_course, publish_work
+		WHERE student_select_course.s_id = #{sId}
 		AND student_select_course.tsc_id = publish_work.tsc_id
 	</select>
 
@@ -212,71 +237,76 @@
 		ORDER BY work.w_time ASC
 	</select>
 	<!-- 李红兵end -->
-<insert id="insertWorks" parameterType="String">
+	
+	<insert id="insertWorks" parameterType="String">
 		INSERT INTO
 		WORK(w_id,pw_id,s_id)
 		VALUES(#{wId},#{pwId},#{sId})
 	</insert>
-<select id="selectwId" parameterType="String" resultType="String">
-select work.w_id AS wId 
-from work
-where s_id=#{sId} and pw_id=#{pwId}
-</select>
+	
+	<select id="selectwId" parameterType="String" resultType="String">
+		select work.w_id AS wId 
+		from work
+		where s_id=#{sId} and pw_id=#{pwId}
+	</select>
 
-<insert id="insertStudentFilewAddr" >
-    INSERT INTO s_file(w_id,s_f_add,s_f_name,s_f_type,s_f_state)
+	<insert id="insertStudentFilewAddr" >
+    	INSERT INTO s_file(w_id,s_f_add,s_f_name,s_f_type,s_f_state)
 		VALUES(#{wId},#{wAddr},#{filename},#{type},#{state})
     </insert>
-<select id="selecttfName" resultType="String">
-select t_f_name AS tfName from t_file where t_f_add=#{tfAdd}
-union
-select s_f_name AS sfName from s_file where s_f_add=#{tfAdd}
-</select>
-<select id="selectsfName" resultType="String">
-select s_f_name AS sfName from s_file where s_f_add=#{sfAdd}
-</select>
-
-<select id="selectWorkAllAddr" resultType="java.util.HashMap">
-SELECT work.w_id ,s_file.`s_f_add`,s_file.`s_f_name`,student.`s_name`,student.`s_id`,publish_work.`pw_name`
-FROM WORK,s_file,student,publish_work
-WHERE
-work.`pw_id`=#{pwId}
-AND work.`w_id`=s_file.`w_id`
-AND student.`s_id`=work.`s_id`
-AND work.`pw_id`=publish_work.`pw_id`
-</select>
-<select id="selectWorkId" resultType="java.util.HashMap">
-SELECT  DISTINCT work.w_id ,student.`s_name`,student.`s_id`,publish_work.`pw_name`,course.`c_name`
-FROM WORK,s_file,student,publish_work,teacher_select_course,course
-WHERE
-work.`pw_id`=#{pwId}
-AND work.`w_id`=s_file.`w_id`
-AND student.`s_id`=work.`s_id`
-AND work.`pw_id`=publish_work.`pw_id`
-AND publish_work.`tsc_id`=teacher_select_course.`tsc_id`
-AND teacher_select_course.`c_id`=course.`c_id`
-</select>
-<select id="selectcName" resultType="java.util.HashMap">
-SELECT  DISTINCT publish_work.`pw_name`,course.`c_name`
-FROM publish_work,teacher_select_course,course
-WHERE
-publish_work.`pw_id`=1
-AND publish_work.`tsc_id`=teacher_select_course.`tsc_id`
-AND teacher_select_course.`c_id`=course.`c_id`
-
-</select>
-
-<update id="teacherupdatework" parameterType="java.util.HashMap">
-UPDATE WORK SET w_remark=#{map.wRemark}
-<if test="map.wScore!=null">
-,w_score=#{map.wScore},
-t_w_state=1
-</if>
-WHERE w_id=#{map.wId}
-</update>
-<resultMap type="java.util.HashMap" id="team">
-<id column="ep_id" property="epId" />
-
+    
+	<select id="selecttfName" resultType="String">
+		select t_f_name AS tfName from t_file where t_f_add=#{tfAdd}
+		union
+		select s_f_name AS sfName from s_file where s_f_add=#{tfAdd}
+	</select>
+	
+	<select id="selectsfName" resultType="String">
+		select s_f_name AS sfName from s_file where s_f_add=#{sfAdd}
+	</select>
+	
+	<select id="selectWorkAllAddr" resultType="java.util.HashMap">
+		SELECT work.w_id ,s_file.`s_f_add`,s_file.`s_f_name`,student.`s_name`,student.`s_id`,publish_work.`pw_name`
+		FROM WORK,s_file,student,publish_work
+		WHERE
+		work.`pw_id`=#{pwId}
+		AND work.`w_id`=s_file.`w_id`
+		AND student.`s_id`=work.`s_id`
+		AND work.`pw_id`=publish_work.`pw_id`
+	</select>
+	
+	<select id="selectWorkId" resultType="java.util.HashMap">
+		SELECT  DISTINCT work.w_id ,student.`s_name`,student.`s_id`,publish_work.`pw_name`,course.`c_name`
+		FROM WORK,s_file,student,publish_work,teacher_select_course,course
+		WHERE
+		work.`pw_id`=#{pwId}
+		AND work.`w_id`=s_file.`w_id`
+		AND student.`s_id`=work.`s_id`
+		AND work.`pw_id`=publish_work.`pw_id`
+		AND publish_work.`tsc_id`=teacher_select_course.`tsc_id`
+		AND teacher_select_course.`c_id`=course.`c_id`
+	</select>
+	
+	<select id="selectcName" resultType="java.util.HashMap">
+		SELECT  DISTINCT publish_work.`pw_name`,course.`c_name`
+		FROM publish_work,teacher_select_course,course
+		WHERE
+		publish_work.`pw_id`=1
+		AND publish_work.`tsc_id`=teacher_select_course.`tsc_id`
+		AND teacher_select_course.`c_id`=course.`c_id`
+	</select>
+	
+	<update id="teacherupdatework" parameterType="java.util.HashMap">
+		UPDATE WORK SET w_remark=#{map.wRemark}
+		<if test="map.wScore!=null">
+		,w_score=#{map.wScore},
+		t_w_state=1
+		</if>
+		WHERE w_id=#{map.wId}
+	</update>
+	
+	<resultMap type="java.util.HashMap" id="team">
+		<id column="ep_id" property="epId" />
 		<collection property="eSppeedList" javaType="List" ofType="java.util.HashMap" autoMapping="true">
 		<id column="e_speed" property="stareSppeed"/>
 		<result column="e_speeds" property="numeSpeed"/>
@@ -289,23 +319,22 @@ WHERE w_id=#{map.wId}
 		<id column="e_difficult" property="stareDifficults"/>
 		<result column="e_difficults" property="numeDifficults" />
 		</collection>
-</resultMap>
-<select id="selectestimate" resultMap="team">
-SELECT A.ep_id,A.e_speeds,A.e_speed,B.e_feels,C.e_difficult,B.e_feel,C.e_difficults
-FROM
-(SELECT ep_id,e_speed AS e_speed,COUNT(e_speed) AS e_speeds
-FROM estimate
-WHERE ep_id=#{epId}
-GROUP BY e_speed) AS A,
-(SELECT ep_id,e_feel AS e_feel,COUNT(e_feel)AS e_feels
-FROM estimate
-WHERE ep_id=#{epId}
-GROUP BY e_feel) AS B,
-(SELECT ep_id,e_difficult AS e_difficult,COUNT(e_difficult)AS e_difficults
-FROM estimate
-WHERE ep_id=#{epId}
-GROUP BY e_feel) AS C
-</select>
-
-
+	</resultMap>
+	
+	<select id="selectestimate" resultMap="team">
+		SELECT A.ep_id,A.e_speeds,A.e_speed,B.e_feels,C.e_difficult,B.e_feel,C.e_difficults
+		FROM
+		(SELECT ep_id,e_speed AS e_speed,COUNT(e_speed) AS e_speeds
+		FROM estimate
+		WHERE ep_id=#{epId}
+		GROUP BY e_speed) AS A,
+		(SELECT ep_id,e_feel AS e_feel,COUNT(e_feel)AS e_feels
+		FROM estimate
+		WHERE ep_id=#{epId}
+		GROUP BY e_feel) AS B,
+		(SELECT ep_id,e_difficult AS e_difficult,COUNT(e_difficult)AS e_difficults
+		FROM estimate
+		WHERE ep_id=#{epId}
+		GROUP BY e_feel) AS C
+	</select>
 </mapper>

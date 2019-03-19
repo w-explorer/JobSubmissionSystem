@@ -16,6 +16,16 @@ public interface WorkMapper {
 	/**
 	 * @author 李红兵
 	 */
+	public double selectAverScore(@Param("sId") String sId, @Param("cId") String cId);
+
+	/**
+	 * @author 李红兵
+	 */
+	public Map<String, Object> selectSubInfo(@Param("sId") String sId, @Param("cId") String cId);
+
+	/**
+	 * @author 李红兵
+	 */
 	public List<Map<String, Object>> selAllWorks(@Param("sId") String sId, @Param("cId") String cId);
 
 	/**
@@ -105,42 +115,60 @@ public interface WorkMapper {
 			@Param("pwName") String pwName);
 
 	public List<Map<String, Object>> getPwDetails(@Param("sId") String sId, @Param("pwId") String pwId);
+
 	/**
 	 * 存入老师文件地址
+	 * 
 	 * @author weiyuhang
 	 */
-   public void insertTeacherFilewAddr(@Param("pwId")String pwId, @Param("wAddr")String wAddr, @Param("filename")String filename,@Param("type")String type,@Param("state")Boolean state);
-   /**
-    * 删除老师文件
-    */
-   public void deleteTeacherFile(@Param("tfId")Integer tfId);
-   /**
-    * 删除学生文件
-    * @author weiyuhang
-    */
-   public void deleteStudentFile(@Param("sfId")Integer sfId);
-   /**
-    * 初始化学生作业表
-    * @author weiyuhang
-    */
-   public void insertWorks(@Param("wId")String wId, @Param("pwId")String pwId,@Param("sId")String sId);
+	public void insertTeacherFilewAddr(@Param("pwId") String pwId, @Param("wAddr") String wAddr,
+			@Param("filename") String filename, @Param("type") String type, @Param("state") Boolean state);
 
+	/**
+	 * 删除老师文件
+	 */
+	public void deleteTeacherFile(@Param("tfId") Integer tfId);
 
-   public String selectwId(@Param("sId")String sId,@Param("pwId")String pwId);
-   /**
+	/**
+	 * 删除学生文件
+	 * 
+	 * @author weiyuhang
+	 */
+	public void deleteStudentFile(@Param("sfId") Integer sfId);
+
+	/**
+	 * 初始化学生作业表
+	 * 
+	 * @author weiyuhang
+	 */
+	public void insertWorks(@Param("wId") String wId, @Param("pwId") String pwId, @Param("sId") String sId);
+
+	public String selectwId(@Param("sId") String sId, @Param("pwId") String pwId);
+
+	/**
 	 * 存入学生文件地址
+	 * 
 	 * @author weiyuhang
 	 */
-  public void insertStudentFilewAddr(@Param("wId")String wId, @Param("wAddr")String wAddr, @Param("filename")String filename,@Param("type")String type,@Param("state")Boolean state);
-  /**
-   * 查询文件名
-   * @author weiyuhang
-   */
-  public String selecttfName(@Param("tfAdd")String tfAdd);
-  public String selectsfName(@Param("sfAdd")String sfAdd);
-  public List<Map<String, Object>> selectWorkAllAddr(@Param("pwId")String pwId);
-  public List<Map<String, Object>> selectWorkId(@Param("pwId")String pwId);
-  public Map<String, Object> selectcName(@Param("pwId")String pwId);
-  public void teacherupdatework(@Param("map")Map<String,Object> map);
-  public Map<String,Object> selectestimate(@Param("epId")String epId);
+	public void insertStudentFilewAddr(@Param("wId") String wId, @Param("wAddr") String wAddr,
+			@Param("filename") String filename, @Param("type") String type, @Param("state") Boolean state);
+
+	/**
+	 * 查询文件名
+	 * 
+	 * @author weiyuhang
+	 */
+	public String selecttfName(@Param("tfAdd") String tfAdd);
+
+	public String selectsfName(@Param("sfAdd") String sfAdd);
+
+	public List<Map<String, Object>> selectWorkAllAddr(@Param("pwId") String pwId);
+
+	public List<Map<String, Object>> selectWorkId(@Param("pwId") String pwId);
+
+	public Map<String, Object> selectcName(@Param("pwId") String pwId);
+
+	public void teacherupdatework(@Param("map") Map<String, Object> map);
+
+	public Map<String, Object> selectestimate(@Param("epId") String epId);
 }

@@ -21,4 +21,16 @@ public interface PublishWorkService {
 
 	List<Map<String,Object>> getSFilesImages(String sId, String pwId);
 
+	int countSPublishEstimates(String cId, String sId);
+
+	List<Map<String,Object>> getTPwDetails(String pwId);
+
+	List<Map<String,Object>> getTTFiles(String pwId);
+
+	List<Map<String,Object>>  getTTFilesImages(String pwId);
+
+	List<Map<String,Object>> getTStudents(String pwId);
+
+	List<Map<String,Object>> getWorkDetails(String sId, String pwId);
+
 }

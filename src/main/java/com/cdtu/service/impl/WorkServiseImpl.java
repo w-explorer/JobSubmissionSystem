@@ -18,6 +18,26 @@ public class WorkServiseImpl implements WorkService {
 	private @Resource WorkMapper workMapper;
 
 	/**
+	 * 统计该门课程的所有作业的平均分
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public double getAverScore(String sId, String cId) {
+		return workMapper.selectAverScore(sId, cId);
+	}
+
+	/**
+	 * 获取提交情况信息
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public Map<String, Object> getSubInfo(String sId, String cId) {
+		return workMapper.selectSubInfo(sId, cId);
+	}
+
+	/**
 	 * 统计作业提交情况
 	 *
 	 * @author 李红兵
@@ -112,7 +132,7 @@ public class WorkServiseImpl implements WorkService {
 
 	/**
 	 * 操作文件
-	 * 
+	 *
 	 * @author weiyuhang
 	 *
 	 */
@@ -147,7 +167,7 @@ public class WorkServiseImpl implements WorkService {
 
 	@Override
 	public String selecttfNameService(String tfAdd) {
-		
+
 		return workMapper.selecttfName(tfAdd);
 	}
 
@@ -156,6 +176,7 @@ public class WorkServiseImpl implements WorkService {
 		// TODO Auto-generated method stub
 		return workMapper.selectsfName(sfAdd);
 	}
+
 	@Override
 	public List<Map<String, Object>> selectWorkAllAddr(String pwId) {
 		return workMapper.selectWorkAllAddr(pwId);
@@ -163,7 +184,7 @@ public class WorkServiseImpl implements WorkService {
 
 	@Override
 	public List<Map<String, Object>> selectWorkId(String pwId) {
-		
+
 		return workMapper.selectWorkId(pwId);
 	}
 
@@ -175,8 +196,8 @@ public class WorkServiseImpl implements WorkService {
 
 	@Override
 	public void teacherupdatework(Map<String, Object> map) {
-		this.workMapper.teacherupdatework(map);
-		
+		workMapper.teacherupdatework(map);
+
 	}
 
 	@Override

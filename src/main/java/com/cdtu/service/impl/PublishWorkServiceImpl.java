@@ -20,6 +20,7 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 
 	@Resource
 	private PublishWorkMapper publishWorkMapper;
+	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 	@Override
 	public void changePublishWorkStateByConparetoEndTime() {
 		SimpleDateFormat mySDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -81,6 +82,42 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 	public List<Map<String, Object>> getSFilesImages(String sId, String pwId) {
 		// TODO Auto-generated method stub
 		return publishWorkMapper.getSFilesImages(sId,pwId);
+	}
+	@Override
+	public int countSPublishEstimates(String cId, String sId) {
+		// TODO Auto-generated method stub
+		return publishWorkMapper.countSPublishEstimates(cId,sId);
+	}
+	@Override
+	public List<Map<String, Object>> getTPwDetails(String pwId) {
+		// TODO Auto-generated method stub
+		return publishWorkMapper.getTPwDetails(pwId);
+	}
+	@Override
+	public List<Map<String, Object>> getTTFiles(String pwId) {
+		// TODO Auto-generated method stub
+		return publishWorkMapper.getTTFiles(pwId);
+	}
+	@Override
+	public List<Map<String, Object>> getTTFilesImages(String pwId) {
+		// TODO Auto-generated method stub
+		return publishWorkMapper.getTTFilesImages(pwId);
+	}
+	@Override
+	public List<Map<String, Object>> getTStudents(String pwId) {
+		List<Map<String, Object>> list =publishWorkMapper.getTStudentsByPwId(pwId);
+		for (Map<String, Object> map : list) {
+			String sId = (String) map.get("sId");
+			map.put("studentFiles", publishWorkService.getSFiles(sId, pwId));
+			map.put("studentFilesImages", publishWorkService.getSFilesImages(sId, pwId));
+			map.put("WorkDetails", publishWorkService.getWorkDetails(sId, pwId));
+		}
+		return list;
+	}
+	@Override
+	public List<Map<String, Object>> getWorkDetails(String sId, String pwId) {
+		// TODO Auto-generated method stub
+		return publishWorkMapper.getWorkDetails(sId,pwId);
 	}
 
 }
