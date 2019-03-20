@@ -28,7 +28,6 @@ import com.cdtu.model.Work;
 import com.cdtu.service.TeacherService;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
-import com.sun.javafx.image.impl.IntArgb;
 
 @Service("teacherService")
 public class TeacherServiceImpl implements TeacherService {
@@ -40,7 +39,8 @@ public class TeacherServiceImpl implements TeacherService {
 	private @Resource PublishWorkMapper publishWorkMapper;
 	private @Resource PublishEstimateMapper publishEstimateMapper;
 	private @Resource StudentSelectCourseMapper studentSelectCourseMapper;
-    private @Resource EstimateMapper estimateMapper;
+	private @Resource EstimateMapper estimateMapper;
+
 	@Override
 	public Teacher getTeacherBytIdAndtPassword(Role role) {
 		return teacherMapper.getTeacherBytIdAndtPassword(role);
@@ -106,9 +106,11 @@ public class TeacherServiceImpl implements TeacherService {
 	public String insertClassCreateService(ClassCreate classcreate) {
 		boolean flag = false;// 判断是否重复
 		List<CourseWapper> classcreates = courseMapper.selectClassCreate(classcreate.gettId());
-		for (CourseWapper classCreate2 : classcreates)
-			if (classCreate2.getcName().equals(classcreate.getCtName()))
+		for (CourseWapper classCreate2 : classcreates) {
+			if (classCreate2.getcName().equals(classcreate.getCtName())) {
 				flag = true;
+			}
+		}
 		if (flag == false) {
 			courseMapper.insertClassCreate(classcreate);
 			return "success";
@@ -127,9 +129,11 @@ public class TeacherServiceImpl implements TeacherService {
 	public String updateClassCreateService(ClassCreate classcreate) {
 		boolean flag = false;// 判断是否重复
 		List<CourseWapper> classcreates = courseMapper.selectClassCreate(classcreate.gettId());
-		for (CourseWapper classCreate2 : classcreates)
-			if (classCreate2.getcName().equals(classcreate.getCtName()))
+		for (CourseWapper classCreate2 : classcreates) {
+			if (classCreate2.getcName().equals(classcreate.getCtName())) {
 				flag = true;
+			}
+		}
 		if (flag == false) {
 			courseMapper.updateClassCreate(classcreate);
 			return "success";
@@ -151,8 +155,9 @@ public class TeacherServiceImpl implements TeacherService {
 			publishEstimateMapper.insertByTscId(publishEstimate);
 			return 1;
 
-		} else
+		} else {
 			return -1;
+		}
 
 	}
 
@@ -162,14 +167,15 @@ public class TeacherServiceImpl implements TeacherService {
 			publishWork.setPwId(OAUtil.getId());
 			publishWork.setTscId(publishWorkMapper.selectTscid(publishWork.getcId(), tId));
 			publishWorkMapper.insterBycId(publishWork);
-			List<String> Ids =studentSelectCourseMapper.selectStudent(publishWork.getcId());
-			for(String sId:Ids){
-				String wId=OAUtil.getId();
-				work.insertWorks(wId,publishWork.getPwId(),sId);
+			List<String> Ids = studentSelectCourseMapper.selectStudent(publishWork.getcId());
+			for (String sId : Ids) {
+				String wId = OAUtil.getId();
+				work.insertWorks(wId, publishWork.getPwId(), sId);
 			}
 			return publishWork.getPwId();
-		} else
+		} else {
 			return "-1";
+		}
 	}
 
 	@Override
@@ -202,7 +208,7 @@ public class TeacherServiceImpl implements TeacherService {
 					publishWorkMapper.selectTeacherPublishWorkCount(tId, courseWapper.getcId(), false));
 			publishWorks.put("countall",
 					publishWorkMapper.selectTeacherPublishWorkCount(tId, courseWapper.getcId(), null));
-			for (PublishWork publishWork : publishWorkLs)
+			for (PublishWork publishWork : publishWorkLs) {
 				if (publishWork.getPwState() == true) {
 					publishWork.setPwStringState("进行中");
 					publishWork.setPwBooleanState(publishWork.getPwState());
@@ -210,10 +216,12 @@ public class TeacherServiceImpl implements TeacherService {
 					publishWork.setPwStringState("已结束");
 					publishWork.setPwBooleanState(publishWork.getPwState());
 				}
+			}
 			publishWorks.put("publishWorks", publishWorkLs);
 			return publishWorks;
-		} else
+		} else {
 			return null;
+		}
 
 	}
 
@@ -289,18 +297,21 @@ public class TeacherServiceImpl implements TeacherService {
 			if (this.work.selectWork(work.getsId(), work.getPwId()) != null) {
 				this.work.teacherUpdateWork(work.getsId(), work.getPwId(), work.getwRemark());
 				return 1;
-			} else
+			} else {
 				return 0;
-		} else
+			}
+		} else {
 			return -1;
+		}
 	}
 
 	@Override
 	public Work selectStudentWork(String sId, String pwId) {
-		if (sId != null && pwId != null)
+		if (sId != null && pwId != null) {
 			return work.selectWork(sId, pwId);
-		else
+		} else {
 			return null;
+		}
 
 	}
 
@@ -311,16 +322,19 @@ public class TeacherServiceImpl implements TeacherService {
 			List<CourseStudent> sumbitStudents = new ArrayList<>();
 			List<CourseStudent> unSumbitStudents = new ArrayList<>();
 			List<CourseStudent> students = selectCourseStudentService(courseWapper);
-			for (CourseStudent courseStudent : students)
-				if (work.selectWork(courseStudent.getsId(), courseWapper.getPwId()) != null)
+			for (CourseStudent courseStudent : students) {
+				if (work.selectWork(courseStudent.getsId(), courseWapper.getPwId()) != null) {
 					sumbitStudents.add(courseStudent);
-				else
+				} else {
 					unSumbitStudents.add(courseStudent);
+				}
+			}
 			courseStudents.put("sumbitStudents", sumbitStudents);
 			courseStudents.put("unSumbitStudents", unSumbitStudents);
 			return courseStudents;
-		} else
+		} else {
 			return null;
+		}
 	}
 
 	@Override
@@ -335,10 +349,11 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public int updatePublishwork(PublishWork publishwork) {
-		if (publishwork.getPwState() == false)
+		if (publishwork.getPwState() == false) {
 			publishwork.setPwState(true);
-		else
+		} else {
 			publishwork.setPwState(false);
+		}
 		publishWorkMapper.changePublishWork(publishwork);
 		return 0;
 	}
@@ -351,8 +366,6 @@ public class TeacherServiceImpl implements TeacherService {
 		teacherMapper.deleteCourseStudent(courseStudent);
 		return 0;
 	}
-
-	
 
 	@Override
 	public void updataAvatar(String path, String username) {
@@ -367,57 +380,54 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public Map<String, Object> selectEstimate(String epId) {
-		List<Map<String,Object>> eSpeed=this.estimateMapper.selecteSpeed(epId);
-		List<Map<String,Object>> eSpeeds=new ArrayList<Map<String, Object>>();
-		int[] a=new int[5]; 
-		for (Map<String, Object> map2: eSpeed) {
-			int q= (int) map2.get("StareSpeed");
-			long s=(long) map2.get("NumeSpeeds"); 
-			a[q-1]= (int) s;
-			}
-		for(int i=1;i<=5;i++){
-			Map<String,Object> map=new HashMap<String, Object>();
+		List<Map<String, Object>> eSpeed = estimateMapper.selecteSpeed(epId);
+		List<Map<String, Object>> eSpeeds = new ArrayList<>();
+		int[] a = new int[5];
+		for (Map<String, Object> map2 : eSpeed) {
+			int q = (int) map2.get("StareSpeed");
+			long s = (long) map2.get("NumeSpeeds");
+			a[q - 1] = (int) s;
+		}
+		for (int i = 1; i <= 5; i++) {
+			Map<String, Object> map = new HashMap<>();
 			map.put("StareSpeed", i);
-			map.put("NumeSpeeds", a[i-1]); 
+			map.put("NumeSpeeds", a[i - 1]);
 			eSpeeds.add(map);
-			}
-		List<Map<String,Object>> eDifficult=this.estimateMapper.selecteDifficult(epId);
-		List<Map<String,Object>> eDifficults=new ArrayList<Map<String, Object>>();
-		int[] b=new int[5];  
-		for (Map<String, Object> map2:  eDifficult) {
-			int q=(int)map2.get("StareDifficult");
-			long w=(long)map2.get("NumeDifficults");
-			b[q-1]=(int) w;
-			}
-		for(int i=1;i<=5;i++){
-			Map<String,Object> map=new HashMap<String, Object>();
+		}
+		List<Map<String, Object>> eDifficult = estimateMapper.selecteDifficult(epId);
+		List<Map<String, Object>> eDifficults = new ArrayList<>();
+		int[] b = new int[5];
+		for (Map<String, Object> map2 : eDifficult) {
+			int q = (int) map2.get("StareDifficult");
+			long w = (long) map2.get("NumeDifficults");
+			b[q - 1] = (int) w;
+		}
+		for (int i = 1; i <= 5; i++) {
+			Map<String, Object> map = new HashMap<>();
 			map.put("StareDifficult", i);
-			map.put("NumeDifficults", b[i-1]); 
+			map.put("NumeDifficults", b[i - 1]);
 			eDifficults.add(map);
-			}
-		List<Map<String,Object>> eFeel=this.estimateMapper.selecteFeel(epId);
-		List<Map<String,Object>> eFeels=new ArrayList<Map<String, Object>>();
-		int[] c=new int[5]; 
-		for (Map<String, Object> map2:  eFeel) {
-			int q=(int)map2.get("StareFeel");
-			long w=(long)map2.get("NumeFeels");
-			c[q-1]=(int) w;
-			}
-		for(int i=1;i<=5;i++){
-			Map<String,Object> map=new HashMap<String, Object>();
+		}
+		List<Map<String, Object>> eFeel = estimateMapper.selecteFeel(epId);
+		List<Map<String, Object>> eFeels = new ArrayList<>();
+		int[] c = new int[5];
+		for (Map<String, Object> map2 : eFeel) {
+			int q = (int) map2.get("StareFeel");
+			long w = (long) map2.get("NumeFeels");
+			c[q - 1] = (int) w;
+		}
+		for (int i = 1; i <= 5; i++) {
+			Map<String, Object> map = new HashMap<>();
 			map.put("StareFeel", i);
-			map.put("NumeFeels", c[i-1]); 
+			map.put("NumeFeels", c[i - 1]);
 			eFeels.add(map);
-			}
-		Map<String,Object> map=new HashMap<String, Object>();
+		}
+		Map<String, Object> map = new HashMap<>();
 		map.put("eDifficults", eDifficults);
-		map.put("eSpeeds",eSpeeds);
-		map.put("eFeels",eFeels);
-		map.put("eSuggests",this.estimateMapper.selecteSuggest(epId) );
+		map.put("eSpeeds", eSpeeds);
+		map.put("eFeels", eFeels);
+		map.put("eSuggests", estimateMapper.selecteSuggest(epId));
 		return map;
 	}
-
-	
-	
 
 }
