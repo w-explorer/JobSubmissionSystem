@@ -6,10 +6,11 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cdtu.mapper.StudentSelectCourseMapper;
 import com.cdtu.service.StudentSelectCourseService;
-
+@Transactional
 @Service("sscService")
 public class StudentSelectCourseServiceImpl implements StudentSelectCourseService {
 	private @Resource StudentSelectCourseMapper sscMapper;

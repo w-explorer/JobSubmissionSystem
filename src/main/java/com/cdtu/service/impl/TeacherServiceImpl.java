@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cdtu.mapper.CourseMapper;
 import com.cdtu.mapper.EstimateMapper;
@@ -29,7 +30,7 @@ import com.cdtu.service.TeacherService;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
 import com.sun.javafx.image.impl.IntArgb;
-
+@Transactional
 @Service("teacherService")
 public class TeacherServiceImpl implements TeacherService {
 	private @Resource WorkMapper work;

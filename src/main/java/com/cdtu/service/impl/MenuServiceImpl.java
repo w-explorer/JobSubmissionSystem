@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cdtu.mapper.MenuMapper;
 import com.cdtu.model.Menu;
@@ -17,6 +18,7 @@ import com.cdtu.service.MenuService;
  * @author wencheng
  *
  */
+@Transactional
 @Service("menuService")
 public class MenuServiceImpl implements MenuService {
 

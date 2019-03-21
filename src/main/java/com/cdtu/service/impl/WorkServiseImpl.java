@@ -8,11 +8,12 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cdtu.mapper.WorkMapper;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.FormatDateToString;
-
+@Transactional
 @Service(value = "workService")
 public class WorkServiseImpl implements WorkService {
 	private @Resource WorkMapper workMapper;
