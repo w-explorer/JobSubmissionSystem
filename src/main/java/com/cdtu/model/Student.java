@@ -8,8 +8,8 @@ public class Student {
     private String sMajor;
 
     private String sPassword;
-
-    public String getsId() {
+    
+	public String getsId() {
         return sId;
     }
 

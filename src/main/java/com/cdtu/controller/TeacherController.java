@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cdtu.mapper.PublishWorkMapper;
 import com.cdtu.model.ClassCreate;
 import com.cdtu.model.CourseStudent;
 import com.cdtu.model.CourseWapper;
@@ -48,6 +49,8 @@ public class TeacherController {
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
 	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 	private @Resource(name = "studentService") StudentService studentService;
+	@Resource
+	private PublishWorkMapper publishWorkMapper;
 
 	/**
 	 * 老师统计作业提交情况，参数是发布作业码
@@ -678,16 +681,39 @@ public class TeacherController {
 		}
 		return map;
 	}
+	/**
+	 * 老师查询作业详细情况
+	 * @author 文成
+	 * @param paramsMap
+	 * @return
+	 */
 	@RequestMapping(value = "getWorkDetails.do")
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> getPwDetails(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String pwId = (String) paramsMap.get("pwId");
+		int state =Integer.parseInt((String) paramsMap.get("state")) ;
+		int page =Integer.parseInt((String) paramsMap.get("page")) ;
 		try {
 			map.put("publishWork", publishWorkService.getTPwDetails(pwId));//发布作业详情
 			map.put("teacherFiles", publishWorkService.getTTFiles(pwId));//发布作业老师附件
-			map.put("teacherFilesImages", publishWorkService.getTTFilesImages(pwId));
-			map.put("students", publishWorkService.getTStudents(pwId));
+			map.put("teacherFilesImages", publishWorkService.getTTFilesImages(pwId));//发布作业老师图片附件
+			map.put("students", publishWorkService.getStudentsBywStateAndpwId(state,pwId,page));
+			//1 已提交作业同学（头像、学号、名字、待批改(作业分数)）、2 未提交作业同学（基本信息、未提交） 、3未批改作业同学（待批改）
+			//最大页码数
+			Integer countFinishStudents = publishWorkMapper.countFinishStudents(pwId);
+			Integer countNotFinishStudents = publishWorkMapper.countNotFinishStudents(pwId);
+			Integer countFinishsAndNotCheckStudent = publishWorkMapper.countFinishsAndNotCheckStudent(pwId);
+			map.put("countFinishStudents", countFinishStudents);
+			map.put("countNotFinishStudents", countFinishStudents);
+			map.put("countFinishsAndNotCheckStudent", countFinishStudents);
+			if(state==1){
+				map.put("max",MaxPage.getMaxPage(countFinishStudents, 5));
+			}else if(state==2){
+				map.put("max",MaxPage.getMaxPage(countNotFinishStudents, 5));
+			}else if(state==3){
+				map.put("max",MaxPage.getMaxPage(countFinishsAndNotCheckStudent, 5));
+			}
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);

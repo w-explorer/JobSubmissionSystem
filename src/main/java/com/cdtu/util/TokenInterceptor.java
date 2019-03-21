@@ -23,7 +23,6 @@ import com.cdtu.model.Role;
  *
  */
 public class TokenInterceptor implements HandlerInterceptor {
-	private String cookieName = "token";
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
 			Exception arg3) throws Exception {
@@ -38,18 +37,14 @@ public class TokenInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		String token = null;
-		
+		String token7 = request.getParameter("token");
+		System.out.println("token="+token7);
+		String token = request.getHeader("token");
+		System.out.println("token="+token);
 		
 		//如果登录认证或记住我，则再一次授权
 		Subject subject = SecurityUtils.getSubject();
-		try {
-			token = CookieUtils.getCookieValue(request, this.cookieName);
-		} catch (Exception e) {
-			System.out.println("token拦截了");
-			return false;
-		}
-		if (token!=null) {
+		if (token!=null&&!"null".equals(token)) {
 			Role role = new Role();
 			role = Jwt.unsign(token, role.getClass());
 			//token解析失败  重定向
@@ -73,7 +68,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 		//1、从cookie中取TT_TOKEN
 		Role role1 = (Role) request.getSession().getAttribute("role");
 		// token不存在
-		if (null != token && null != role1) {
+		if (null != token && null != role1&&!"null".equals(token)) {
 			String id = role1.getUsername();
 			Role role = Jwt.unsign(token, Role.class);
 			System.out.println(role.toString());

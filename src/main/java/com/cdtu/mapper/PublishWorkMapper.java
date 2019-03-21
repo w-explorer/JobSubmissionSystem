@@ -208,4 +208,16 @@ public interface PublishWorkMapper {
 
 	List<Map<String, Object>> getWorkDetails(@Param("sId")String sId,@Param("pwId") String pwId);
 
+	List<Map<String, Object>> getFinishStudents(@Param("pwId") String pwId,@Param("start") int start,@Param("end") int end);
+
+	List<Map<String, Object>> getNotFinishStudents(@Param("pwId") String pwId,@Param("start") int start,@Param("end") int end);
+
+	List<Map<String, Object>> getFinishsAndNotCheckStudent(@Param("pwId") String pwId,@Param("start") int start,@Param("end") int end);
+
+	Integer countFinishStudents(@Param("pwId")String pwId);
+
+	Integer countNotFinishStudents(@Param("pwId")String pwId);
+
+	Integer countFinishsAndNotCheckStudent(@Param("pwId")String pwId);
+
 }

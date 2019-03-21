@@ -208,6 +208,26 @@
 			    <version>1.4.7</version>
 			</dependency>		
 		<!-- spring email end -->
+		
+		<!-- spring 数据校验 start -->
+		<dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.3.0.Alpha1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+		<!-- spring  数据校验l end -->
 		<!-- 上传组件包 end -->
 	</dependencies>
 
