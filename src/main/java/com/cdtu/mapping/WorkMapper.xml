@@ -204,26 +204,34 @@
 		AND work.s_id = #{sId}
 		AND work.s_w_state = 1) s
 		SET work_info.submitted = s.submitted;
-		SELECT * FROM work_info;
+		SELECT to_submit AS toSubmit, submitted FROM work_info;
 		DROP TEMPORARY TABLE IF EXISTS work_info
 	</select>
 
 	<select id="selSubCon" resultType="java.util.HashMap">
-		SELECT student.s_id AS sId, student.s_name AS sName, IF(student.s_id IN (SELECT work.s_id
-		FROM WORK WHERE work.pw_id = publish_work.pw_id), 1, 0) AS submitted
+		DROP TEMPORARY TABLE IF EXISTS stu_id;
+		CREATE TEMPORARY TABLE stu_id (s_id VARCHAR(10));
+		INSERT INTO stu_id(s_id) SELECT work.s_id
+		FROM work, publish_work WHERE work.pw_id = publish_work.pw_id;
+		SELECT student.s_id AS sId, student.s_name AS sName, student.s_id IN (SELECT * FROM stu_id) AS submitted
 		FROM student_select_course, publish_work, student
 		WHERE publish_work.pw_id = #{pwId}
 		AND publish_work.tsc_id = student_select_course.tsc_id
-		AND student.s_id = student_select_course.s_id
+		AND student.s_id = student_select_course.s_id;
+		DROP TEMPORARY TABLE IF EXISTS stu_id
 	</select>
 
 	<select id="selAllWorks" resultType="java.util.HashMap">
-		SELECT publish_work.pw_id AS pwId, publish_work.pw_name AS pwName,
-		publish_work.pw_end AS pwEnd, publish_work.pw_state AS pwState,
-		#{sId} IN (SELECT work.s_id FROM work WHERE work.pw_id = publish_work.pw_id) AS submitted
+		DROP TEMPORARY TABLE IF EXISTS stu_id;
+		CREATE TEMPORARY TABLE stu_id (s_id VARCHAR(10));
+		INSERT INTO stu_id(s_id) SELECT work.s_id
+		FROM work, publish_work WHERE work.pw_id = publish_work.pw_id;
+		SELECT publish_work.pw_id AS pwId, publish_work.pw_name AS pwName, publish_work.pw_end AS pwEnd,
+		publish_work.pw_state AS pwState, #{sId} IN (SELECT * FROM stu_id) AS submitted
 		FROM student_select_course, publish_work
 		WHERE student_select_course.s_id = #{sId}
-		AND student_select_course.tsc_id = publish_work.tsc_id
+		AND student_select_course.tsc_id = publish_work.tsc_id;
+		DROP TEMPORARY TABLE IF EXISTS stu_id
 	</select>
 
 	<select id="selByDateSection" resultType="java.lang.Integer">
