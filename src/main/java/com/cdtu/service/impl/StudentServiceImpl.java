@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cdtu.mapper.EstimateMapper;
 import com.cdtu.mapper.PublishEstimateMapper;
@@ -28,7 +29,7 @@ import com.cdtu.model.Work;
 import com.cdtu.service.StudentService;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
-
+@Transactional
 @Service("studentService")
 public class StudentServiceImpl implements StudentService {
 	@Resource

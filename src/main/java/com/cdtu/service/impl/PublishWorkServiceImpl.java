@@ -9,12 +9,13 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cdtu.mapper.PublishWorkMapper;
 import com.cdtu.model.PublishWork;
 import com.cdtu.service.PublishWorkService;
 import com.cdtu.util.FormatDateToString;
-
+@Transactional
 @Service("publishWorkService")
 public class PublishWorkServiceImpl implements PublishWorkService {
 

@@ -274,6 +274,7 @@ public class WorkFileController {
 			}
 			zipOut.closeEntry();
 			input.close();
+			file.delete();
 		}
 
 		System.out.println(name.get("c_name"));

@@ -6,9 +6,11 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cdtu.mapper.UserMapper;
 import com.cdtu.service.UserService;
+@Transactional
 @Service(value = "userService")
 public class userServiceImpl implements UserService {
 	private @Resource UserMapper userMapper;
