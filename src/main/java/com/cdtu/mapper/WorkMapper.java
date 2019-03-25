@@ -31,6 +31,11 @@ public interface WorkMapper {
 	/**
 	 * @author 李红兵
 	 */
+	public List<Map<String, Object>> selectMyWorkInfo(@Param("sId") String sId, @Param("cId") String cId);
+
+	/**
+	 * @author 李红兵
+	 */
 	public List<Map<String, Object>> selByDateSection(@Param("sId") String sId, @Param("cId") String cId,
 			@Param("start") String start, @Param("end") String end);
 
@@ -118,7 +123,7 @@ public interface WorkMapper {
 
 	/**
 	 * 存入老师文件地址
-	 * 
+	 *
 	 * @author weiyuhang
 	 */
 	public void insertTeacherFilewAddr(@Param("pwId") String pwId, @Param("wAddr") String wAddr,
@@ -131,14 +136,14 @@ public interface WorkMapper {
 
 	/**
 	 * 删除学生文件
-	 * 
+	 *
 	 * @author weiyuhang
 	 */
 	public void deleteStudentFile(@Param("sfId") Integer sfId);
 
 	/**
 	 * 初始化学生作业表
-	 * 
+	 *
 	 * @author weiyuhang
 	 */
 	public void insertWorks(@Param("wId") String wId, @Param("pwId") String pwId, @Param("sId") String sId);
@@ -147,7 +152,7 @@ public interface WorkMapper {
 
 	/**
 	 * 存入学生文件地址
-	 * 
+	 *
 	 * @author weiyuhang
 	 */
 	public void insertStudentFilewAddr(@Param("wId") String wId, @Param("wAddr") String wAddr,
@@ -155,7 +160,7 @@ public interface WorkMapper {
 
 	/**
 	 * 查询文件名
-	 * 
+	 *
 	 * @author weiyuhang
 	 */
 	public String selecttfName(@Param("tfAdd") String tfAdd);

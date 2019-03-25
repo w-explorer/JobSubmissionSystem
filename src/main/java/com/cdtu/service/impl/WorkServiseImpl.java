@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cdtu.mapper.WorkMapper;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.FormatDateToString;
+
 @Transactional
 @Service(value = "workService")
 public class WorkServiseImpl implements WorkService {
@@ -64,6 +65,14 @@ public class WorkServiseImpl implements WorkService {
 			map.put("submitted", "1".equals(map.get("submitted").toString()));
 		});
 		return maps;
+	}
+
+	/**
+	 * 查询该学生该门课程的所有作业的分数和名称
+	 */
+	@Override
+	public List<Map<String, Object>> getMyWorkInfo(String sId, String cId) {
+		return workMapper.selectMyWorkInfo(sId, cId);
 	}
 
 	/**

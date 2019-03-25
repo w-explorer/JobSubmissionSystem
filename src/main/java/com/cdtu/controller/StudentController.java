@@ -189,6 +189,7 @@ public class StudentController {
 			map.put("averScore", averMap);
 			map.put("gapScore", gapMap);
 			map.putAll(workService.getSubInfo(sId, cId));
+			map.put("works", workService.getMyWorkInfo(sId, cId));
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);
