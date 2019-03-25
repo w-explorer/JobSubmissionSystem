@@ -29,9 +29,8 @@ import com.cdtu.model.Work;
 import com.cdtu.service.TeacherService;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
-import com.sun.javafx.image.impl.IntArgb;
-@Transactional
 
+@Transactional
 @Service("teacherService")
 public class TeacherServiceImpl implements TeacherService {
 	private @Resource WorkMapper work;

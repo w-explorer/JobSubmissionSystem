@@ -12,7 +12,7 @@ import com.cdtu.mapper.UserMapper;
 import com.cdtu.service.UserService;
 @Transactional
 @Service(value = "userService")
-public class userServiceImpl implements UserService {
+public class UserServiceImpl implements UserService {
 	private @Resource UserMapper userMapper;
 	@Override
 	public List<Map<String, Object>> getPassword(String username, String email) {
