@@ -179,7 +179,15 @@ public class StudentController {
 		try {
 			String cId = (String) paramsMap.get("cId");
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
-			map.put("averScore", workService.getAverScore(sId, cId));
+			double averSore = workService.getAverScore(sId, cId);
+			Map<String, Object> averMap = new HashMap<>();
+			Map<String, Object> gapMap = new HashMap<>();
+			averMap.put("value", averSore);
+			averMap.put("name", "我的平均分");
+			gapMap.put("value", 100 - averSore);
+			gapMap.put("name", "仍需努力的分数");
+			map.put("averScore", averMap);
+			map.put("gapScore", gapMap);
 			map.putAll(workService.getSubInfo(sId, cId));
 			map.put("status", 200);
 		} catch (Exception e) {
@@ -208,17 +216,18 @@ public class StudentController {
 	 */
 	@RequestMapping("selectPE.do")
 	@RequiresRoles({ "student" })
-	public @ResponseBody Map<String, Object> selectPE(@RequestBody Map<String,Object> paramsMap,HttpServletRequest request) {
+	public @ResponseBody Map<String, Object> selectPE(@RequestBody Map<String, Object> paramsMap,
+			HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
-		String sId=role.getUsername();
-		String cId = (String)paramsMap.get("cId");
-		int page = (int)paramsMap.get("page");
+		String sId = role.getUsername();
+		String cId = (String) paramsMap.get("cId");
+		int page = (int) paramsMap.get("page");
 		int pubENum = (int) request.getSession().getAttribute("pubENum");
 		try {
-			map.put("publishEstimates",studentService.selectPublishEstimate(cId,sId,(page-1)*5,page)) ;
-			map.put("max",  MaxPage.getMaxPage(pubENum, 5));
+			map.put("publishEstimates", studentService.selectPublishEstimate(cId, sId, (page - 1) * 5, page));
+			map.put("max", MaxPage.getMaxPage(pubENum, 5));
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);
