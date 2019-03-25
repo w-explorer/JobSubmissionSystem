@@ -23,7 +23,6 @@ import com.cdtu.model.CourseWapper;
 import com.cdtu.model.Estimate;
 import com.cdtu.model.PublishWork;
 import com.cdtu.model.Role;
-import com.cdtu.model.Student;
 import com.cdtu.model.StudentSelectCourse;
 import com.cdtu.model.Work;
 import com.cdtu.service.StudentService;
@@ -46,7 +45,7 @@ public class StudentServiceImpl implements StudentService {
 	private StudentSelectCourseMapper studentSelectCourseMapper;
 
 	@Override
-	public Student getStudentBysIdAndsPassword(Role role) {
+	public Map<String,Object> getStudentBysIdAndsPassword(Role role) {
 		return studentMapper.getStudentBysIdAndsPassword(role);
 	}
 

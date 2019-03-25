@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
@@ -39,7 +38,6 @@ public class CourseController {
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public Map<String, Object> doDetails(@RequestBody Map<String, Object> paramsMap,HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
-		HttpSession session = request.getSession();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		int pubENum=0;
@@ -56,7 +54,6 @@ public class CourseController {
 				String sId=role.getUsername();
 				pubENum=publishWorkService.countSPublishEstimates(cId,sId);
 			}
-			session.setAttribute("pubENum", pubENum);
 			map.put("pubWNum", pubWNum);//活动数量
 			map.put("pubENum", pubENum);//活动数量
 			

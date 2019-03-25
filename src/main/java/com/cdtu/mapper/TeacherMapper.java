@@ -1,16 +1,17 @@
 package com.cdtu.mapper;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.cdtu.model.CourseStudent;
 import com.cdtu.model.Role;
-import com.cdtu.model.Teacher;
 
 public interface TeacherMapper {
 	/**
 	 * @author wencheng
 	 */
-	public Teacher getTeacherBytIdAndtPassword(Role role);
+	public Map<String,Object> getTeacherBytIdAndtPassword(Role role);
 	/**
 	 * @author wencheng
 	 */

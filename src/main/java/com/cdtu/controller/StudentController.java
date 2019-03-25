@@ -224,9 +224,9 @@ public class StudentController {
 		String sId = role.getUsername();
 		String cId = (String) paramsMap.get("cId");
 		int page = (int) paramsMap.get("page");
-		int pubENum = (int) request.getSession().getAttribute("pubENum");
+		int pubENum =publishWorkService.countSPublishEstimates(cId,sId);
 		try {
-			map.put("publishEstimates", studentService.selectPublishEstimate(cId, sId, (page - 1) * 5, page));
+			map.put("publishEstimates", studentService.selectPublishEstimate(cId, sId, (page - 1) * 5, 5));
 			map.put("max", MaxPage.getMaxPage(pubENum, 5));
 			map.put("status", 200);
 		} catch (Exception e) {

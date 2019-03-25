@@ -97,7 +97,7 @@ public class WorkServiseImpl implements WorkService {
 		List<Map<String, Object>> maps = workMapper.SearchPwByPwName(tId, cId, pwName);
 		for (Map<String, Object> map : maps) {
 			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));// 将时间秒变成字符串形式
-			if ((int) map.get("pwState") == 0) {
+			if ( (Boolean)map.get("pwState") == false) {
 				map.put("pwStringState", "已结束");
 				map.put("pwBooleanState", false);
 			} else {

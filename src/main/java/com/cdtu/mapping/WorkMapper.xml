@@ -60,7 +60,7 @@
 			AND tsc.c_id=c.c_id
 			AND pw.tsc_id=tsc.tsc_id
 			AND pw.pw_id=w.pw_id
-			AND tsc.`t_id`#{tId}
+			AND tsc.t_id= #{tId}
 			AND c.c_id=#{cId}
 			)
 		AND pw.pw_id=w.pw_id

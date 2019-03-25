@@ -1,11 +1,12 @@
 package com.cdtu.service;
 
-import com.cdtu.model.Adminstrator;
+import java.util.Map;
+
 import com.cdtu.model.Role;
 
 public interface AdminstratorService {
 
 	public String getPasswordById(String userName);
 
-	public Adminstrator getAdminByaIdAndaPassword(Role role);
+	public Map<String,Object> getAdminByaIdAndaPassword(Role role);
 }
