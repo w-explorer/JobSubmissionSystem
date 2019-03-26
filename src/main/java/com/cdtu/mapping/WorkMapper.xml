@@ -244,6 +244,15 @@
 		AND work.w_time BETWEEN #{start} AND #{end}
 		ORDER BY work.w_time ASC
 	</select>
+	
+	<select id="selectMyWorkInfo" resultType="java.util.HashMap">
+		SELECT work.w_score AS value, publish_work.pw_name AS name
+		FROM work, publish_work, teacher_select_course
+		WHERE teacher_select_course.c_id = #{cId}
+		AND publish_work.tsc_id = teacher_select_course.tsc_id
+		AND work.pw_id = publish_work.pw_id
+		AND work.s_id = #{sId}
+	</select>
 	<!-- 李红兵end -->
 	
 	<insert id="insertWorks" parameterType="String">

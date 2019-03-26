@@ -12,6 +12,8 @@ public interface WorkService {
 
 	public List<Map<String, Object>> getAllWorks(String sId, String cId);
 
+	public List<Map<String, Object>> getMyWorkInfo(String sId, String cId);
+
 	public List<Map<String, Object>> getScoreInLastDays(String sId, String cId, int days);
 
 	public List<Map<String, Object>> fuzzySearchWorkBySidAndCid(String sId, String cId, String pwName);

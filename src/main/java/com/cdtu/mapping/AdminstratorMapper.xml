@@ -12,7 +12,7 @@
   		WHERE a_id = #{userName}
   </select>
   <select id="getAdminByaIdAndaPassword" parameterType="com.cdtu.model.Role" resultType="java.util.HashMap">
-  	SELECT a_ID AS userName,a_name as name,a_img_src as userImgSrc,a_major as userMajor,a_email as userEmail,a_phone as userPhone 
+  	SELECT a_ID AS userName,a_name as name,a_img_src as userImgSrc,a_email as userEmail,a_phone as userPhone 
   	FROM administrator
 		WHERE A_ID =#{username,jdbcType=VARCHAR}
 		AND A_PASSWORD =#{password,jdbcType=VARCHAR}

@@ -185,6 +185,8 @@ public class StudentController {
 			List<Map<String, Object>> submitMap = new ArrayList<Map<String, Object>>();
 			Map<String, Object> map1 = new HashMap<String, Object>();
 			Map<String, Object> map2 = new HashMap<String, Object>();
+			Map<String, Object> map3 = new HashMap<String, Object>();
+			Map<String, Object> map4 = new HashMap<String, Object>();
 			map1.put("value", averSore);
 			map1.put("name", "我的平均分");
 			map2.put("value", 100 - averSore);
@@ -193,12 +195,23 @@ public class StudentController {
 			averMap.add(map2);
 			map.put("averScore", averMap);
 			Map<String, Object> subInfo = workService.getSubInfo(sId, cId);
-			map1.put("value", subInfo.get("submitted"));
-			map1.put("name", "已提交");
-			map2.put("value", subInfo.get("toSubmit"));
-			map2.put("name", "未提交");
-			submitMap.add(map1);
-			submitMap.add(map2);
+			map3.put("value", subInfo.get("submitted"));
+			map3.put("name", "已提交");
+			map4.put("value", subInfo.get("toSubmit"));
+			map4.put("name", "未提交");
+			submitMap.add(map3);
+			submitMap.add(map4);
+			map.put("submitMap", submitMap);
+			List<Map<String,Object>> myWorkInfo = workService.getMyWorkInfo(sId, cId);
+			List<String> listString = new ArrayList<String>();
+			List<Integer> listInt = new ArrayList<Integer>();
+			for (Map<String, Object> map5 : myWorkInfo) {
+				listString.add((String) map5.get("name"));
+				listInt.add((int) map5.get("value"));
+			}
+//			map.put("works", workService.getMyWorkInfo(sId, cId));
+			map.put("listString", listString);
+			map.put("listInt", listInt);
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);
