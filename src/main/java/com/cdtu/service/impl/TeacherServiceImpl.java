@@ -392,6 +392,7 @@ public class TeacherServiceImpl implements TeacherService {
 		}
 		for (int i = 1; i <= 5; i++) {
 			Map<String, Object> map = new HashMap<>();
+			
 			map.put("StareSpeed", i);
 			map.put("NumeSpeeds", a[i - 1]);
 			eSpeeds.add(map);
