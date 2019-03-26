@@ -10,8 +10,9 @@
 		<result column="s_password" property="sPassword"/>
 	</resultMap>
 	<select id="getStudentBysIdAndsPassword" parameterType="com.cdtu.model.Role" 
-	resultMap="getStudentBysIdAndsPassword">
-		SELECT * FROM STUDENT
+	resultType="java.util.HashMap">
+		SELECT S_ID AS userName,s_name as name,s_img_src as userImgSrc,s_major as userMajor,s_email as userEmail,s_phone as userPhone
+		FROM STUDENT 
 		WHERE S_ID =#{username,jdbcType=VARCHAR}
 		AND S_PASSWORD =#{password,jdbcType=VARCHAR}
 	</select>

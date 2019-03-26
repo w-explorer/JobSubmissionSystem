@@ -8,8 +8,9 @@
 		<result column="t_staff_room" property="tStaffRoom"/>
 		<result column="t_password" property="tPassword"/>
 	</resultMap>
-	<select id="getTeacherBytIdAndtPassword" parameterType="com.cdtu.model.Role" resultMap="getTeacherBytIdAndtPassword">
-  		SELECT * FROM TEACHER 
+	<select id="getTeacherBytIdAndtPassword" parameterType="com.cdtu.model.Role" resultType="java.util.HashMap">
+  		SELECT t_ID AS userName,t_name as name,t_img_src as userImgSrc,t_email as userEmail,t_phone as userPhone
+  		FROM TEACHER 
    		WHERE T_ID =#{username,jdbcType=VARCHAR}
    		AND T_PASSWORD =#{password,jdbcType=VARCHAR}
   	</select>

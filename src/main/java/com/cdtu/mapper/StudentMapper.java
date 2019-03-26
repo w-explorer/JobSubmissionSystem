@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.cdtu.model.Role;
-import com.cdtu.model.Student;
 
 
 public interface StudentMapper {
@@ -15,7 +14,7 @@ public interface StudentMapper {
 	 * author wencheng
 	 * @return Student
 	 */
-    public Student getStudentBysIdAndsPassword(Role role);
+    public Map<String,Object> getStudentBysIdAndsPassword(Role role);
     /**
 	 * author wencheng
 	 * @return 

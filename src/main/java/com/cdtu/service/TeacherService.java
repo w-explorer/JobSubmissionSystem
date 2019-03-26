@@ -9,7 +9,6 @@ import com.cdtu.model.CourseWapper;
 import com.cdtu.model.PublishEstimate;
 import com.cdtu.model.PublishWork;
 import com.cdtu.model.Role;
-import com.cdtu.model.Teacher;
 import com.cdtu.model.Work;
 
 public interface TeacherService {
@@ -18,7 +17,7 @@ public interface TeacherService {
 	 * @author wencheng
 	 * return Teacher
 	 */
-	public Teacher getTeacherBytIdAndtPassword(Role role);
+	public Map<String,Object> getTeacherBytIdAndtPassword(Role role);
 	/**
 	 * @author wencheng
 	 * return

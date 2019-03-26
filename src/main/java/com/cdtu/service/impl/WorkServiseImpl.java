@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cdtu.mapper.WorkMapper;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.FormatDateToString;
+
 @Transactional
 @Service(value = "workService")
 public class WorkServiseImpl implements WorkService {
@@ -67,6 +68,14 @@ public class WorkServiseImpl implements WorkService {
 	}
 
 	/**
+	 * 查询该学生该门课程的所有作业的分数和名称
+	 */
+	@Override
+	public List<Map<String, Object>> getMyWorkInfo(String sId, String cId) {
+		return workMapper.selectMyWorkInfo(sId, cId);
+	}
+
+	/**
 	 * 统计近多少天的作业分
 	 *
 	 * @author 李红兵
@@ -97,7 +106,7 @@ public class WorkServiseImpl implements WorkService {
 		List<Map<String, Object>> maps = workMapper.SearchPwByPwName(tId, cId, pwName);
 		for (Map<String, Object> map : maps) {
 			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));// 将时间秒变成字符串形式
-			if ((int) map.get("pwState") == 0) {
+			if ( (Boolean)map.get("pwState") == false) {
 				map.put("pwStringState", "已结束");
 				map.put("pwBooleanState", false);
 			} else {

@@ -7,7 +7,6 @@ import com.cdtu.model.CourseStudent;
 import com.cdtu.model.CourseWapper;
 import com.cdtu.model.Estimate;
 import com.cdtu.model.Role;
-import com.cdtu.model.Student;
 import com.cdtu.model.StudentSelectCourse;
 import com.cdtu.model.Work;
 
@@ -16,7 +15,7 @@ public interface StudentService {
 	/**
 	 * @author wencheng return Student
 	 */
-	public Student getStudentBysIdAndsPassword(Role role);
+	public  Map<String,Object> getStudentBysIdAndsPassword(Role role);
 
 	/**
 	 * @author wencheng return

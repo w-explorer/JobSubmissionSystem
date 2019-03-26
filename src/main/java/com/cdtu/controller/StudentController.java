@@ -2,6 +2,7 @@ package com.cdtu.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -179,8 +180,38 @@ public class StudentController {
 		try {
 			String cId = (String) paramsMap.get("cId");
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
-			map.put("averScore", workService.getAverScore(sId, cId));
-			map.putAll(workService.getSubInfo(sId, cId));
+			double averSore = workService.getAverScore(sId, cId);
+			List<Map<String, Object>> averMap = new ArrayList<Map<String, Object>>();
+			List<Map<String, Object>> submitMap = new ArrayList<Map<String, Object>>();
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			Map<String, Object> map3 = new HashMap<String, Object>();
+			Map<String, Object> map4 = new HashMap<String, Object>();
+			map1.put("value", averSore);
+			map1.put("name", "我的平均分");
+			map2.put("value", 100 - averSore);
+			map2.put("name", "仍需努力的分数");
+			averMap.add(map1);
+			averMap.add(map2);
+			map.put("averScore", averMap);
+			Map<String, Object> subInfo = workService.getSubInfo(sId, cId);
+			map3.put("value", subInfo.get("submitted"));
+			map3.put("name", "已提交");
+			map4.put("value", subInfo.get("toSubmit"));
+			map4.put("name", "未提交");
+			submitMap.add(map3);
+			submitMap.add(map4);
+			map.put("submitMap", submitMap);
+			List<Map<String,Object>> myWorkInfo = workService.getMyWorkInfo(sId, cId);
+			List<String> listString = new ArrayList<String>();
+			List<Integer> listInt = new ArrayList<Integer>();
+			for (Map<String, Object> map5 : myWorkInfo) {
+				listString.add((String) map5.get("name"));
+				listInt.add((int) map5.get("value"));
+			}
+//			map.put("works", workService.getMyWorkInfo(sId, cId));
+			map.put("listString", listString);
+			map.put("listInt", listInt);
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);
@@ -208,17 +239,18 @@ public class StudentController {
 	 */
 	@RequestMapping("selectPE.do")
 	@RequiresRoles({ "student" })
-	public @ResponseBody Map<String, Object> selectPE(@RequestBody Map<String,Object> paramsMap,HttpServletRequest request) {
+	public @ResponseBody Map<String, Object> selectPE(@RequestBody Map<String, Object> paramsMap,
+			HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
-		String sId=role.getUsername();
-		String cId = (String)paramsMap.get("cId");
-		int page = (int)paramsMap.get("page");
-		int pubENum = (int) request.getSession().getAttribute("pubENum");
+		String sId = role.getUsername();
+		String cId = (String) paramsMap.get("cId");
+		int page = (int) paramsMap.get("page");
+		int pubENum =publishWorkService.countSPublishEstimates(cId,sId);
 		try {
-			map.put("publishEstimates",studentService.selectPublishEstimate(cId,sId,(page-1)*5,page)) ;
-			map.put("max",  MaxPage.getMaxPage(pubENum, 5));
+			map.put("publishEstimates", studentService.selectPublishEstimate(cId, sId, (page - 1) * 5, 5));
+			map.put("max", MaxPage.getMaxPage(pubENum, 5));
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);

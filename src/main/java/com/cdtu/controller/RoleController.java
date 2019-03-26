@@ -25,11 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import com.cdtu.model.Adminstrator;
 import com.cdtu.model.Menu;
 import com.cdtu.model.Role;
-import com.cdtu.model.Student;
-import com.cdtu.model.Teacher;
 import com.cdtu.service.AdminstratorService;
 import com.cdtu.service.MenuService;
 import com.cdtu.service.StudentService;
@@ -109,18 +106,11 @@ public class RoleController {
 		// 如果登录认证或记住我，则再一次授权
 		System.out.println(subject.isRemembered() + "记住密码");
 		if ("teacher".equals(role.getRole())) {
-			Teacher teacher = this.teacherService.getTeacherBytIdAndtPassword(role);
-			role.setName(teacher.gettName());
-			map.put("role", role);
-
+			map.put("role", teacherService.getTeacherBytIdAndtPassword(role));
 		} else if ("student".equals(role.getRole())) {
-			Student student = this.studentService.getStudentBysIdAndsPassword(role);
-			role.setName(student.getsName());
-			map.put("role", role);
+			map.put("role", studentService.getStudentBysIdAndsPassword(role));
 		} else if ("admin".equals(role.getRole())) {
-			Adminstrator adminstrator = this.adminstratorService.getAdminByaIdAndaPassword(role);
-			role.setName(adminstrator.getaName());
-			map.put("role", role);
+			map.put("role", adminstratorService.getAdminByaIdAndaPassword(role));
 		} else {
 			map.put("msg", "获取用户失败");
 			return map;

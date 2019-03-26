@@ -24,7 +24,6 @@ import com.cdtu.model.CourseWapper;
 import com.cdtu.model.PublishEstimate;
 import com.cdtu.model.PublishWork;
 import com.cdtu.model.Role;
-import com.cdtu.model.Teacher;
 import com.cdtu.model.Work;
 import com.cdtu.service.TeacherService;
 import com.cdtu.util.MaxPage;
@@ -44,7 +43,7 @@ public class TeacherServiceImpl implements TeacherService {
 	private @Resource EstimateMapper estimateMapper;
 
 	@Override
-	public Teacher getTeacherBytIdAndtPassword(Role role) {
+	public Map<String,Object> getTeacherBytIdAndtPassword(Role role) {
 		return teacherMapper.getTeacherBytIdAndtPassword(role);
 	}
 
