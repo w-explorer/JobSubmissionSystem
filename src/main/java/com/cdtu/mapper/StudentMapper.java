@@ -39,5 +39,6 @@ public interface StudentMapper {
 	public void CreatStudentTableDescRank(@Param("cId")String cId,@Param("tId")String tId);
 	public List<Map<String, Object>> selectStudents( @Param("start") int start,
 			@Param("end") int end);
+	public void updateRoleInfo(@Param("email")String email, @Param("phone")String phone, @Param("username")String username);
 	
 }

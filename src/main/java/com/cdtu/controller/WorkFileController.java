@@ -176,6 +176,7 @@ public class WorkFileController {
 		Map<String, Object> map = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
+		@SuppressWarnings("unchecked")
 		List<String> Addrs = (List<String>) maps.get("Addrs");
 		String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator
 				+ role.getUsername();

@@ -53,6 +53,16 @@ public class RoleController {
 	@Resource(name = "adminstratorService")
 	private AdminstratorService adminstratorService;
 
+	/**
+	 * 统一异常处理
+	 *
+	 * @author 李红兵
+	 */
+	private void handlException(Map<String, Object> map, Exception e) {
+		e.printStackTrace();
+		map.put("status", 500);
+		map.put("msg", "抱歉，服务器开小差了");
+	}
 	// 执行登陆方法
 	@RequestMapping(value = "/login.do", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> doLogin(@RequestBody Role role, HttpServletResponse response,
@@ -95,7 +105,11 @@ public class RoleController {
 		return map;
 	}
 
-	// 获取用户信息
+	/**
+	 * 获取用户信息
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("/getRole.do")
 	public @ResponseBody Map<String, Object> getRole(HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -204,13 +218,14 @@ public class RoleController {
 		return map;
 	}
 
-	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	@RequiresRoles(value = { "student", "teacher","admin"}, logical = Logical.OR)
 	@RequestMapping(value = "updateAvatar.do")
-	public  void updateAvatar(@RequestParam("file") CommonsMultipartFile file,
+	public @ResponseBody Map<String,Object> updateAvatar(@RequestParam("file") CommonsMultipartFile file,
 			HttpServletRequest request) {
 		// 获取当前用户
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
+		Map<String, Object> map = new HashMap<>();
 		String path = "";
 		if (!file.isEmpty()) {
 			//获得文件类型（可以判断如果不是图片，禁止上传）
@@ -229,16 +244,29 @@ public class RoleController {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			path=File.separator +"imgSrc"+ File.separator +role.getRole()+ File.separator +role.getUsername()+ File.separator + "studentavatar." + imageName;
+			path=File.separator +"imgSrc"+ File.separator +role.getRole()+ File.separator +role.getUsername()+ File.separator + "avatar." + imageName;
 		}
-		if("teacher".equals(role.getRole())){
-			teacherService.updataAvatar(path,role.getUsername());
+		try {
+			if("teacher".equals(role.getRole())){
+				teacherService.updataAvatar(path,role.getUsername());
+			}
+			else if("student".equals(role.getRole())){
+				studentService.updataAvatar(path,role.getUsername());
+			}
+			else if("admin".equals(role.getRole())){
+				adminstratorService.updataAvatar(path,role.getUsername());
+			}
+			map.put("status", 200);
+		} catch (Exception e) {
+			handlException(map,e);
 		}
-		else if("student".equals(role.getRole())){
-			studentService.updataAvatar(path,role.getUsername());
-		}
+		return map;
 	}
-
+   /**
+    * 更具出入邮箱实现忘记密码功能
+    * @param paramsMap
+    * @return
+    */
 	@RequestMapping(value = "forgetpassword.do")
 	public @ResponseBody Map<String, Object> forgetPassword(@RequestBody Map<String,Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
@@ -257,6 +285,29 @@ public class RoleController {
 			SendEmail.sendPasswordByEmail(email, password);
 			map.put("status", 200);
 			map.put("msg", "请前往邮箱查看密码！");
+		}
+		return map;
+	}
+	@RequestMapping(value = "updateRoleInfo.do")
+	public @ResponseBody Map<String, Object> updateRoleInfo(@RequestBody Map<String,Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		String email  = (String) paramsMap.get("email");
+		String phone  = (String) paramsMap.get("phone");
+		// 获取当前用户
+		Role role = (Role) SecurityUtils.getSubject().getPrincipal();
+		try {
+			if("student".equals(role.getRole())){
+				studentService.updateRoleInfo(email,phone,role.getUsername());
+			}
+			else if("teacher".equals(role.getRole())){
+				teacherService.updateRoleInfo(email,phone,role.getUsername());
+			}
+			else if("admin".equals(role.getRole())){
+				adminstratorService.updateRoleInfo(email,phone,role.getUsername());
+			}
+			map.put("status", 200);
+		} catch (Exception e) {
+			handlException(map, e);
 		}
 		return map;
 	}

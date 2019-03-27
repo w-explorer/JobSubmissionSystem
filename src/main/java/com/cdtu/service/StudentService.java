@@ -130,4 +130,6 @@ public interface StudentService {
 
 	public List<Map<String, Object>> selectStudents(int page);
 
+	public void updateRoleInfo(String email, String phone, String username);
+
 }

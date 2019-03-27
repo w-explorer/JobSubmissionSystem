@@ -290,4 +290,10 @@ public class StudentServiceImpl implements StudentService {
 		return studentMapper.selectStudents((page - 1) * 30, page * 30);
 	}
 
+	@Override
+	public void updateRoleInfo(String email, String phone, String username) {
+		// TODO Auto-generated method stub
+		studentMapper.updateRoleInfo(email,  phone,  username);
+	}
+
 }

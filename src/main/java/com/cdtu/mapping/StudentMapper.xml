@@ -79,6 +79,11 @@
 	<select id="selectStudents" resultType="java.util.HashMap">
 		SELECT DISTINCT * FROM secondView ORDER BY secondView.sumScore DESC LIMIT #{start}, #{end}
 	</select>
+	<update id="updateRoleInfo">
+		UPDATE student s 
+		SET s.s_email= #{email} ,s.s_phone =#{phone} 
+  		WHERE s.s_id =#{username};
+	</update>
 	<!-- 文成end -->
 	
 	

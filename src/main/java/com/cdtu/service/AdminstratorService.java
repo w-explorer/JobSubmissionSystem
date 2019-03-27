@@ -9,4 +9,8 @@ public interface AdminstratorService {
 	public String getPasswordById(String userName);
 
 	public Map<String,Object> getAdminByaIdAndaPassword(Role role);
+
+	public void updateRoleInfo(String email, String phone, String username);
+
+	public void updataAvatar(String path, String username);
 }

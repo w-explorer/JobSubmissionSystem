@@ -483,7 +483,7 @@
 		AND tsc.c_id=c.c_id
 		AND pw.tsc_id=tsc.tsc_id
 		AND pw.pw_id=w.pw_id
-		AND tsc.`t_id`=#{tId}
+		AND tsc.t_id=#{tId}
 		AND c.c_id=#{cId}
 		<if test="pwState!=null">
 			AND pw.pw_state=#{pwState}
@@ -715,9 +715,9 @@
 		)
 	</select>
 	<select id="getTPwDetails" resultType="java.util.HashMap">
-		SELECT	pw.`pw_img_src` AS activityImgSrc,pw.`pw_name` AS pwName,pw.`pw_content` AS pwContent,pw.`pw_end` pwEnd,pw.`pw_score` pwScore
+		SELECT	pw.pw_img_src AS activityImgSrc,pw.pw_name AS pwName,pw.pw_content AS pwContent,pw.pw_end pwEnd,pw.pw_score pwScore,pw.pw_state as pwState
 		FROM publish_work pw
-		WHERE pw.`pw_id`=#{pwId}
+		WHERE pw.pw_id=#{pwId}
 	</select>
 	<select id="getTTFiles" resultType="java.util.HashMap">
 		SELECT	DISTINCT tf.t_f_name AS name, tf.t_f_add AS url,tf.t_f_state AS state,tf.t_f_type AS type,tf.t_f_id AS tfId
@@ -749,7 +749,7 @@
 		AND w.s_id=#{sId}
 	</select>
 	<select id="getFinishStudents" resultType="java.util.HashMap">
-		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.`t_w_state` AS twState,w.`w_score` AS wScore
+		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.t_w_state AS twState,w.w_score AS wScore
 		FROM publish_work pw,WORK w,student s
 		WHERE pw.pw_id=#{pwId}
 		AND pw.pw_id=w.pw_id
@@ -759,7 +759,7 @@
 		LIMIT #{start},#{end};
 	</select>
 	<select id="getNotFinishStudents" resultType="java.util.HashMap">
-		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.`t_w_state` AS twState,w.`w_score` AS wScore,"未提交"  AS checkStringState 
+		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.t_w_state AS twState,w.w_score AS wScore,"未提交"  AS checkStringState 
 		FROM publish_work pw,WORK w,student s
 		WHERE pw.pw_id=#{pwId}
 		AND pw.pw_id=w.pw_id
@@ -769,7 +769,7 @@
 	    LIMIT #{start},#{end};
 	</select>
 	<select id="getFinishsAndNotCheckStudent" resultType="java.util.HashMap">
-		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.`t_w_state` AS twState,w.`w_score` AS wScore, "待批改" AS checkStringState 
+		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.t_w_state AS twState,w.w_score AS wScore, "待批改" AS checkStringState 
 		FROM publish_work pw,WORK w,student s
 		WHERE pw.pw_id=#{pwId}
 		AND pw.pw_id=w.pw_id

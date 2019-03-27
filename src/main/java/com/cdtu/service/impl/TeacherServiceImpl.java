@@ -432,4 +432,10 @@ public class TeacherServiceImpl implements TeacherService {
 		return map;
 	}
 
+	@Override
+	public void updateRoleInfo(String email, String phone, String username) {
+		// TODO Auto-generated method stub
+		teacherMapper.updateRoleInfo(email,phone,username);
+	}
+
 }
