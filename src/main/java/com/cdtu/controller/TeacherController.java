@@ -542,12 +542,11 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> PwDetails(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		String pwId = (String) paramsMap.get("pwId");
-		String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		try {
 			map.put("status", 200);
-			map.put("publishWork", publishWorkService.getPwDetails(tId, pwId));
-			map.put("teacherFiles", publishWorkService.getTFiles(tId, pwId));
-			map.put("studentFiles", publishWorkService.getSFiles(tId, pwId));
+			map.put("publishWork", publishWorkService.getTPwDetails(pwId));//发布作业详情
+			map.put("teacherFiles", publishWorkService.getTTFiles(pwId));//发布作业老师附件
+			map.put("teacherFilesImages", publishWorkService.getTTFilesImages(pwId));//发布作业老师图片附件
 		} catch (Exception e) {
 			handlException(map, e);
 		}
@@ -633,7 +632,7 @@ public class TeacherController {
 		Role role = (Role) subject.getPrincipal();
 		String tId = role.getUsername();
 		String cId = (String) paramsMap.get("cId");
-		int page = Integer.parseInt((String) paramsMap.get("page"));
+		int page = (int) paramsMap.get("page");
 		int stusNum = sscService.countStudents(cId);
 		try {
 			map.put("students", studentService.selectStudents(page));
@@ -644,9 +643,9 @@ public class TeacherController {
 				studentService.CreatStudentTableDescRank(cId,tId);
 				map.put("students", studentService.selectStudents(page));
 				map.put("stusNum", stusNum);
-				map.put("pageNum", MaxPage.getMaxPage(stusNum, 30));
+				map.put("max", MaxPage.getMaxPage(stusNum, 30));
 			} catch (Exception e1) {
-				handlException(map, e);
+				handlException(map, e1);
 			}
 		}
 		map.put("status", 200);

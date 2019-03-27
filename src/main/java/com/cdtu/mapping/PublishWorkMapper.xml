@@ -356,7 +356,6 @@
 					AND pw.pw_state=#{pwState}
 				</if>)
 		AND pw.pw_id=w.pw_id
-		AND w.s_w_state=1
 		<if test="pwState!=null">
 			AND pw.pw_state=#{pwState}
 		</if>
@@ -497,7 +496,7 @@
 		</if>
 		GROUP BY w.pw_id
 		<if test="pwState!=null">
-			AND publish_work.pw_state=#{pwState}
+			AND pw.pw_state=#{pwState}
 		</if>
 		LIMIT #{start}, #{end}
 	</select>
