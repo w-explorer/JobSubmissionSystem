@@ -27,4 +27,9 @@ public interface SchoolMapper {
     int updateByPrimaryKeySelective(School record);
 
     int updateByPrimaryKey(School record);
+    /**
+     * @author weiyuhang
+     * @return
+     */
+    List<String> selectSchool();
 }

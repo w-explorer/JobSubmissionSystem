@@ -71,4 +71,7 @@
 		LIMIT 1
 	</select>
 	<!-- 李红兵end -->
+<select>
+select 
+</select>
 </mapper>
