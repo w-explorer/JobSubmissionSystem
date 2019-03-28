@@ -65,22 +65,25 @@
 				AND w.s_id=s.s_id
 				GROUP BY w.s_id;
 	
-		CREATE TEMPORARY TABLE secondView (sId VARCHAR(10) NOT NULL,sName VARCHAR(10) NOT NULL,sImgSrc TEXT NOT NULL,sumScore INT(3)NOT NULL,rank INT(3)NOT NULL);
+		CREATE TEMPORARY TABLE secondView (sId VARCHAR(10) NOT NULL,sName VARCHAR(10) NOT NULL,sImgSrc TEXT NOT NULL,sumScore INT(3)NOT NULL,rank INT(3)NOT NULL, PRIMARY KEY (sId));
 		INSERT INTO secondView(sId,sName,sImgSrc,sumScore,rank)
-		SELECT sId,sName,sImgSrc,sumScore ,
-		CASE 
-		WHEN @prevRank = sumScore THEN @curRank 
-		WHEN @prevRank := sumScore THEN @curRank := @curRank + 1
-		END AS rank
-		FROM firstView p, 
-		(SELECT @curRank :=0, @prevRank := NULL) r
-		ORDER BY sumScore DESC;
-		
+		 SELECT firstView.sId,firstView.sName,firstView.sImgSrc,firstView.sumScore ,firstView.rank FROM
+		 (SELECT sId,sName,sImgSrc,sumScore ,
+		 @curRank := IF (@prevRank = sumScore, @curRank, @incRank) AS rank,
+		 @incRank := @incRank + 1,@prevRank := sumScore
+		 FROM firstView p,
+		(SELECT @curRank :=0, @prevRank := NULL, @incRank := 1) r 
+		 ORDER BY sumScore DESC) firstView;
 		DROP TABLE firstView
 	</select>
 	<select id="selectStudents" resultType="java.util.HashMap">
 		SELECT DISTINCT * FROM secondView ORDER BY secondView.sumScore DESC LIMIT #{start}, #{end}
 	</select>
+	<update id="updateRoleInfo">
+		UPDATE student s 
+		SET s.s_email= #{email} ,s.s_phone =#{phone} 
+  		WHERE s.s_id =#{username};
+	</update>
 	<!-- 文成end -->
 	
 	

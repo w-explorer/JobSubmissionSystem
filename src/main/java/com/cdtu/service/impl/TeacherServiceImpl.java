@@ -26,6 +26,7 @@ import com.cdtu.model.PublishWork;
 import com.cdtu.model.Role;
 import com.cdtu.model.Work;
 import com.cdtu.service.TeacherService;
+import com.cdtu.util.FormatDateToString;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
 
@@ -375,6 +376,7 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public String updatepublishWork(PublishWork publishWork) {
+		publishWork.setPwEnd(publishWork.getPwEnd().substring(0, 10));
 		publishWorkMapper.updatePublishWork(publishWork);
 		return null;
 	}
@@ -430,6 +432,12 @@ public class TeacherServiceImpl implements TeacherService {
 		map.put("eFeels", eFeels);
 		map.put("eSuggests", estimateMapper.selecteSuggest(epId));
 		return map;
+	}
+
+	@Override
+	public void updateRoleInfo(String email, String phone, String username) {
+		// TODO Auto-generated method stub
+		teacherMapper.updateRoleInfo(email,phone,username);
 	}
 
 }

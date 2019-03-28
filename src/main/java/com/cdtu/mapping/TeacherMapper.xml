@@ -29,9 +29,16 @@
 	delete from student_select_course where ct_id=#{cId} and s_id=#{sId}
 	</delete>
 	
+	<!-- wc start -->
 	<update id="updataAvatar">
 		update teacher
 		set t_img_src=#{tImgSrc}
 		where t_id=#{tId}
 	</update>
+	<update id="updateRoleInfo">
+		UPDATE teacher t 
+		SET t.t_email= #{email} ,t.t_phone =#{phone} 
+  		WHERE t.t_id =#{username};
+	</update>
+	<!-- wc end -->
 </mapper>

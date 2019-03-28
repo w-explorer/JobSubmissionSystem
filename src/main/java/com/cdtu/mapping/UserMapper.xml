@@ -12,4 +12,17 @@
   	where t_id=#{username}
   	and t_email=#{email}
   </select>
+  <select id="getEmailByUsername" resultType="java.lang.String">
+  	select s_email as email
+  	from student
+  	where s_id=#{username}
+  	UNION
+  	select t_email as email
+  	from teacher
+  	where t_id=#{username}
+  	UNION
+  	select a_email as email
+  	from administrator 
+  	where a_id=#{username}
+  </select>
 </mapper>

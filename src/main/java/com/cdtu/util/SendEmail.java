@@ -18,7 +18,7 @@ public class SendEmail {
 		msg.setFrom("2515106327@qq.com"); // 发件人邮箱
 		msg.setTo(email); // 收件人邮箱
 		msg.setSubject("找回密码邮件"); // 标题
-		msg.setText("这是您的密码:"+password); // 文本信息
+		msg.setText("【成工云班课】密码：+"+password+"+。请勿重复点击发送，也不要透露给他人！"); // 文本信息
 		try {
 			mailSender.send(msg);
 			System.out.println("邮件发送成功!"); // 没有报错就是好消息 :-)

@@ -167,4 +167,5 @@ public interface TeacherService {
      * @return
      */
 	public Map<String,Object> selectEstimate(String epId);
+	public void updateRoleInfo(String email, String phone, String username);
 }

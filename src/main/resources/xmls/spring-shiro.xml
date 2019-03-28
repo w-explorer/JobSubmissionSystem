@@ -26,6 +26,7 @@
 				/login.html = anon
 				/role/checkCode = anon
 				/role/login.do = anon
+				/role/forgetpassword.do = anon
 				/* =authc
 			</value>
 		</property>

@@ -23,5 +23,15 @@ public class AdminstratorServiceImpl implements AdminstratorService {
 	public Map<String,Object> getAdminByaIdAndaPassword(Role role) {
 		return adminstratorMapper.getAdminByaIdAndaPassword(role);
 	}
+	@Override
+	public void updateRoleInfo(String email, String phone, String username) {
+		// TODO Auto-generated method stub
+		adminstratorMapper.updateRoleInfo(email,  phone,  username);
+	}
+	@Override
+	public void updataAvatar(String path, String username) {
+		adminstratorMapper.updataAvatar(path, username);
+		
+	}
 
 }

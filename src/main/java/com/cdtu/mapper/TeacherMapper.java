@@ -25,4 +25,5 @@ public interface TeacherMapper {
 	 */
 	public void updataAvatar(@Param("tImgSrc")String path, @Param("tId")String username);
 	public void deleteCourseStudent(CourseStudent courseStudent);
+	public void updateRoleInfo(@Param("email")String email, @Param("phone")String phone, @Param("username")String username);
 }

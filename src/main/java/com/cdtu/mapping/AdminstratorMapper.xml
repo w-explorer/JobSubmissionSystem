@@ -17,4 +17,15 @@
 		WHERE A_ID =#{username,jdbcType=VARCHAR}
 		AND A_PASSWORD =#{password,jdbcType=VARCHAR}
   </select>
+  <update id="updateRoleInfo">
+  	UPDATE administrator a 
+  	SET a.a_email=#{email}  ,a.a_phone =#{phone} 
+ 	 WHERE a.a_id = #{username};
+  </update>
+  
+  <update id="updataAvatar">
+		update administrator 
+		set a_img_src=#{path}
+		where a_id=#{username};
+	</update>
 </mapper>

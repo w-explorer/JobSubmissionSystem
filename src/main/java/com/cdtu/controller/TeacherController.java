@@ -49,8 +49,7 @@ public class TeacherController {
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
 	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 	private @Resource(name = "studentService") StudentService studentService;
-	@Resource
-	private PublishWorkMapper publishWorkMapper;
+	private @Resource(name = "publishWorkMapper") PublishWorkMapper publishWorkMapper;
 
 	/**
 	 * 老师统计作业提交情况，参数是发布作业码
@@ -541,12 +540,11 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> PwDetails(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		String pwId = (String) paramsMap.get("pwId");
-		String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		try {
 			map.put("status", 200);
-			map.put("publishWork", publishWorkService.getPwDetails(tId, pwId));
-			map.put("teacherFiles", publishWorkService.getTFiles(tId, pwId));
-			map.put("studentFiles", publishWorkService.getSFiles(tId, pwId));
+			map.put("publishWork", publishWorkService.getTPwDetails(pwId));//发布作业详情
+			map.put("teacherFiles", publishWorkService.getTTFiles(pwId));//发布作业老师附件
+			map.put("teacherFilesImages", publishWorkService.getTTFilesImages(pwId));//发布作业老师图片附件
 		} catch (Exception e) {
 			handlException(map, e);
 		}
@@ -632,20 +630,20 @@ public class TeacherController {
 		Role role = (Role) subject.getPrincipal();
 		String tId = role.getUsername();
 		String cId = (String) paramsMap.get("cId");
-		int page = Integer.parseInt((String) paramsMap.get("page"));
+		int page = (int) paramsMap.get("page");
 		int stusNum = sscService.countStudents(cId);
 		try {
 			map.put("students", studentService.selectStudents(page));
 			map.put("stusNum", stusNum);
-			map.put("pageNum", MaxPage.getMaxPage(stusNum, 30));
+			map.put("max", MaxPage.getMaxPage(stusNum, 30));
 		} catch (Exception e) {
 			try {
 				studentService.CreatStudentTableDescRank(cId,tId);
 				map.put("students", studentService.selectStudents(page));
 				map.put("stusNum", stusNum);
-				map.put("pageNum", MaxPage.getMaxPage(stusNum, 30));
+				map.put("max", MaxPage.getMaxPage(stusNum, 30));
 			} catch (Exception e1) {
-				handlException(map, e);
+				handlException(map, e1);
 			}
 		}
 		map.put("status", 200);
@@ -698,7 +696,7 @@ public class TeacherController {
 			map.put("teacherFiles", publishWorkService.getTTFiles(pwId));//发布作业老师附件
 			map.put("teacherFilesImages", publishWorkService.getTTFilesImages(pwId));//发布作业老师图片附件
 			map.put("students", publishWorkService.getStudentsBywStateAndpwId(state,pwId,page));
-			//1 已提交作业同学（头像、学号、名字、待批改(作业分数)）、2 未提交作业同学（基本信息、未提交） 、3未批改作业同学（待批改）
+			//、1未批改作业同学（待批改）待批改(作业分数)）2/未提交作业同学（基本信息、未提交） 、3、已批改作业同学（头像、学号、名字、
 			//最大页码数
 			Integer countFinishStudents = publishWorkMapper.countFinishStudents(pwId);
 			Integer countNotFinishStudents = publishWorkMapper.countNotFinishStudents(pwId);
@@ -707,11 +705,11 @@ public class TeacherController {
 			map.put("countNotFinishStudents", countFinishStudents);
 			map.put("countFinishsAndNotCheckStudent", countFinishStudents);
 			if(state==1){
-				map.put("max",MaxPage.getMaxPage(countFinishStudents, 5));
+				map.put("max",MaxPage.getMaxPage(countFinishsAndNotCheckStudent, 5));
 			}else if(state==2){
 				map.put("max",MaxPage.getMaxPage(countNotFinishStudents, 5));
 			}else if(state==3){
-				map.put("max",MaxPage.getMaxPage(countFinishsAndNotCheckStudent, 5));
+				map.put("max",MaxPage.getMaxPage(countFinishStudents, 5));
 			}
 			map.put("status", 200);
 		} catch (Exception e) {
@@ -733,8 +731,8 @@ public class TeacherController {
 		try {
 			map.put("status", 200);
 			map.put("publishWork", publishWorkService.getPwDetails(sId, pwId));
-			map.put("teacherFiles", publishWorkService.getTFiles(sId, pwId));
-			map.put("teacherFilesImages", publishWorkService.getTFilesImages(sId, pwId));
+//			map.put("teacherFiles", publishWorkService.getTFiles(sId, pwId));
+//			map.put("teacherFilesImages", publishWorkService.getTFilesImages(sId, pwId));
 			map.put("studentFiles", publishWorkService.getSFiles(sId, pwId));
 			map.put("studentFilesImages", publishWorkService.getSFilesImages(sId, pwId));
 		} catch (Exception e) {
