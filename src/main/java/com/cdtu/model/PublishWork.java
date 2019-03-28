@@ -21,6 +21,8 @@ public class PublishWork {
 	private Integer finishedNum;//完成作业的总人数
 	
 	
+	
+
 	public Integer getFinishedNum() {
 		return finishedNum;
 	}

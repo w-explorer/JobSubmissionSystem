@@ -453,7 +453,6 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> changePublishWork(@RequestBody PublishWork publishwork) {
 		Map<String, Object> msg = new HashMap<>();
 		try {
-			System.out.println(publishwork.getPwState());
 			teacherService.updatePublishwork(publishwork);
 			msg.put("status", 200);
 		} catch (Exception e) {
