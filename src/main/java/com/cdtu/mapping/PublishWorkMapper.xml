@@ -356,6 +356,7 @@
 					AND pw.pw_state=#{pwState}
 				</if>)
 		AND pw.pw_id=w.pw_id
+		AND w.s_w_state=1
 		<if test="pwState!=null">
 			AND pw.pw_state=#{pwState}
 		</if>
@@ -495,9 +496,6 @@
 			AND pw.pw_state=#{pwState}
 		</if>
 		GROUP BY w.pw_id
-		<if test="pwState!=null">
-			AND pw.pw_state=#{pwState}
-		</if>
 		LIMIT #{start}, #{end}
 	</select>
 	<!-- 教师查询发布作业表通过课程号（cId）数量 by:黎睿-->
@@ -749,14 +747,15 @@
 		AND w.s_id=#{sId}
 	</select>
 	<select id="getFinishStudents" resultType="java.util.HashMap">
-		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.t_w_state AS twState,w.w_score AS wScore
+		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.t_w_state AS twState,w.w_score AS wScore, "已批改" AS checkStringState 
 		FROM publish_work pw,WORK w,student s
 		WHERE pw.pw_id=#{pwId}
 		AND pw.pw_id=w.pw_id
 		AND w.s_id=s.s_id
 		AND w.s_w_state=1
-		ORDER  BY  sId 
-		LIMIT #{start},#{end};
+		AND w.t_w_state=1
+		ORDER  BY  sId
+	    LIMIT #{start},#{end};
 	</select>
 	<select id="getNotFinishStudents" resultType="java.util.HashMap">
 		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.t_w_state AS twState,w.w_score AS wScore,"未提交"  AS checkStringState 
@@ -779,15 +778,16 @@
 		ORDER  BY  sId
 	    LIMIT #{start},#{end};
 	</select>
-	<select id="countFinishStudents" resultType="int">
-		SELECT	COUNT(s.s_id) 
+	<select id="countFinishStudents" resultType="java.lang.Integer">
+		SELECT	COUNT(s.s_id)
 		FROM publish_work pw,WORK w,student s
 		WHERE pw.pw_id=#{pwId}
 		AND pw.pw_id=w.pw_id
 		AND w.s_id=s.s_id
 		AND w.s_w_state=1
+		AND w.t_w_state=1
 	</select>
-	<select id="countNotFinishStudents" resultType="int">
+	<select id="countNotFinishStudents" resultType="java.lang.Integer">
 		SELECT	COUNT(s.s_id)
 		FROM publish_work pw,WORK w,student s
 		WHERE pw.pw_id=#{pwId}
@@ -795,7 +795,7 @@
 		AND w.s_id=s.s_id
 		AND w.s_w_state=0
 	</select>
-	<select id="countFinishsAndNotCheckStudent" resultType="int">
+	<select id="countFinishsAndNotCheckStudent" resultType="java.lang.Integer">
 		SELECT	COUNT(s.s_id)
 		FROM publish_work pw,WORK w,student s
 		WHERE pw.pw_id=#{pwId}
@@ -809,6 +809,6 @@
 	
 	<update id="updatePublishWork" parameterType="com.cdtu.model.PublishWork">
 	update publish_work set pw_name=#{pwName} , pw_end=#{pwEnd} , pw_state=#{pwState} , pw_content=#{pwContent}
-	, pw_score=#{pwScore} where pw_id=#{pwId}
+    where pw_id=#{pwId}
 	</update>
 </mapper>

@@ -231,8 +231,8 @@ public class RoleController {
 			//获得文件类型（可以判断如果不是图片，禁止上传）
 			String contentType = file.getContentType();
 			//获得文件后缀名称
-			String imageName = contentType.substring(contentType.indexOf("/") + 1);
-			path = "D:" + File.separator + "uploadFile" + File.separator + "avatar" + File.separator +role.getRole()+ File.separator +role.getUsername()+ File.separator + "studentavatar." + imageName;
+			String imageName = contentType.substring(contentType.lastIndexOf("/") + 1);
+			path = "D:" + File.separator + "uploadFile" + File.separator + "avatar" + File.separator +role.getRole()+ File.separator +role.getUsername()+ File.separator + "avatar." + imageName;
 			File storeDirectory = new File(path);// 即代表文件又代表目录
 			if (!storeDirectory.exists()) {
 				storeDirectory.mkdirs();// 创建一个指定的目录
@@ -256,6 +256,7 @@ public class RoleController {
 			else if("admin".equals(role.getRole())){
 				adminstratorService.updataAvatar(path,role.getUsername());
 			}
+			map.put("activityImgSrc", path);
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map,e);
@@ -270,22 +271,22 @@ public class RoleController {
 	@RequestMapping(value = "forgetpassword.do")
 	public @ResponseBody Map<String, Object> forgetPassword(@RequestBody Map<String,Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
-		String username = (String) paramsMap.get("username");
-		String email  = (String) paramsMap.get("email");
-		List<Map<String,Object>> user = userService.getPassword(username,email);
-		String password=null;
-		if(user.size()==0){
+		String userName = (String) paramsMap.get("userName");
+		String email = null;
+		email =userService.getEmailByUsername(userName);
+		if(email==null){
 			map.put("status", 404);
-			map.put("msg", "亲，账号或邮箱错误！若不记得邮箱请联系管理员！");
+			map.put("msg", "您未绑定邮箱！请联系管理员！");
+			return map;
 		}
-		else{
-			for (Map<String, Object> map2 : user) {
-				password=(String) map2.get("password");
-			}
-			SendEmail.sendPasswordByEmail(email, password);
-			map.put("status", 200);
-			map.put("msg", "请前往邮箱查看密码！");
+		List<Map<String,Object>> user = userService.getPassword(userName,email);
+		String password=null;
+		for (Map<String, Object> map2 : user) {
+			password=(String) map2.get("password");
 		}
+		SendEmail.sendPasswordByEmail(email, password);
+		map.put("status", 200);
+		map.put("msg", "请前往邮箱查看密码！");
 		return map;
 	}
 	@RequestMapping(value = "updateRoleInfo.do")

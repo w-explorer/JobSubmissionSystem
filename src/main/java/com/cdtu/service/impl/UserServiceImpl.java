@@ -18,5 +18,9 @@ public class UserServiceImpl implements UserService {
 	public List<Map<String, Object>> getPassword(String username, String email) {
 		return userMapper.getPassword(username,email);
 	}
+	@Override
+	public String getEmailByUsername(String username) {
+		return userMapper.getEmailByUsername(username);
+	}
 
 }

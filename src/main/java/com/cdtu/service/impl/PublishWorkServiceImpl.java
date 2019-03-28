@@ -124,19 +124,12 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 	public List<Map<String, Object>> getStudentsBywStateAndpwId(int state, String pwId,int page) {
 		// TODO Auto-generated method stub
 		List<Map<String, Object>> students =null;
-		if(state==1){
-			students = publishWorkMapper.getFinishStudents(pwId,(page - 1) * 5, 5);//提交作业同学
-			for (Map<String, Object> map : students) {
-				if((boolean) map.get("twState")){
-					map.put("checkStringState", "已批改");
-				}else{
-					map.put("checkStringState", "待批改");
-				}
-			}
-		}else if(state==2){
+		if(state==1){//带批改
+			students = publishWorkMapper.getFinishsAndNotCheckStudent(pwId,(page - 1) * 5, 5);//为批改同学作业，不包含未提交作业同学
+		}else if(state==2){//以及批改的学生
 			students = publishWorkMapper.getNotFinishStudents(pwId,(page - 1) * 5, 5);//未提交作业同学
 		}else if(state==3){
-			students = publishWorkMapper.getFinishsAndNotCheckStudent(pwId,(page - 1) * 5, 5);//为批改同学作业，不包含未提交作业同学
+			students = publishWorkMapper.getFinishStudents(pwId,(page - 1) * 5, 5);//已经批改作业同学
 		}
 		return students;
 	}
