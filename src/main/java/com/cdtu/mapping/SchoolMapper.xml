@@ -161,4 +161,8 @@
     set sc_name = #{scName,jdbcType=VARCHAR}
     where sc_id = #{scId,jdbcType=CHAR}
   </update>
+  <select id="selectSchool">
+  select school.sc_id As scId,school.sc_name AS scName from school
+  </select>
+  
 </mapper>
