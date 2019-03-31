@@ -55,4 +55,6 @@ public interface WorkService {
 	public void teacherupdatework(Map<String, Object> map);
 
 	public Map<String, Object> selectestimate(String epId);
+	
+	public List<Map<String, Object>> selectScore(String pwId);
 }

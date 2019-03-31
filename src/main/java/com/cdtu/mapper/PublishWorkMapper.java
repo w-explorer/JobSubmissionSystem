@@ -219,5 +219,7 @@ public interface PublishWorkMapper {
 	Integer countNotFinishStudents(@Param("pwId")String pwId);
 
 	Integer countFinishsAndNotCheckStudent(@Param("pwId")String pwId);
+	
+	Map<String,Object> selectpublishwork(@Param("pwId")String pwId);
 
 }

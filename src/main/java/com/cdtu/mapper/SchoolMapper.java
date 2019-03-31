@@ -28,6 +28,7 @@ public interface SchoolMapper {
 
     int updateByPrimaryKey(School record);
     /**
+     * 查询学院
      * @author weiyuhang
      * @return
      */

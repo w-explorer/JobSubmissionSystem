@@ -48,4 +48,9 @@ public interface CourseMapper {
 	 * @author weiyuhang
 	 */
 	int deleteClassCreate(int ctId);
+	/**
+	 * 查询学院课程
+	 * @author weiyuhang
+	 */
+	List<Map<String,Object>> selectSchoolCourse(@Param("scId") String scId);
 }
