@@ -122,7 +122,7 @@ public interface StudentService {
 
 	public void updataAvatar(String path, String username);
 
-	public List<Map<String, Object>> fuzzySearchStudentByNameOrId(String nameOrId, String cId);
+	public List<Map<String, Object>> fuzzySearchStudentByNameOrId(String nameOrId);
 
 	public List<Map<String, Object>> SearchStudentById(String sId);
 

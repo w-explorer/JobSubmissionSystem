@@ -220,4 +220,6 @@ public interface PublishWorkMapper {
 
 	Integer countFinishsAndNotCheckStudent(@Param("pwId")String pwId);
 
+	List<Map<String, Object>> getWorkBySid(@Param("pwId")String pwId, @Param("sId")String sId);
+
 }

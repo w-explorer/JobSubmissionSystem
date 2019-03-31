@@ -12,7 +12,7 @@
   		SELECT t_ID AS userName,t_name as name,t_img_src as userImgSrc,t_email as userEmail,t_phone as userPhone
   		FROM TEACHER 
    		WHERE T_ID =#{username,jdbcType=VARCHAR}
-   		AND T_PASSWORD =#{password,jdbcType=VARCHAR}
+
   	</select>
   	
   	<select id="selectPasswordById" parameterType="java.lang.String" resultType="java.lang.String">

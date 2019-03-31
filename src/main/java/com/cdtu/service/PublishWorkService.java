@@ -35,4 +35,6 @@ public interface PublishWorkService {
 
 	List<Map<String,Object>> getStudentsBywStateAndpwId(int state, String pwId,int page);
 
+	List<Map<String,Object>> getWorkBySid(String pwId, String sId);
+
 }

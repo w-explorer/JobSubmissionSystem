@@ -267,9 +267,9 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public List<Map<String, Object>> fuzzySearchStudentByNameOrId(String nameOrId,String cId) {
+	public List<Map<String, Object>> fuzzySearchStudentByNameOrId(String nameOrId) {
 		// TODO Auto-generated method stub
-		return studentMapper.fuzzySearchStudentByNameOrId(nameOrId,cId);
+		return studentMapper.fuzzySearchStudentByNameOrId(nameOrId);
 	}
 
 	@Override
