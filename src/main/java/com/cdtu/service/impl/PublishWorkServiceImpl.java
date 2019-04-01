@@ -134,9 +134,14 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 		return students;
 	}
 	@Override
-	public Map<String, Object> selectPublishwork(String pwId) {
+	public Map<String, String> selectPublishwork(String pwId) {
 		
 		return publishWorkMapper.selectpublishwork(pwId);
+	}
+	@Override
+	public List<Map<String, Object>> selectTeacherFile(String pwId) {
+		
+		return publishWorkMapper.selectTeacherFile(pwId);
 	}
 
 }

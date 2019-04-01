@@ -35,6 +35,7 @@ public interface PublishWorkService {
 
 	List<Map<String,Object>> getStudentsBywStateAndpwId(int state, String pwId,int page);
 	
-	Map<String,Object> selectPublishwork(String pwId);
+	Map<String,String> selectPublishwork(String pwId);
+	List<Map<String,Object>> selectTeacherFile(String pwId);
 
 }

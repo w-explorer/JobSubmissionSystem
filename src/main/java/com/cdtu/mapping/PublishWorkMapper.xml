@@ -816,12 +816,17 @@
 	SELECT course.`c_name` AS cName,
 publish_work.pw_id AS pwId,
 publish_work.`pw_name` AS pwName,
-publish_work.`pw_end`,
-publish_work.`pw_score`,
+publish_work.`pw_end`AS pwEnd,
+publish_work.`pw_score`AS pwScore,
 publish_work.pw_content AS pwContent
- FROM publish_work,course,teacher_select_course WHERE publish_work.pw_id=#{pwId}
+ FROM publish_work,course,teacher_select_course 
+ WHERE publish_work.pw_id=#{pwId}
  AND  publish_work.`tsc_id`=teacher_select_course.`tsc_id`
  AND teacher_select_course.`c_id`=course.`c_id`
-	
 	</select>
+<select id="selectTeacherFile" resultType="java.util.HashMap">
+SELECT t_file.t_f_add AS tfAdd ,t_file.`t_f_name` AS tfName FROM t_file 
+WHERE pw_id=#{pwId}
+
+</select>
 </mapper>
