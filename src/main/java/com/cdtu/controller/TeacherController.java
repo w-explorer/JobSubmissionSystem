@@ -47,13 +47,12 @@ import com.cdtu.util.MaxPage;
 @RequestMapping(value = "teacher")
 public class TeacherController {
 	private @Resource(name = "workService") WorkService workService;
+	private @Resource(name = "studentService") StudentService studentService;
 	private @Resource(name = "teacherService") TeacherService teacherService;
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
-	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
-	private @Resource(name = "studentService") StudentService studentService;
 	private @Resource(name = "publishWorkMapper") PublishWorkMapper publishWorkMapper;
-	@Resource(name = "adminstratorService")
-	private AdminstratorService adminstratorService;
+	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
+	private @Resource(name = "adminstratorService") AdminstratorService adminstratorService;
 
 	/**
 	 * 老师统计作业提交情况，参数是发布作业码
