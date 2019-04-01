@@ -461,6 +461,10 @@ public class StudentController {
 		Map<String, Object> map = new HashMap<>();
 		String cId = (String) paramsMap.get("cId");
 		String pwName = (String) paramsMap.get("pwName");
+		if("".equals(pwName)){
+			map.put("status", 200);
+			map.put("fuzzySearchWorks",null);
+		}
 		String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		try {
 			map.put("status", 200);

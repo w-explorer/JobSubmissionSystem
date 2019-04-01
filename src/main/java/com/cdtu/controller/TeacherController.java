@@ -477,6 +477,11 @@ public class TeacherController {
 		Map<String, Object> map = new HashMap<>();
 		String cId = (String) paramsMap.get("cId");
 		String pwName = (String) paramsMap.get("pwName");
+		if("".equals(pwName)){
+			map.put("status", 200);
+			map.put("fuzzySearchWorks",null);
+			return map;
+		}
 		String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 		try {
 			map.put("status", 200);
@@ -588,7 +593,11 @@ public class TeacherController {
 	public @ResponseBody Map<String,Object> fuzzySearchStudentsByNameOrId(@RequestBody Map<String,Object> paramsMap){
 		Map<String,Object> map = new HashMap<String,Object>();
 		String nameOrId = (String) paramsMap.get("nameOrId");
-		System.out.println(".......nameOrId"+nameOrId);
+		if("".equals(nameOrId)){
+			map.put("status", 200);
+			map.put("students",null);
+			return map;
+		}
 		try {
 			map.put("students", studentService.fuzzySearchStudentByNameOrId(nameOrId));
 			map.put("status", 200);

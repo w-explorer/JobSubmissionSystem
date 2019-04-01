@@ -33,10 +33,10 @@
 		where s_id=#{sId}
 	</update>
 	<select id="fuzzySearchStudentByNameOrId" resultType="java.util.HashMap">
-		SELECT DISTINCT sName as value ,sId
-		FROM secondView 
-		WHERE sId LIKE '%nameOrId%'
-			OR sName LIKE '%nameOrId%'
+		SELECT DISTINCT s_name as value ,s_id as sId
+		FROM student s 
+		WHERE s_id LIKE '%nameOrId%'
+			OR s_name LIKE '%nameOrId%'
 	</select>
 	<select id="SearchStudentById" resultType="java.util.HashMap">
 		SELECT DISTINCT * 
