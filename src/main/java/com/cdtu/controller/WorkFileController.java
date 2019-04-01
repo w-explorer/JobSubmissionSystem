@@ -269,6 +269,7 @@ public class WorkFileController {
 						String filen = filename.substring(filename.lastIndexOf("\\") + 1);
 						String filenames = filen.substring(0, 5) + Addr.get("s_f_name");
 						String filePath = works + Addra.substring(9);
+						
 						String filePaths = studentworkFile + File.separator + filenames;
 						File files = new File(filePath);
 						input = new FileInputStream(files);
