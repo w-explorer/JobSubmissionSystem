@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -36,12 +35,10 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.cdtu.model.Role;
 import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.WorkService;
-import com.cdtu.service.impl.PublishWorkServiceImpl;
 import com.cdtu.util.DownloadFile;
 import com.cdtu.util.ExportExcel;
 import com.cdtu.util.ExportWord;
 import com.cdtu.util.OAUtil;
-import com.cdtu.util.compresszip;
 
 @Controller
 @RequestMapping(value = "work")
