@@ -216,4 +216,10 @@ public class WorkServiseImpl implements WorkService {
 		return workMapper.selectestimate(epId);
 	}
 
+	@Override
+	public List<Map<String, Object>> selectScore(String pwId) {
+		// TODO Auto-generated method stub
+		return workMapper.selectScore(pwId);
+	}
+
 }

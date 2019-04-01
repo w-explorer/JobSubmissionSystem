@@ -47,13 +47,12 @@ import com.cdtu.util.MaxPage;
 @RequestMapping(value = "teacher")
 public class TeacherController {
 	private @Resource(name = "workService") WorkService workService;
+	private @Resource(name = "studentService") StudentService studentService;
 	private @Resource(name = "teacherService") TeacherService teacherService;
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
-	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
-	private @Resource(name = "studentService") StudentService studentService;
 	private @Resource(name = "publishWorkMapper") PublishWorkMapper publishWorkMapper;
-	@Resource(name = "adminstratorService")
-	private AdminstratorService adminstratorService;
+	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
+	private @Resource(name = "adminstratorService") AdminstratorService adminstratorService;
 
 	/**
 	 * 老师统计作业提交情况，参数是发布作业码
@@ -232,9 +231,9 @@ public class TeacherController {
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		Integer status = teacherService.PublishEstimate(publishEstimate, role.getUsername());
-		if (status == 1)
+		if (status == 1) {
 			msg.put("status", 200);
-		else {
+		} else {
 			if (status == -1) {
 				msg.put("status", -1);
 				msg.put("msg", "用户为空");
@@ -259,13 +258,13 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> publishWork(@RequestBody PublishWork publishWork) {
 		Map<String, Object> msg = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
-		try{
+		try {
 			Role role = (Role) subject.getPrincipal();
-			String  ms= teacherService.publishWork(publishWork, role.getUsername());
+			String ms = teacherService.publishWork(publishWork, role.getUsername());
 			System.out.println(publishWork.getPwContent());
 			msg.put("status", 200);
 			msg.put("pwId", ms);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			msg.put("status", 0);
 			msg.put("msg", "错误信息");
 		}
@@ -338,8 +337,9 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> remarkStudentWork(@RequestBody Work work) {
 		Map<String, Object> msg = new HashMap<>();
 		Integer status = teacherService.addWorkRemark(work);
-		if (status == 1)
+		if (status == 1) {
 			msg.put("status", 200);
+		}
 		if (status == -1) {
 			msg.put("status", 0);
 			msg.put("msg", "输入值为空");
@@ -385,10 +385,11 @@ public class TeacherController {
 	 */
 	@RequestMapping(value = "downloadteache.do")
 	@RequiresRoles({ "teacher" })
-	public void download(@RequestBody Work work, HttpServletResponse response,HttpServletRequest request) throws IOException {
+	public void download(@RequestBody Work work, HttpServletResponse response, HttpServletRequest request)
+			throws IOException {
 		File file = new File(work.getwAddr());
 		String fileName = work.getsId() + "_" + teacherService.selectStudentName(work.getsId()) + "_" + file.getName();
-		DownloadFile.downloadFile(file, fileName, response,request);
+		DownloadFile.downloadFile(file, fileName, response, request);
 		// return new
 		// ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),
 		// path, HttpStatus.CREATED);
@@ -407,7 +408,8 @@ public class TeacherController {
 	@RequestMapping(value = "downLoadAll.do")
 	@RequiresRoles({ "teacher" })
 	@ResponseBody
-	public void downloadAll(@RequestBody Work work, HttpServletResponse response,HttpServletRequest request) throws IOException {
+	public void downloadAll(@RequestBody Work work, HttpServletResponse response, HttpServletRequest request)
+			throws IOException {
 
 		// 需要压缩的文件
 		// 压缩后的文件
@@ -421,14 +423,15 @@ public class TeacherController {
 			input = new FileInputStream(file);
 			zipOut.putNextEntry(new ZipEntry(sId + "_" + teacherService.selectStudentName(sId) + "_" + file.getName()));
 			int temp = 0;
-			while ((temp = input.read()) != -1)
+			while ((temp = input.read()) != -1) {
 				zipOut.write(temp);
+			}
 			zipOut.closeEntry();
 			input.close();
 		}
 		zipOut.close();
 		File file = new File("D:/" + resourcesName);
-		DownloadFile.downloadFile(file, resourcesName, response,request);
+		DownloadFile.downloadFile(file, resourcesName, response, request);
 		// Path path=Paths.get(file.getName());
 		// response.setContentType(MediaType.APPLICATION_OCTET_STREAM.toString());
 		// response.setHeader("Content-Disposition", "attachment; filename=" +
@@ -444,7 +447,7 @@ public class TeacherController {
 	/**
 	 *
 	 * 控制作业状态
-	 * 
+	 *
 	 * @author WYH
 	 * @param sIds
 	 * @param pwId
@@ -477,9 +480,9 @@ public class TeacherController {
 		Map<String, Object> map = new HashMap<>();
 		String cId = (String) paramsMap.get("cId");
 		String pwName = (String) paramsMap.get("pwName");
-		if("".equals(pwName)){
+		if ("".equals(pwName)) {
 			map.put("status", 200);
-			map.put("fuzzySearchWorks",null);
+			map.put("fuzzySearchWorks", null);
 			return map;
 		}
 		String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
@@ -494,7 +497,7 @@ public class TeacherController {
 
 	/**
 	 * 按作业名字查询作业
-	 * 
+	 *
 	 * @author wencheng
 	 * @param paramsMap
 	 * @return
@@ -517,7 +520,7 @@ public class TeacherController {
 
 	/**
 	 * 老师删除加错的学生
-	 * 
+	 *
 	 * @author weiyuhang
 	 */
 	@RequestMapping(value = "deleteCourseStudent.do")
@@ -540,7 +543,7 @@ public class TeacherController {
 
 	/**
 	 * 得到作业详情
-	 * 
+	 *
 	 * @param paramsMap
 	 * @return
 	 */
@@ -551,14 +554,15 @@ public class TeacherController {
 		String pwId = (String) paramsMap.get("pwId");
 		try {
 			map.put("status", 200);
-			map.put("publishWork", publishWorkService.getTPwDetails(pwId));//发布作业详情
-			map.put("teacherFiles", publishWorkService.getTTFiles(pwId));//发布作业老师附件
-			map.put("teacherFilesImages", publishWorkService.getTTFilesImages(pwId));//发布作业老师图片附件
+			map.put("publishWork", publishWorkService.getTPwDetails(pwId));// 发布作业详情
+			map.put("teacherFiles", publishWorkService.getTTFiles(pwId));// 发布作业老师附件
+			map.put("teacherFilesImages", publishWorkService.getTTFilesImages(pwId));// 发布作业老师图片附件
 		} catch (Exception e) {
 			handlException(map, e);
 		}
 		return map;
 	}
+
 	/**
 	 * 老师修改发布作业
 	 *
@@ -571,31 +575,33 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> updatepublishWork(@RequestBody PublishWork publishWork) {
 		Map<String, Object> map = new HashMap<>();
 
-		try{
-		
-		 teacherService.updatepublishWork(publishWork);
-		System.out.println(publishWork.getPwContent());
-		map.put("status", 200);
-		
-	}catch (Exception e) {
-		handlException(map, e);
-	}
+		try {
+
+			teacherService.updatepublishWork(publishWork);
+			System.out.println(publishWork.getPwContent());
+			map.put("status", 200);
+
+		} catch (Exception e) {
+			handlException(map, e);
+		}
 		return map;
 	}
+
 	/**
-	 *模糊查询学生
+	 * 模糊查询学生
+	 *
 	 * @author 文成
 	 * @param paramsMap
 	 * @return
 	 */
-	@RequestMapping(value="fuzzySearchStudent.do")
-	@RequiresRoles({"teacher"})
-	public @ResponseBody Map<String,Object> fuzzySearchStudentsByNameOrId(@RequestBody Map<String,Object> paramsMap){
-		Map<String,Object> map = new HashMap<String,Object>();
+	@RequestMapping(value = "fuzzySearchStudent.do")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> fuzzySearchStudentsByNameOrId(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
 		String nameOrId = (String) paramsMap.get("nameOrId");
-		if("".equals(nameOrId)){
+		if ("".equals(nameOrId)) {
 			map.put("status", 200);
-			map.put("students",null);
+			map.put("students", null);
 			return map;
 		}
 		try {
@@ -606,85 +612,88 @@ public class TeacherController {
 		}
 		return map;
 	}
+
 	/**
 	 * 根据学号查询学生
+	 *
 	 * @author 文成
 	 * @param paramsMap
 	 * @return
 	 */
-	@RequestMapping(value="SearchStudent.do")
-	@RequiresRoles({"teacher"})
-	public @ResponseBody Map<String,Object> SearchStudentById(@RequestBody Map<String,Object> paramsMap){
-		Map<String,Object> map = new HashMap<String,Object>();
-		String sId = (String) paramsMap.get("sId");
-		Role role = new Role();
-		role.setUsername(sId);
+	@RequestMapping(value = "SearchStudent.do")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> SearchStudentById(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
 		try {
-			
-//			map.put("student", studentService.SearchStudentById(sId));
-//			map.put("status", 200);
-			// 如果登录认证或记住我，则再一次授权
-			map.put("role", studentService.getStudentBysIdAndsPassword(role));
+			Role role = new Role();
+			Map<String, Object> map1 = new HashMap<>();
+			Map<String, Object> map2 = new HashMap<>();
+			Map<String, Object> map3 = new HashMap<>();
+			Map<String, Object> map4 = new HashMap<>();
 			String cId = (String) paramsMap.get("cId");
+			String sId = (String) paramsMap.get("sId");
 			double averSore = workService.getAverScore(sId, cId);
-			List<Map<String, Object>> averMap = new ArrayList<Map<String, Object>>();
-			List<Map<String, Object>> submitMap = new ArrayList<Map<String, Object>>();
-			Map<String, Object> map1 = new HashMap<String, Object>();
-			Map<String, Object> map2 = new HashMap<String, Object>();
-			Map<String, Object> map3 = new HashMap<String, Object>();
-			Map<String, Object> map4 = new HashMap<String, Object>();
+			List<Map<String, Object>> averMaps = new ArrayList<>();
+			List<Map<String, Object>> submitMaps = new ArrayList<>();
+			Map<String, Object> subInfo = workService.getSubInfo(sId, cId);
+			List<Map<String, Object>> myWorkInfo = workService.getMyWorkInfo(sId, cId);
+			int[] scores = new int[myWorkInfo.size()];
+			String[] names = new String[myWorkInfo.size()];
+
+			role.setUsername(sId);
+			map.put("role", studentService.getStudentBysIdAndsPassword(role));
+
 			map1.put("value", averSore);
 			map1.put("name", "我的平均分");
 			map2.put("value", 100 - averSore);
 			map2.put("name", "仍需努力的分数");
-			averMap.add(map1);
-			averMap.add(map2);
-			map.put("averScore", averMap);
-			Map<String, Object> subInfo = workService.getSubInfo(sId, cId);
+			averMaps.add(map1);
+			averMaps.add(map2);
+			map.put("averScore", averMaps);
+
 			map3.put("value", subInfo.get("submitted"));
 			map3.put("name", "已提交");
-			map4.put("value", subInfo.get("toSubmit"));
+			map4.put("value", (int) subInfo.get("toSubmit") - (int) subInfo.get("submitted"));
 			map4.put("name", "未提交");
-			submitMap.add(map3);
-			submitMap.add(map4);
-			map.put("submitMap", submitMap);
-			List<Map<String,Object>> myWorkInfo = workService.getMyWorkInfo(sId, cId);
-			List<String> listString = new ArrayList<String>();
-			List<Integer> listInt = new ArrayList<Integer>();
-			for (Map<String, Object> map5 : myWorkInfo) {
-				listString.add((String) map5.get("name"));
-				listInt.add((int) map5.get("value"));
+			submitMaps.add(map3);
+			submitMaps.add(map4);
+			map.put("submitMap", submitMaps);
+
+			for (int i = 0; i < myWorkInfo.size(); i++) {
+				names[i] = (String) myWorkInfo.get(i).get("name");
+				scores[i] = (int) myWorkInfo.get(i).get("score");
 			}
-//			map.put("works", workService.getMyWorkInfo(sId, cId));
-			map.put("listString", listString);
-			map.put("listInt", listInt);
+			map.put("listString", names);
+			map.put("listInt", scores);
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);
 		}
 		return map;
 	}
+
 	/**
-	 * 通过建立一张临时表 存储班级成绩排名 每个同学的总分(sql 高级排名  开启mybatis 一次执行多条SQL )
+	 * 通过建立一张临时表 存储班级成绩排名 每个同学的总分(sql 高级排名 开启mybatis 一次执行多条SQL )
 	 * 怎么开启呢？在拼装mysql链接的url时，为其加上allowMultiQueries参数，设置为true，如下：
 	 * jdbc.jdbcUrl=jdbc:mysql://127.0.0.1:3306/database?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+	 *
 	 * @author 文成
 	 * @param paramsMap
 	 * @return
 	 */
-	@RequestMapping(value="SearchStudents.do")
-	@RequiresRoles({"teacher"})
-	public @ResponseBody Map<String,Object> SearchStudentsBycId(@RequestBody Map<String,Object> paramsMap){
-		Map<String,Object> map = new HashMap<String,Object>();
+	@RequestMapping(value = "SearchStudents.do")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> SearchStudentsBycId(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		String tId = role.getUsername();
 		String cId = (String) paramsMap.get("cId");
 		int page = (int) paramsMap.get("page");
 		int stusNum = sscService.countStudents(cId);
-	
+
 		try {
-			studentService.CreatStudentTableDescRank(cId,tId);
+			studentService.CreatStudentTableDescRank(cId, tId);
 			map.put("students", studentService.selectStudents(page));
 			map.put("stusNum", stusNum);
 			map.put("max", MaxPage.getMaxPage(stusNum, 30));
@@ -694,37 +703,40 @@ public class TeacherController {
 		map.put("status", 200);
 		return map;
 	}
-	
+
 	@RequestMapping(value = "TeacherUpadteWork.do")
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> teacherupadtework(@RequestBody Map<String, Object> paramsMap) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		try {
-			this.workService.teacherupdatework(paramsMap);
+			workService.teacherupdatework(paramsMap);
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);
 			map.put("status", 0);
 			map.put("msg", "批阅失败");
-			
+
 		}
 		return map;
 	}
+
 	@RequestMapping(value = "selectEstimate.do")
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> selectEstimate(@RequestBody Map<String, Object> paramsMap) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		try {
-			
-			map.put("Estimate", this.teacherService.selectEstimate((String) paramsMap.get("epId")));
+
+			map.put("Estimate", teacherService.selectEstimate((String) paramsMap.get("epId")));
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);
 		}
 		return map;
 	}
+
 	/**
 	 * 老师查询作业详细情况
+	 *
 	 * @author 文成
 	 * @param paramsMap
 	 * @return
@@ -732,29 +744,29 @@ public class TeacherController {
 	@RequestMapping(value = "getWorkDetails.do")
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> getPwDetails(@RequestBody Map<String, Object> paramsMap) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		String pwId = (String) paramsMap.get("pwId");
-		int state =Integer.parseInt((String) paramsMap.get("state")) ;
-		int page =(int) paramsMap.get("page") ;
+		int state = Integer.parseInt((String) paramsMap.get("state"));
+		int page = (int) paramsMap.get("page");
 		try {
-			map.put("publishWork", publishWorkService.getTPwDetails(pwId));//发布作业详情
-			map.put("teacherFiles", publishWorkService.getTTFiles(pwId));//发布作业老师附件
-			map.put("teacherFilesImages", publishWorkService.getTTFilesImages(pwId));//发布作业老师图片附件
-			map.put("students", publishWorkService.getStudentsBywStateAndpwId(state,pwId,page));
-			//、1未批改作业同学（待批改）待批改(作业分数)）2/未提交作业同学（基本信息、未提交） 、3、已批改作业同学（头像、学号、名字、
-			//最大页码数
+			map.put("publishWork", publishWorkService.getTPwDetails(pwId));// 发布作业详情
+			map.put("teacherFiles", publishWorkService.getTTFiles(pwId));// 发布作业老师附件
+			map.put("teacherFilesImages", publishWorkService.getTTFilesImages(pwId));// 发布作业老师图片附件
+			map.put("students", publishWorkService.getStudentsBywStateAndpwId(state, pwId, page));
+			// 、1未批改作业同学（待批改）待批改(作业分数)）2/未提交作业同学（基本信息、未提交） 、3、已批改作业同学（头像、学号、名字、
+			// 最大页码数
 			Integer countFinishStudents = publishWorkMapper.countFinishStudents(pwId);
 			Integer countNotFinishStudents = publishWorkMapper.countNotFinishStudents(pwId);
 			Integer countFinishsAndNotCheckStudent = publishWorkMapper.countFinishsAndNotCheckStudent(pwId);
 			map.put("countFinishStudents", countFinishStudents);
 			map.put("countNotFinishStudents", countNotFinishStudents);
 			map.put("countFinishsAndNotCheckStudent", countFinishsAndNotCheckStudent);
-			if(state==1){
-				map.put("max",MaxPage.getMaxPage(countFinishsAndNotCheckStudent, 5));
-			}else if(state==2){
-				map.put("max",MaxPage.getMaxPage(countNotFinishStudents, 5));
-			}else if(state==3){
-				map.put("max",MaxPage.getMaxPage(countFinishStudents, 5));
+			if (state == 1) {
+				map.put("max", MaxPage.getMaxPage(countFinishsAndNotCheckStudent, 5));
+			} else if (state == 2) {
+				map.put("max", MaxPage.getMaxPage(countNotFinishStudents, 5));
+			} else if (state == 3) {
+				map.put("max", MaxPage.getMaxPage(countFinishStudents, 5));
 			}
 			map.put("status", 200);
 		} catch (Exception e) {
@@ -762,15 +774,17 @@ public class TeacherController {
 		}
 		return map;
 	}
+
 	/**
 	 * 老师查看学生作业内容
+	 *
 	 * @param paramsMap
 	 * @return
 	 */
 	@RequestMapping(value = "selectOneWorkDetail.do")
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> selectOneWorkDetail(@RequestBody Map<String, Object> paramsMap) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		String sId = (String) paramsMap.get("sId");
 		String pwId = (String) paramsMap.get("pwId");
 		try {
@@ -785,20 +799,22 @@ public class TeacherController {
 		}
 		return map;
 	}
+
 	/**
 	 * 老师按学号搜索学生作业内容
+	 *
 	 * @param paramsMap
 	 * @return
 	 */
 	@RequestMapping(value = "queryWorkBySid.do")
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> queryWorkBySid(@RequestBody Map<String, Object> paramsMap) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		String sId = (String) paramsMap.get("sId");
 		String pwId = (String) paramsMap.get("pwId");
 		try {
 			map.put("status", 200);
-			map.put("work", publishWorkService.getWorkBySid(pwId,sId));
+			map.put("work", publishWorkService.getWorkBySid(pwId, sId));
 		} catch (Exception e) {
 			handlException(map, e);
 		}

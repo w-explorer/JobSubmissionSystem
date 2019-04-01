@@ -71,6 +71,9 @@
 		LIMIT 1
 	</select>
 	<!-- 李红兵end -->
-
+<select id="selectSchoolCourse" resultType="java.util.HashMap">
+SELECT course.`c_id` AS cId ,course.`c_name` AS cName ,course.`c_credit` AS cCredit , course.`c_img_src` AS cImgSrc
+FROM course WHERE  course.sc_id=#{scId}
+</select>
 
 </mapper>

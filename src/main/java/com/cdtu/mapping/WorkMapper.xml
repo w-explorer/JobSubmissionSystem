@@ -246,7 +246,7 @@
 	</select>
 	
 	<select id="selectMyWorkInfo" resultType="java.util.HashMap">
-		SELECT work.w_score AS value, publish_work.pw_name AS name
+		SELECT work.w_score AS score, publish_work.pw_name AS name
 		FROM work, publish_work, teacher_select_course
 		WHERE teacher_select_course.c_id = #{cId}
 		AND publish_work.tsc_id = teacher_select_course.tsc_id
@@ -353,5 +353,12 @@
 		FROM estimate
 		WHERE ep_id=#{epId}
 		GROUP BY e_feel) AS C
+	</select>
+	<select id="selectScore" resultType="java.util.HashMap">
+SELECT DISTINCT student.`s_id` AS sId,student.`s_name` AS sName,work.`s_w_state` AS sWstate
+,work.`t_w_state` AS tWstate, work.`w_score` AS wScore FROM WORK,student 
+WHERE work.`pw_id`=#{pwId}
+AND work.`s_id`=student.`s_id`
+ORDER BY student.`s_id`
 	</select>
 </mapper>

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -33,9 +34,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.cdtu.model.Role;
+import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.WorkService;
+import com.cdtu.service.impl.PublishWorkServiceImpl;
 import com.cdtu.util.DownloadFile;
+import com.cdtu.util.ExportExcel;
+import com.cdtu.util.ExportWord;
 import com.cdtu.util.OAUtil;
+import com.cdtu.util.compresszip;
 
 @Controller
 @RequestMapping(value = "work")
@@ -45,7 +51,8 @@ public class WorkFileController {
 			"pdf" };
 	@Resource(name = "workService")
 	private WorkService workService;
-
+	@Resource(name = "publishWorkService")
+	private PublishWorkService publishWorkService;
 	@RequestMapping("uploadFiles")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> upFiles(@RequestParam("file") CommonsMultipartFile[] file,
@@ -228,63 +235,124 @@ public class WorkFileController {
 
 	@RequestMapping(value = "downloadFileWork.do")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	public ResponseEntity<byte[]> downloadFileWork(@RequestBody Map<String, Object> maps, HttpServletResponse response,
-			HttpServletRequest request) throws IOException {
+	public @ResponseBody Map<String, Object> downloadFileWork(@RequestBody Map<String, Object> maps)
+			throws IOException {
 		String pwId = (String) maps.get("pwId");
-		String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator
-				+ File.separator + pwId + "45";
-		String resourcesName = workFile + ".zip";
-		List<Map<String, Object>> Addrs = workService.selectWorkAllAddr(pwId);
-		List<Map<String, Object>> wId = workService.selectWorkId(pwId);
-		Map<String, Object> name = workService.selectcName(pwId);
-		ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(resourcesName));
-		InputStream input = null;
-		for (Map<String, Object> w : wId) {
-			String workFilezip = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator
-					+ "zip" + File.separator + w.get("w_id");
-			ZipOutputStream zipOutstudent = new ZipOutputStream(new FileOutputStream(workFilezip + ".zip"));
-			for (Map<String, Object> Addr : Addrs) {
-				System.out.println(Addr.get("w_id"));
-				String ws = (String) Addr.get("w_id");
-				if (w.get("w_id").equals(ws)) {
-					String works = "D:" + File.separator + "uploadFile" + File.separator + "works";
-					String Addra = (String) Addr.get("s_f_add");
-					String filename = (String) Addr.get("s_f_add");
-					String filen = filename.substring(filename.lastIndexOf("\\") + 1);
-					String filenames = filen.substring(0, 5) + Addr.get("s_f_name");
-					String filePath = works + Addra.substring(9);
-					System.out.println(filePath);
-					File files = new File(filePath);
-					input = new FileInputStream(files);
-					zipOutstudent.putNextEntry(new ZipEntry(filenames));
-					int temp = 0;
-					while ((temp = input.read()) != -1) {
-						zipOutstudent.write(temp);
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			List<Map<String, Object>> Addrs = workService.selectWorkAllAddr(pwId);
+			List<Map<String, Object>> wId = workService.selectWorkId(pwId);
+			Map<String, Object> name = workService.selectcName(pwId);
+			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator + "zip"
+					+ File.separator + (String) name.get("c_name") + (String) name.get("pw_name");
+			String resourcesName = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator
+					+ "zip" + File.separator + (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
+			File file = new File(workFile);
+			if (!file.exists()) {
+				file.mkdirs();// 创建目录
+			}
+			ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(resourcesName));
+			InputStream input = null;
+			for (Map<String, Object> w : wId) {
+				String studentworkFile = workFile + File.separator + (String) w.get("s_name");
+				File studentfile = new File(studentworkFile);
+				if (!studentfile.exists()) {
+					studentfile.mkdirs();// 创建目录
+				}
+				for (Map<String, Object> Addr : Addrs) {
+					System.out.println(Addr.get("w_id"));
+					String ws = (String) Addr.get("w_id");
+					if (w.get("w_id").equals(ws)) {
+						String works = "D:" + File.separator + "uploadFile" + File.separator + "works";
+						String Addra = (String) Addr.get("s_f_add");
+						String filename = (String) Addr.get("s_f_add");
+						String filen = filename.substring(filename.lastIndexOf("\\") + 1);
+						String filenames = filen.substring(0, 5) + Addr.get("s_f_name");
+						String filePath = works + Addra.substring(9);
+						String filePaths = studentworkFile + File.separator + filenames;
+						File files = new File(filePath);
+						input = new FileInputStream(files);
+						FileOutputStream output = new FileOutputStream(filePaths);
+						int temp = 0;
+						while ((temp = input.read()) != -1) {
+							output.write(temp);
+						}
+						output.flush();
+						output.close();
+						input.close();
 					}
-					zipOutstudent.closeEntry();
-					input.close();
 				}
 			}
-			zipOutstudent.close();
-			File file = new File(workFilezip + ".zip");
-			input = new FileInputStream(file);
-			zipOut.putNextEntry(new ZipEntry(w.get("s_name") + ".zip"));
-			int temp = 0;
-			while ((temp = input.read()) != -1) {
-				zipOut.write(temp);
+			File filed = new File(workFile + File.separator + "任务详情");
+			if (!filed.exists()) {
+				filed.mkdirs();// 创建目录
 			}
-			zipOut.closeEntry();
-			input.close();
-			file.delete();
+			String teacherworkfile = workFile + File.separator + "任务详情";
+			List<Map<String, Object>> teacherFile = publishWorkService.selectTeacherFile(pwId);
+			for (Map<String, Object> teacherfile : teacherFile) {
+				String teacherfilename = (String) teacherfile.get("tfName");
+				String teacherfileAddr = (String) teacherfile.get("tfAdd");
+				String Addr = teacherfileAddr.substring(teacherfileAddr.lastIndexOf("\\") + 1);
+				System.out.println(Addr);
+				String works = "D:" + File.separator + "uploadFile" + File.separator + "works";
+				FileInputStream inputs = new FileInputStream(works + teacherfileAddr.substring(9));
+				FileOutputStream outputn = new FileOutputStream(
+						teacherworkfile + File.separator + Addr.substring(0, 5) + teacherfilename);
+				int temp = 0;
+				while ((temp = inputs.read()) != -1) {
+					outputn.write(temp);
+				}
+				outputn.flush();
+				outputn.close();
+				inputs.close();
+			}
+			List<Map<String, Object>> workScores = workService.selectScore(pwId);
+			// excel标题
+			String[] title = { "学号", "姓名", "成绩" };
+			String fileName = "学生成绩表" + ".xlsx";
+			String sheetName = "学生成绩表";
+			String[][] content = new String[workScores.size()][3];
+			// 创建HSSFWorkbook
+			for (int i = 0; i < workScores.size(); i++) {
+				Map<String, Object> workScore = workScores.get(i);
+				content[i][0] = (String) workScore.get("sId");
+				content[i][1] = (String) workScore.get("sName");
+				if ((Boolean) workScore.get("sWstate") == false) {
+					content[i][2] = "未提交";
+				} else if ((Boolean) workScore.get("tWstate") == false) {
+					content[i][2] = "未批改";
+				} else {
+					content[i][2] = (String) workScore.get("wScore");
+				}
+			}
+			HSSFWorkbook wb = ExportExcel.getHSSFWorkbook(sheetName, title, content, null);
+			FileOutputStream output = new FileOutputStream(workFile + File.separator + fileName);
+			wb.write(output);
+			wb.close();
+			output.close();
+			Map<String, String> publishwork = publishWorkService.selectPublishwork(pwId);
+			if (publishwork.get("pwName") == null) {
+				publishwork.put("pwName", "null");
+			}
+			if (publishwork.get("pwContent") == null) {
+				publishwork.put("pwContent", "null");
+			}
+			String moban = "D:\\uploadFile";
+			String filePath = workFile + File.separator + "任务详情" + File.separator + "作业详情" + ".docx";
+			ExportWord.createWord(publishwork, moban, filePath);
+			com.cdtu.util.compresszip.compress(file, zipOut, (String) name.get("c_name") + (String) name.get("pw_name"),
+					true);
+			zipOut.close();
+			map.put("status", 200);
+			map.put("Addr", resourcesName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			map.put("status", 0);
+			map.put("msg", "导出失败");
 		}
-
-		System.out.println(name.get("c_name"));
-		String filename = (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
-		zipOut.close();
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		headers.setContentDispositionFormData("attachment", filename);
-		return new ResponseEntity<>(FileUtils.readFileToByteArray(new File(resourcesName)), headers,
-				HttpStatus.CREATED);
+		return map;
 	}
-}
+	
+	}
+

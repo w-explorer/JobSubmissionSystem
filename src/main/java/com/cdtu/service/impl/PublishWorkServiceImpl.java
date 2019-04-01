@@ -134,6 +134,15 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 		return students;
 	}
 	@Override
+	public Map<String, String> selectPublishwork(String pwId) {
+		
+		return publishWorkMapper.selectpublishwork(pwId);
+	}
+	@Override
+	public List<Map<String, Object>> selectTeacherFile(String pwId) {
+		
+		return publishWorkMapper.selectTeacherFile(pwId);
+	}
 	public List<Map<String, Object>> getWorkBySid(String pwId, String sId) {
 		// TODO Auto-generated method stub
 		List<Map<String,Object>> workBySid = publishWorkMapper.getWorkBySid(pwId, sId);
