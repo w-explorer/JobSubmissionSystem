@@ -1,4 +1,4 @@
-package com.cdtu.util;
+package com.cdtu.interceptor;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

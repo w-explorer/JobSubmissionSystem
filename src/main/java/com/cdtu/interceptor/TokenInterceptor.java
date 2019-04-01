@@ -1,4 +1,4 @@
-package com.cdtu.util;
+package com.cdtu.interceptor;
 
 import java.io.IOException;
 
@@ -12,6 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cdtu.model.Role;
+import com.cdtu.util.Jwt;
 /**
  * 
  * ClassName:视图与Controller间的拦截器类
