@@ -38,4 +38,6 @@ public interface PublishWorkService {
 	Map<String,String> selectPublishwork(String pwId);
 	List<Map<String,Object>> selectTeacherFile(String pwId);
 
+	List<Map<String,Object>> getWorkBySid(String pwId, String sId);
+
 }

@@ -143,5 +143,19 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 		
 		return publishWorkMapper.selectTeacherFile(pwId);
 	}
+	public List<Map<String, Object>> getWorkBySid(String pwId, String sId) {
+		// TODO Auto-generated method stub
+		List<Map<String,Object>> workBySid = publishWorkMapper.getWorkBySid(pwId, sId);
+		for (Map<String, Object> map : workBySid) {
+			if((boolean) map.get("swState")==false){
+				map.put("checkStringState", "未提交");
+			}else if((boolean) map.get("twState")==false){
+				map.put("checkStringState", "带批改");
+			}else{
+				map.put("checkStringState", "已批改");
+			}
+		}
+		return workBySid;
+	}
 
 }

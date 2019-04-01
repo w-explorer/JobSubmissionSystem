@@ -113,12 +113,9 @@ public class RoleController {
 	@RequestMapping("/getRole.do")
 	public @ResponseBody Map<String, Object> getRole(HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		String token = request.getHeader("token");
-		System.out.println(token + "//////////////");
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		// 如果登录认证或记住我，则再一次授权
-		System.out.println(subject.isRemembered() + "记住密码");
 		if ("teacher".equals(role.getRole())) {
 			map.put("role", teacherService.getTeacherBytIdAndtPassword(role));
 		} else if ("student".equals(role.getRole())) {

@@ -15,7 +15,6 @@
   	SELECT a_ID AS userName,a_name as name,a_img_src as userImgSrc,a_email as userEmail,a_phone as userPhone 
   	FROM administrator
 		WHERE A_ID =#{username,jdbcType=VARCHAR}
-		AND A_PASSWORD =#{password,jdbcType=VARCHAR}
   </select>
   <update id="updateRoleInfo">
   	UPDATE administrator a 

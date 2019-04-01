@@ -804,6 +804,14 @@
 		AND w.s_w_state=1
 		AND w.t_w_state=0
 	</select>
+	<select id="getWorkBySid" resultType="java.util.HashMap">
+		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.t_w_state AS twState,w.w_score AS wScore,w.t_w_state AS twState,w.s_w_state AS swState
+		FROM publish_work pw,WORK w,student s
+		WHERE pw.pw_id=#{pwId}
+		AND pw.pw_id=w.pw_id
+		AND w.s_id=s.s_id
+		AND s.s_id=#{sId}
+	</select>
 	
 	<!-- 文成end -->
 	

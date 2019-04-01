@@ -223,4 +223,6 @@ public interface PublishWorkMapper {
 	Map<String,String> selectpublishwork(@Param("pwId")String pwId);
 	List<Map<String,Object>> selectTeacherFile(@Param("pwId")String pwId);
 
+	List<Map<String, Object>> getWorkBySid(@Param("pwId")String pwId, @Param("sId")String sId);
+
 }
