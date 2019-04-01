@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.cdtu.mapper.CourseMapper;
 import com.cdtu.service.AdminstratorService;
 import com.cdtu.service.CourseService;
 @Controller

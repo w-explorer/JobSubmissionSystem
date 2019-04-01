@@ -33,10 +33,10 @@
 		where s_id=#{sId}
 	</update>
 	<select id="fuzzySearchStudentByNameOrId" resultType="java.util.HashMap">
-		SELECT DISTINCT s_name as value ,s_id as sId
-		FROM student s 
-		WHERE s_id LIKE '%nameOrId%'
-			OR s_name LIKE '%nameOrId%'
+		SELECT DISTINCT sName as value ,sId
+		FROM secondView  
+		WHERE sId LIKE '%${nameOrId}%'
+			OR sName LIKE '%${nameOrId}%'
 	</select>
 	<select id="SearchStudentById" resultType="java.util.HashMap">
 		SELECT DISTINCT * 
@@ -65,7 +65,7 @@
 				AND w.s_id=s.s_id
 				GROUP BY w.s_id;
 	
-		CREATE TEMPORARY TABLE secondView (sId VARCHAR(10) NOT NULL,sName VARCHAR(10) NOT NULL,sImgSrc TEXT NOT NULL,sumScore INT(3)NOT NULL,rank INT(3)NOT NULL, PRIMARY KEY (sId));
+		CREATE   TEMPORARY TABLE secondView (sId VARCHAR(10) NOT NULL,sName VARCHAR(10) NOT NULL,sImgSrc TEXT NOT NULL,sumScore INT(3)NOT NULL,rank INT(3)NOT NULL, PRIMARY KEY (sId));
 		INSERT INTO secondView(sId,sName,sImgSrc,sumScore,rank)
 		 SELECT firstView.sId,firstView.sName,firstView.sImgSrc,firstView.sumScore ,firstView.rank FROM
 		 (SELECT sId,sName,sImgSrc,sumScore ,

@@ -7,8 +7,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
-import com.auth0.jwt.internal.com.fasterxml.jackson.core.Version;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 

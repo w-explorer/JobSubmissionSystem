@@ -36,12 +36,10 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.cdtu.model.Role;
 import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.WorkService;
-import com.cdtu.service.impl.PublishWorkServiceImpl;
 import com.cdtu.util.DownloadFile;
 import com.cdtu.util.ExportExcel;
 import com.cdtu.util.ExportWord;
 import com.cdtu.util.OAUtil;
-import com.cdtu.util.compresszip;
 
 @Controller
 @RequestMapping(value = "work")
