@@ -321,13 +321,14 @@ public class WorkFileController {
 				} else if ((Boolean) workScore.get("tWstate") == false) {
 					content[i][2] = "未批改";
 				} else {
-					content[i][2] = (String) workScore.get("wScore");
+					Integer a=(Integer) workScore.get("wScore");
+					content[i][2] =Integer.toString(a) ;
 				}
 			}
 			HSSFWorkbook wb = ExportExcel.getHSSFWorkbook(sheetName, title, content, null);
 			FileOutputStream output = new FileOutputStream(workFile + File.separator + fileName);
 			wb.write(output);
-			wb.close();
+		
 			output.close();
 			Map<String, String> publishwork = publishWorkService.selectPublishwork(pwId);
 			if (publishwork.get("pwName") == null) {

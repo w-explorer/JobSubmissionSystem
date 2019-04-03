@@ -173,7 +173,7 @@ public interface WorkMapper {
 
 	public Map<String, Object> selectcName(@Param("pwId") String pwId);
 
-	public void teacherupdatework(@Param("map") Map<String, Object> map);
+	public void teacherupdateworks(@Param("sId")String sId,@Param("pwId")String pwId,@Param("wScore")Integer wScore,@Param("wRemark")String wRemark);
 
 	public Map<String, Object> selectestimate(@Param("epId") String epId);
 	

@@ -52,7 +52,7 @@ public interface WorkService {
 
 	public Map<String, Object> selectcName(String pwId);
 
-	public void teacherupdatework(Map<String, Object> map);
+	public void teacherupdatework(String sId, String pwId,Integer wScore,String wRemark);
 
 	public Map<String, Object> selectestimate(String epId);
 	

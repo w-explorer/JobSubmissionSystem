@@ -313,13 +313,14 @@
 		AND teacher_select_course.`c_id`=course.`c_id`
 	</select>
 	
-	<update id="teacherupdatework" parameterType="java.util.HashMap">
-		UPDATE WORK SET w_remark=#{map.wRemark}
-		<if test="map.wScore!=null">
-		,w_score=#{map.wScore},
+	<update id="teacherupdateworks" parameterType="String">
+		UPDATE WORK SET w_remark=#{wRemark}
+		<if test="wScore!=null">
+		,w_score=#{wScore},
 		t_w_state=1
 		</if>
-		WHERE w_id=#{map.wId}
+		WHERE pw_id=#{pwId}
+		and s_id=#{sId}
 	</update>
 	
 	<resultMap type="java.util.HashMap" id="team">

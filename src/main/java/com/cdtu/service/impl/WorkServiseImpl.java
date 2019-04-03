@@ -205,8 +205,8 @@ public class WorkServiseImpl implements WorkService {
 	}
 
 	@Override
-	public void teacherupdatework(Map<String, Object> map) {
-		workMapper.teacherupdatework(map);
+	public void teacherupdatework(String sId,String pwId,Integer wScore,String wRemark) {
+		workMapper.teacherupdateworks(sId,pwId, wScore, wRemark);
 
 	}
 

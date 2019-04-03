@@ -709,7 +709,8 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> teacherupadtework(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			workService.teacherupdatework(paramsMap);
+			
+			workService.teacherupdatework((String)paramsMap.get("sId"),(String)paramsMap.get("pwId"),(Integer)paramsMap.get("wScore"),(String)paramsMap.get("wRemark"));
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);
