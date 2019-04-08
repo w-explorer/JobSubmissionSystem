@@ -236,6 +236,7 @@ public class WorkFileController {
 	public @ResponseBody Map<String, Object> downloadFileWork(@RequestBody Map<String, Object> maps)
 			throws IOException {
 		String pwId = (String) maps.get("pwId");
+		System.out.println(pwId);
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			List<Map<String, Object>> Addrs = workService.selectWorkAllAddr(pwId);
@@ -243,6 +244,7 @@ public class WorkFileController {
 			Map<String, Object> name = workService.selectcName(pwId);
 			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator + "zip"
 					+ File.separator + (String) name.get("c_name") + (String) name.get("pw_name");
+			System.out.println(workFile);
 			String resourcesName = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator
 					+ "zip" + File.separator + (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
 			File file = new File(workFile);

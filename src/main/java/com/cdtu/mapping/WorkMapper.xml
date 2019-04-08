@@ -308,7 +308,7 @@
 		SELECT  DISTINCT publish_work.`pw_name`,course.`c_name`
 		FROM publish_work,teacher_select_course,course
 		WHERE
-		publish_work.`pw_id`=1
+		publish_work.`pw_id`=#{pwId}
 		AND publish_work.`tsc_id`=teacher_select_course.`tsc_id`
 		AND teacher_select_course.`c_id`=course.`c_id`
 	</select>
