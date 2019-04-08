@@ -198,8 +198,8 @@
   <!-- 添加发布课程点评表 by:黎睿-->
 	<insert id="insertByTscId" parameterType="com.cdtu.model.PublishEstimate">
 		INSERT INTO
-		publish_estimate(ep_id,tsc_id,ep_start_time)
-		VALUES(#{epId},#{tscId},#{epStartTime})
+		publish_estimate(ep_id,tsc_id,ep_start_time,ep_name)
+		VALUES(#{epId},#{tscId},#{epStartTime},#{epName}))
 	</insert>
 	<!-- 添加发布创课点评表 by:黎睿-->
 	<insert id="insertByCtId" parameterType="com.cdtu.model.PublishEstimate">
@@ -246,5 +246,28 @@
 		AND student_select_course.ct_id=publish_estimate.ct_id
 		AND student.s_id=#{sId}
 		AND student_select_course.ct_id=#{ctId})
+	</select>
+	
+	
+	<select id="selectPublishEstimateBytId">
+	SELECT
+		publish_estimate.ep_id AS epId,publish_estimate.ep_name AS epName,publish_estimate.ep_start_time AS epStartTime,publish_estimate.ep_img_src AS activityImgSrc
+		FROM publish_estimate,teacher_select_course tsc
+		WHERE
+		 tsc.c_id=#{cId}
+		AND tsc.`t_id`=#{tId}
+		AND tsc.`tsc_id`=publish_estimate.`tsc_id`
+		ORDER BY publish_estimate.ep_start_time
+		LIMIT #{start},#{end}
+	</select>
+	<select id="selectPublishEstimateCount">
+	SELECT
+		count(*)
+		from publish_estimate,teacher_select_course tsc
+		WHERE
+		 tsc.c_id=#{cId}
+		AND tsc.`t_id`=#{tId}
+		AND tsc.`tsc_id`=publish_estimate.`tsc_id`
+		
 	</select>
 </mapper>

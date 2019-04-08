@@ -439,4 +439,15 @@ public class TeacherServiceImpl implements TeacherService {
 		teacherMapper.updateRoleInfo(email, phone, username);
 	}
 
+	@Override
+	public List<Map<String, Object>> selectPublishEstimate(String tId, String cId,int start,int end) {
+		return publishEstimateMapper.selectPublishEstimateBytId(tId, cId,start,end);
+	}
+
+	@Override
+	public int countSelectPublishEstimateCount(String tId, String cId) {
+		
+		return publishEstimateMapper.selectPublishEstimateCount(tId, cId);
+	}
+
 }

@@ -1,5 +1,7 @@
 package com.cdtu.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -247,12 +249,15 @@ public class WorkFileController {
 					+ "zip" + File.separator + (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
 			String resourcesNames = File.separator + "workfile" + File.separator + "zip" + File.separator
 					+ (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
+			com.cdtu.util.deleteFolder.delFolder(workFile);
 			File file = new File(workFile);
 			if (!file.exists()) {
 				file.mkdirs();// 创建目录
 			}
 			ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(resourcesName));
 			InputStream input = null;
+			BufferedInputStream binput = null;
+			BufferedOutputStream boutput = null;
 			for (Map<String, Object> w : wId) {
 				String studentworkFile = workFile + File.separator + (String) w.get("s_name");
 				File studentfile = new File(studentworkFile);
@@ -269,16 +274,20 @@ public class WorkFileController {
 						String filen = filename.substring(filename.lastIndexOf("\\") + 1);
 						String filenames = filen.substring(0, 5) + Addr.get("s_f_name");
 						String filePath = works + Addra.substring(9);
-
 						String filePaths = studentworkFile + File.separator + filenames;
 						File files = new File(filePath);
 						input = new FileInputStream(files);
 						FileOutputStream output = new FileOutputStream(filePaths);
+						binput = new BufferedInputStream(input);
+						boutput = new BufferedOutputStream(output);
 						int temp = 0;
-						while ((temp = input.read()) != -1) {
-							output.write(temp);
+						byte[] b = new byte[1024];
+						while ((temp = binput.read(b)) != -1) {
+							boutput.write(b, 0, temp);
 						}
 						output.flush();
+						binput.close();
+						boutput.close();
 						output.close();
 						input.close();
 					}
@@ -299,11 +308,16 @@ public class WorkFileController {
 				FileInputStream inputs = new FileInputStream(works + teacherfileAddr.substring(9));
 				FileOutputStream outputn = new FileOutputStream(
 						teacherworkfile + File.separator + Addr.substring(0, 5) + teacherfilename);
+				binput = new BufferedInputStream(inputs);
+				boutput = new BufferedOutputStream(outputn);
+				byte[] b = new byte[1024];
 				int temp = 0;
-				while ((temp = inputs.read()) != -1) {
-					outputn.write(temp);
+				while ((temp = binput.read(b)) != -1) {
+					boutput.write(b, 0, temp);
 				}
 				outputn.flush();
+				binput.close();
+				boutput.close();
 				outputn.close();
 				inputs.close();
 			}
