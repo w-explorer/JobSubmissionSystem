@@ -14,35 +14,42 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cdtu.service.AdminstratorService;
 import com.cdtu.service.CourseService;
+
 @Controller
-@RequestMapping(value="admin")
+@RequestMapping(value = "admin")
 public class AdminController {
-@Resource(name="adminstratorService") private AdminstratorService admin;
-@Resource(name="") private CourseService courseService;
-/**
- * 查询学院
- * @author weiyuhang
- */
-@RequestMapping(value="selectSchool")
-@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-public @ResponseBody Map<String, Object>  selectSchool(){
-	Map<String, Object> map=new HashMap<String,Object>();
-	try{
-		map.put("Schools",admin.selectSchool());
-		map.put("status",200);
-	}catch(Exception e){
-		map.put("status",0);
-		map.put("msg", "服务器异常");
+	@Resource(name = "adminstratorService")
+	private AdminstratorService admin;
+	@Resource(name = "")
+	private CourseService courseService;
+
+	/**
+	 * 查询学院
+	 *
+	 * @author weiyuhang
+	 */
+	@RequestMapping(value = "selectSchool")
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	public @ResponseBody Map<String, Object> selectSchool() {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			map.put("Schools", admin.selectSchool());
+			map.put("status", 200);
+		} catch (Exception e) {
+			map.put("status", 0);
+			map.put("msg", "服务器异常");
+		}
+		return map;
 	}
-	return map;
-}
-/**
- * 查询课程
- * @author weiyuhang
- */
-@RequestMapping(value="selectCourse")
-@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-public @ResponseBody Map<String, Object>  selectCourse(@RequestBody Map<String,Object> pmap){
-	return pmap;
-}
+
+	/**
+	 * 查询课程
+	 *
+	 * @author weiyuhang
+	 */
+	@RequestMapping(value = "selectCourse")
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	public @ResponseBody Map<String, Object> selectCourse(@RequestBody Map<String, Object> pmap) {
+		return pmap;
+	}
 }
