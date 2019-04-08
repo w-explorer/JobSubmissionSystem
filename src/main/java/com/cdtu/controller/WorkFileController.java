@@ -247,6 +247,8 @@ public class WorkFileController {
 			System.out.println(workFile);
 			String resourcesName = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator
 					+ "zip" + File.separator + (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
+			String resourcesNames = File.separator + "workfile" + File.separator + 
+					"zip" + File.separator + (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
 			File file = new File(workFile);
 			if (!file.exists()) {
 				file.mkdirs();// 创建目录
@@ -345,8 +347,9 @@ public class WorkFileController {
 			com.cdtu.util.compresszip.compress(file, zipOut, (String) name.get("c_name") + (String) name.get("pw_name"),
 					true);
 			zipOut.close();
+			com.cdtu.util.deleteFolder.delFolder(workFile);
 			map.put("status", 200);
-			map.put("Addr", resourcesName);
+			map.put("Addr", resourcesNames);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

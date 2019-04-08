@@ -157,5 +157,10 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 		}
 		return workBySid;
 	}
+	@Override
+	public void deletePublishWorkService(String pwId) {
+		
+		publishWorkMapper.deletePublishWork(pwId);
+	}
 
 }

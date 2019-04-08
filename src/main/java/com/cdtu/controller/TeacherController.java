@@ -821,4 +821,18 @@ public class TeacherController {
 		}
 		return map;
 	}
+	@RequestMapping(value = "deletePublishWork.do")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> deletePublishWork(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		String pwId = (String) paramsMap.get("pwId");
+		try {
+			publishWorkService.deletePublishWorkService(pwId);
+			map.put("status", 200);
+	        map.put("msg", "删除成功");
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
 }

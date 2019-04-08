@@ -225,4 +225,5 @@ public interface PublishWorkMapper {
 
 	List<Map<String, Object>> getWorkBySid(@Param("pwId")String pwId, @Param("sId")String sId);
 
+	void deletePublishWork(@Param("pwId")String pwId);
 }
