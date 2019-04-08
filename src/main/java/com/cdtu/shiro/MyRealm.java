@@ -24,18 +24,14 @@ import com.cdtu.service.TeacherService;
 /**
  * 自定义realm
  *
- * @author  wenc
+ * @author wenc
  *
  */
 public class MyRealm extends AuthorizingRealm {
-
-	@Resource(name = "studentService")
-	private StudentService studentService;
-	@Resource(name = "teacherService")
-	private TeacherService teacherService;
-	@Resource(name = "adminstratorService")
-	private AdminstratorService adminService;
 	private @Resource MenuMapper menuMapper;
+	private @Resource(name = "studentService") StudentService studentService;
+	private @Resource(name = "teacherService") TeacherService teacherService;
+	private @Resource(name = "adminstratorService") AdminstratorService adminService;
 
 	/**
 	 * 认证方法
@@ -49,16 +45,16 @@ public class MyRealm extends AuthorizingRealm {
 		String password = null;
 		Role role = new Role();
 		role.setUsername(userName);
-		
+
 		role.setRole(roleName);
 		if ("teacher".equals(roleName)) {
-			password = this.teacherService.getPasswordById(userName);
+			password = teacherService.getPasswordById(userName);
 			role.setPassword(password);
 		} else if ("student".equals(roleName)) {
-			password = this.studentService.getPasswordById(userName);
+			password = studentService.getPasswordById(userName);
 			role.setPassword(password);
 		} else if ("admin".equals(roleName)) {
-			password = this.adminService.getPasswordById(userName);
+			password = adminService.getPasswordById(userName);
 			role.setPassword(password);
 		}
 		if (password == null) {
@@ -68,14 +64,12 @@ public class MyRealm extends AuthorizingRealm {
 			// 用户名存在
 			// 创建简单认证信息对象
 			/***
-			 * 参数一：签名，程序可以在任意位置获取当前放入的对象
-			 * 参数二：从数据库中查询出的密码
-			 * 参数三：当前realm的名称
+			 * 参数一：签名，程序可以在任意位置获取当前放入的对象 参数二：从数据库中查询出的密码 参数三：当前realm的名称
 			 */
 			if ("teacher".equals(roleName)) {
 				System.out.println("老师");
 				String t_password = password;
-				//返回给安全管理器，由安全管理器负责比对数据库中查询出的密码和页面提交的密码
+				// 返回给安全管理器，由安全管理器负责比对数据库中查询出的密码和页面提交的密码
 				SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(role, t_password,
 						this.getClass().getSimpleName());
 				return info;
@@ -86,12 +80,12 @@ public class MyRealm extends AuthorizingRealm {
 						this.getClass().getSimpleName());
 				return info;
 			} else if ("admin".equals(roleName)) {
-			System.out.println("admin");
-			String a_password = password;
-			SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(role, a_password,
-					this.getClass().getSimpleName());
-			return info;
-		}
+				System.out.println("admin");
+				String a_password = password;
+				SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(role, a_password,
+						this.getClass().getSimpleName());
+				return info;
+			}
 
 		}
 		return null;
@@ -102,10 +96,10 @@ public class MyRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		System.out.println("授權了");
+		System.out.println("授权了");
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		Role role = (Role) principals.getPrimaryPrincipal();
-		List<Menu> menus = this.menuMapper.selectByRoleName(role.getRole());
+		List<Menu> menus = menuMapper.selectByRoleName(role.getRole());
 		info.addRole(role.getRole());
 		for (Menu menu : menus) {
 			info.addStringPermission(menu.getPerms());

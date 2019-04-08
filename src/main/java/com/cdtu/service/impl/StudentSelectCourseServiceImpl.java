@@ -10,8 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cdtu.mapper.StudentSelectCourseMapper;
 import com.cdtu.service.StudentSelectCourseService;
+
 @Transactional
-@Service("sscService")
+@Service(value = "sscService")
 public class StudentSelectCourseServiceImpl implements StudentSelectCourseService {
 	private @Resource StudentSelectCourseMapper sscMapper;
 

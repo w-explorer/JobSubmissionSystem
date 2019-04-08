@@ -3,6 +3,8 @@ package com.cdtu.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 public interface PublishWorkService {
 
 	void changePublishWorkStateByConparetoEndTime();
@@ -39,5 +41,7 @@ public interface PublishWorkService {
 	List<Map<String,Object>> selectTeacherFile(String pwId);
 
 	List<Map<String,Object>> getWorkBySid(String pwId, String sId);
+	
+	void deletePublishWorkService(@Param("pwId")String pwId);
 
 }

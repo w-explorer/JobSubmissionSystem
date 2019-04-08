@@ -30,7 +30,7 @@ import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
 
 @Transactional
-@Service("teacherService")
+@Service(value = "teacherService")
 public class TeacherServiceImpl implements TeacherService {
 	private @Resource WorkMapper work;
 	private @Resource CourseMapper coursemapper;
@@ -43,7 +43,7 @@ public class TeacherServiceImpl implements TeacherService {
 	private @Resource EstimateMapper estimateMapper;
 
 	@Override
-	public Map<String,Object> getTeacherBytIdAndtPassword(Role role) {
+	public Map<String, Object> getTeacherBytIdAndtPassword(Role role) {
 		return teacherMapper.getTeacherBytIdAndtPassword(role);
 	}
 
@@ -392,7 +392,7 @@ public class TeacherServiceImpl implements TeacherService {
 		}
 		for (int i = 1; i <= 5; i++) {
 			Map<String, Object> map = new HashMap<>();
-			
+
 			map.put("StareSpeed", i);
 			map.put("NumeSpeeds", a[i - 1]);
 			eSpeeds.add(map);
@@ -436,7 +436,18 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public void updateRoleInfo(String email, String phone, String username) {
 		// TODO Auto-generated method stub
-		teacherMapper.updateRoleInfo(email,phone,username);
+		teacherMapper.updateRoleInfo(email, phone, username);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectPublishEstimate(String tId, String cId,int start,int end) {
+		return publishEstimateMapper.selectPublishEstimateBytId(tId, cId,start,end);
+	}
+
+	@Override
+	public int countSelectPublishEstimateCount(String tId, String cId) {
+		
+		return publishEstimateMapper.selectPublishEstimateCount(tId, cId);
 	}
 
 }

@@ -821,4 +821,48 @@ public class TeacherController {
 		}
 		return map;
 	}
+	@RequestMapping(value = "deletePublishWork.do")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> deletePublishWork(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		String pwId = (String) paramsMap.get("pwId");
+		try {
+			publishWorkService.deletePublishWorkService(pwId);
+			map.put("status", 200);
+	        map.put("msg", "删除成功");
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
+	/**
+	 * 查询发布的评价
+	 *
+	 * @author weiyuhang
+	 * @param studentSelectCourse
+	 * @return
+	 */
+	@RequestMapping("selectPE.do")
+	@RequiresRoles({ "teacher" })
+	public @ResponseBody Map<String, Object> selectPE(@RequestBody Map<String, Object> paramsMap,
+			HttpServletRequest request) {
+		Map<String, Object> map = new HashMap<>();
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String tId = role.getUsername();
+		String cId = (String) paramsMap.get("cId");
+		int page = (int) paramsMap.get("page");
+		int pubENum = teacherService.countSelectPublishEstimateCount(tId, cId);
+		try {
+			map.put("publishEstimates", teacherService.selectPublishEstimate(tId, cId, (page - 1) * 5, 5));
+			map.put("max", MaxPage.getMaxPage(pubENum, 5));
+			map.put("status", 200);
+		} catch (Exception e) {
+			handlException(map, e);
+			e.printStackTrace();
+		}
+		return map;
+
+	}
+
 }
