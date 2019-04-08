@@ -15,7 +15,6 @@ public class ChangePublishWorkStateByConparetoEndTime implements HandlerIntercep
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		System.out.println("ChangePublishWorkStateByConparetoEndTime执行了");
 		publishWorkService.changePublishWorkStateByConparetoEndTime();
 		return true;
 	}

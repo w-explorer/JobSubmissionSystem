@@ -261,7 +261,7 @@ public class TeacherController {
 		try {
 			Role role = (Role) subject.getPrincipal();
 			String ms = teacherService.publishWork(publishWork, role.getUsername());
-			System.out.println(publishWork.getPwContent());
+//			System.out.println(publishWork.getPwContent());
 			msg.put("status", 200);
 			msg.put("pwId", ms);
 		} catch (Exception e) {
@@ -578,7 +578,7 @@ public class TeacherController {
 		try {
 
 			teacherService.updatepublishWork(publishWork);
-			System.out.println(publishWork.getPwContent());
+//			System.out.println(publishWork.getPwContent());
 			map.put("status", 200);
 
 		} catch (Exception e) {
@@ -704,7 +704,7 @@ public class TeacherController {
 		return map;
 	}
 
-	@RequestMapping(value = "TeacherUpadteWork.do")
+	@RequestMapping(value = "TeacherUpadte.do")
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> teacherupadtework(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();

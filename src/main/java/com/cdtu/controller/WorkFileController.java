@@ -55,7 +55,7 @@ public class WorkFileController {
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> upFiles(@RequestParam("file") CommonsMultipartFile[] file,
 			@RequestParam("pwId") String pwId) {
-		System.out.println("uploadFiles-multipartResolver:" + file.length);
+//		System.out.println("uploadFiles-multipartResolver:" + file.length);
 		// 判断file数组不能为空并且长度大于0
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
@@ -83,23 +83,23 @@ public class WorkFileController {
 						String files = OAUtil.getId() + "." + type;
 						// 得到上传文件的扩展名
 						String filePath = savePath + File.separator + files;
-						System.out.println("uploadFiles-filePath:" + filePath);
+//						System.out.println("uploadFiles-filePath:" + filePath);
 						// 转存文件
 						File storeDirectory = new File(filePath);// 即代表文件又代表目录
 						if (!storeDirectory.exists()) {
 							storeDirectory.mkdirs();// 创建一个指定的目录
 						}
 						file1.transferTo(new File(filePath));
-						System.out.println(pwId);
+//						System.out.println(pwId);
 						String wAddr = File.separator + "workfile" + File.separator + pwId + File.separator
 								+ role.getRole() + File.separator + role.getUsername() + File.separator + files;
-						System.out.println(wAddr);
+//						System.out.println(wAddr);
 						if (role.getRole() == "teacher") {
 							workService.insertTeacherFilewAddr(pwId, wAddr, filename, type, state);
 						} else {
 							String sId = role.getUsername();
-							System.out.println(sId);
-							System.out.println(pwId);
+//							System.out.println(sId);
+//							System.out.println(pwId);
 							String wId = workService.selectwId(sId, pwId);
 
 							workService.insertStudentFilewAddr(wId, wAddr, filename, type, state);
@@ -221,7 +221,6 @@ public class WorkFileController {
 	public ResponseEntity<byte[]> downloadFile(@RequestBody Map<String, Object> maps, HttpServletResponse response,
 			HttpServletRequest request) throws IOException {
 		String Addr = (String) maps.get("tfAdd");
-		System.out.println("clksdnlkjsdbkj");
 		String fileName = workService.selecttfNameService(Addr);
 		String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
 		String filePath = workFile + Addr.substring(9);
@@ -236,7 +235,6 @@ public class WorkFileController {
 	public @ResponseBody Map<String, Object> downloadFileWork(@RequestBody Map<String, Object> maps)
 			throws IOException {
 		String pwId = (String) maps.get("pwId");
-		System.out.println(pwId);
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			List<Map<String, Object>> Addrs = workService.selectWorkAllAddr(pwId);
@@ -244,7 +242,6 @@ public class WorkFileController {
 			Map<String, Object> name = workService.selectcName(pwId);
 			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator + "zip"
 					+ File.separator + (String) name.get("c_name") + (String) name.get("pw_name");
-			System.out.println(workFile);
 			String resourcesName = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator
 					+ "zip" + File.separator + (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
 			File file = new File(workFile);
@@ -260,7 +257,6 @@ public class WorkFileController {
 					studentfile.mkdirs();// 创建目录
 				}
 				for (Map<String, Object> Addr : Addrs) {
-					System.out.println(Addr.get("w_id"));
 					String ws = (String) Addr.get("w_id");
 					if (w.get("w_id").equals(ws)) {
 						String works = "D:" + File.separator + "uploadFile" + File.separator + "works";
@@ -294,7 +290,6 @@ public class WorkFileController {
 				String teacherfilename = (String) teacherfile.get("tfName");
 				String teacherfileAddr = (String) teacherfile.get("tfAdd");
 				String Addr = teacherfileAddr.substring(teacherfileAddr.lastIndexOf("\\") + 1);
-				System.out.println(Addr);
 				String works = "D:" + File.separator + "uploadFile" + File.separator + "works";
 				FileInputStream inputs = new FileInputStream(works + teacherfileAddr.substring(9));
 				FileOutputStream outputn = new FileOutputStream(

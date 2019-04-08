@@ -81,7 +81,7 @@ public class RoleController {
 		// 构造一个用户名密码令牌 ,是否记住我
 		UsernamePasswordToken token1 = new UsernamePasswordToken(role.getUsername(), role.getPassword(), role.getRole());
 		try {
-			System.out.println(role.isRememberMe() + "///////////" + subject.isRemembered() + "登陆 记住密码");
+//			System.out.println(role.isRememberMe() + "///////////" + subject.isRemembered() + "登陆 记住密码");
 			// 提交认证
 			subject.login(token1);
 		} catch (Exception e) {
@@ -93,7 +93,7 @@ public class RoleController {
 			request.getSession().setAttribute("role", role);
 			// 给用户jwt加密生成token
 			String token = Jwt.sign(role, 60L * 1000L * 30L);
-			System.out.println(token + "//");
+//			System.out.println(token + "//");
 			int timeOut = 0;
 			if (role.isRememberMe() != false) {
 				timeOut = 30;

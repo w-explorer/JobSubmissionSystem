@@ -12,6 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cdtu.model.Role;
+import com.cdtu.util.CookieUtils;
 import com.cdtu.util.Jwt;
 /**
  * 
@@ -38,11 +39,8 @@ public class TokenInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		String token7 = request.getParameter("token");
-		System.out.println("token="+token7);
 		String token = request.getHeader("token");
-		System.out.println("token="+token);
-		
+		String cookieValue = CookieUtils.getCookieValue(request, "token");
 		//如果登录认证或记住我，则再一次授权
 		Subject subject = SecurityUtils.getSubject();
 		if (token!=null&&!"null".equals(token)) {
@@ -61,6 +59,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 				UsernamePasswordToken token1 = new UsernamePasswordToken(role.getUsername(), role.getPassword(), role.getRole());
 				//提交认证
 				subject.login(token1);
+				response.sendRedirect("http://localhost:8080/#/student-classList");
 				return true;
 			}
 		}
@@ -72,7 +71,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 		if (null != token && null != role1&&!"null".equals(token)) {
 			String id = role1.getUsername();
 			Role role = Jwt.unsign(token, Role.class);
-			System.out.println(role.toString());
+//			System.out.println(role.toString());
 
 			// 解密token后的id与用户传来的id不一致，一般都是token过期
 			if (null != id && null != role) {
