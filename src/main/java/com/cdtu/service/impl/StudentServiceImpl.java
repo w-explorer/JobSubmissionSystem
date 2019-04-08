@@ -28,24 +28,19 @@ import com.cdtu.model.Work;
 import com.cdtu.service.StudentService;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
+
 @Transactional
 @Service("studentService")
 public class StudentServiceImpl implements StudentService {
-	@Resource
-	private StudentMapper studentMapper;
-	@Resource
-	private PublishEstimateMapper publishEstimateMapper;
-	@Resource
-	private EstimateMapper estimateMapper;
-	@Resource
-	private PublishWorkMapper publishWorkMapper;
-	@Resource
-	private WorkMapper workMapper;
-	@Resource
-	private StudentSelectCourseMapper studentSelectCourseMapper;
+	private @Resource WorkMapper workMapper;
+	private @Resource StudentMapper studentMapper;
+	private @Resource EstimateMapper estimateMapper;
+	private @Resource PublishWorkMapper publishWorkMapper;
+	private @Resource PublishEstimateMapper publishEstimateMapper;
+	private @Resource StudentSelectCourseMapper studentSelectCourseMapper;
 
 	@Override
-	public Map<String,Object> getStudentBysIdAndsPassword(Role role) {
+	public Map<String, Object> getStudentBysIdAndsPassword(Role role) {
 		return studentMapper.getStudentBysIdAndsPassword(role);
 	}
 
@@ -60,13 +55,8 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public List<Map<String,Object>> selectPublishEstimate(String cId,String sId,int start,int end) {
-			return publishEstimateMapper.selectPublishEstimateBytscId(cId,sId,start,end);
-//		else {
-//			studentSelectCourse.setCtId(studentSelectCourse.getId());
-//			return publishEstimateMapper.selectPublishEstimateByctId(studentSelectCourse.getsId(),
-//					studentSelectCourse.getCtId());
-//		}
+	public List<Map<String, Object>> selectPublishEstimate(String cId, String sId, int start, int end) {
+		return publishEstimateMapper.selectPublishEstimateBytscId(cId, sId, start, end);
 	}
 
 	@Override
@@ -76,8 +66,9 @@ public class StudentServiceImpl implements StudentService {
 			estimate.setsEState(true);
 			estimateMapper.insertEstimate(estimate);
 			return 1;
-		} else
+		} else {
 			return -1;
+		}
 	}
 
 	@Override
@@ -128,113 +119,34 @@ public class StudentServiceImpl implements StudentService {
 			}
 			publishWorks.put("publishWorks", publishWorkLs);
 			return publishWorks;
-		} else
+		} else {
 			return null;
+		}
 
 	}
 
-	/*
-	 * @Override public Map<String, Object> selectPublishWork(StudentSelectCourse
-	 * studentSelectCourse) { List<PublishWork> publishWorkLs = new
-	 * ArrayList<PublishWork>(); Map<String, Object> publishWorks = new
-	 * HashMap<String, Object>(); if (studentSelectCourse.getTscId() != null) {
-	 * 
-	 * if ("2".equals(studentSelectCourse.getState())) { publishWorkLs =
-	 * this.publishWorkMapper.selectStudentPublishWorkBytscId(studentSelectCourse.
-	 * getsId(), studentSelectCourse.getTscId(), true,
-	 * (studentSelectCourse.getPage() - 1) * 5, 5);// 进行 publishWorks.put("max",
-	 * MaxPage.getMaxPage(
-	 * this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.
-	 * getTscId(), true),5));// 最大页数 } if
-	 * ("3".equals(studentSelectCourse.getState())) { publishWorkLs =
-	 * this.publishWorkMapper.selectStudentPublishWorkBytscId(studentSelectCourse.
-	 * getsId(), studentSelectCourse.getTscId(), false,
-	 * (studentSelectCourse.getPage() - 1) * 5, 5);// 结束 publishWorks.put("max",
-	 * MaxPage.getMaxPage(
-	 * this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.
-	 * getTscId(), false),5));// 最大页数 } if
-	 * ("1".equals(studentSelectCourse.getState())) { publishWorkLs =
-	 * this.publishWorkMapper.selectStudentPublishWorkBytscId(studentSelectCourse.
-	 * getsId(), studentSelectCourse.getTscId(), null,
-	 * (studentSelectCourse.getPage() - 1) * 5, 5);// 全部 publishWorks.put("max",
-	 * MaxPage.getMaxPage(
-	 * this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.
-	 * getTscId(), null),5));// 最大页数 }
-	 * 
-	 * publishWorks.put("countprocess",
-	 * this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.
-	 * getTscId(), true)); publishWorks.put("countover",
-	 * this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.
-	 * getTscId(), false)); publishWorks.put("countall",
-	 * this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.
-	 * getTscId(), null)); for (PublishWork publishWork : publishWorkLs) { if
-	 * (this.workMapper.selectWorkCount(studentSelectCourse.getsId(),
-	 * publishWork.getPwId()) != 0) { publishWork.setwStringState("已参与");
-	 * publishWork.setwBooleanState(true); } else {
-	 * publishWork.setwStringState("未参与"); publishWork.setwBooleanState(false); } if
-	 * (publishWork.getPwState() == true) { publishWork.setPwStringState("进行中");
-	 * publishWork.setPwBooleanState(publishWork.getPwState()); } else {
-	 * publishWork.setPwStringState("已结束");
-	 * publishWork.setPwBooleanState(publishWork.getPwState()); } }
-	 * publishWorks.put("publishWorks", publishWorkLs); return publishWorks; } else
-	 * { studentSelectCourse.setCtId(studentSelectCourse.getId()); if
-	 * ("2".equals(studentSelectCourse.getState())) { publishWorkLs =
-	 * this.publishWorkMapper.selectStudentPublishWorkByctId(studentSelectCourse.
-	 * getsId(), studentSelectCourse.getCtId(), true, (studentSelectCourse.getPage()
-	 * - 1) * 5, 5);// 进行 publishWorks.put("max", MaxPage.getMaxPage(
-	 * this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.
-	 * getCtId(), true),5));// 最大页数 } if
-	 * ("3".equals(studentSelectCourse.getState())) { publishWorkLs =
-	 * this.publishWorkMapper.selectStudentPublishWorkByctId(studentSelectCourse.
-	 * getsId(), studentSelectCourse.getCtId(), false,
-	 * (studentSelectCourse.getPage() - 1) * 5, 5);// 结束 publishWorks.put("max",
-	 * MaxPage.getMaxPage(
-	 * this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.
-	 * getCtId(), false),5));// 最大页数 } if
-	 * ("1".equals(studentSelectCourse.getState())) { publishWorkLs =
-	 * this.publishWorkMapper.selectStudentPublishWorkByctId(studentSelectCourse.
-	 * getsId(), studentSelectCourse.getCtId(), null, (studentSelectCourse.getPage()
-	 * - 1) * 5, 5);// 全部 publishWorks.put("max", MaxPage.getMaxPage(
-	 * this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.
-	 * getCtId(), null),5));// 最大页数 }
-	 * 
-	 * publishWorks.put("countprocess",
-	 * this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.
-	 * getCtId(), true)); publishWorks.put("countover",
-	 * this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.
-	 * getCtId(), false)); publishWorks.put("countall",
-	 * this.publishWorkMapper.selectCountBypwStateBytscId(studentSelectCourse.
-	 * getCtId(), null)); for (PublishWork publishWork : publishWorkLs) { if
-	 * (this.workMapper.selectWorkCount(studentSelectCourse.getsId(),
-	 * publishWork.getPwId()) != 0) { publishWork.setwStringState("已参与");
-	 * publishWork.setwBooleanState(true); } else {
-	 * publishWork.setwStringState("未参与"); publishWork.setwBooleanState(false); } if
-	 * (publishWork.getPwState() == true) { publishWork.setPwStringState("进行中");
-	 * publishWork.setPwBooleanState(publishWork.getPwState()); } else {
-	 * publishWork.setPwStringState("已结束");
-	 * publishWork.setPwBooleanState(publishWork.getPwState()); } }
-	 * publishWorks.put("publishWorks", publishWorkLs); return publishWorks; } }
-	 */
 	@Override
 	public Integer submitWork(Work work) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		if (work != null) {
-				String nowDate = dateFormat.format(date);
-				work.setsWState(true);
-				work.setwTime(nowDate);
-				workMapper.studentUpdateWork(work);
-				return 1;
-		} else
+			String nowDate = dateFormat.format(date);
+			work.setsWState(true);
+			work.setwTime(nowDate);
+			workMapper.studentUpdateWork(work);
+			return 1;
+		} else {
 			return -1;
+		}
 	}
 
 	@Override
 	public Work showStudentWork(String sId, String pwId) {
-		if (sId != null && pwId != null)
+		if (sId != null && pwId != null) {
 			return workMapper.selectWork(sId, pwId);
-		else
+		} else {
 			return null;
+		}
 
 	}
 
@@ -268,32 +180,26 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public List<Map<String, Object>> fuzzySearchStudentByNameOrId(String nameOrId) {
-		// TODO Auto-generated method stub
 		return studentMapper.fuzzySearchStudentByNameOrId(nameOrId);
 	}
 
 	@Override
 	public List<Map<String, Object>> SearchStudentById(String sId) {
-		// TODO Auto-generated method stub
 		return studentMapper.SearchStudentById(sId);
 	}
 
 	@Override
-	public void CreatStudentTableDescRank(String cId,String tId) {
-		// TODO Auto-generated method stub
-		studentMapper.CreatStudentTableDescRank(cId,tId);
+	public void CreatStudentTableDescRank(String cId, String tId) {
+		studentMapper.CreatStudentTableDescRank(cId, tId);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectStudents(int page) {
-		// TODO Auto-generated method stub
 		return studentMapper.selectStudents((page - 1) * 30, page * 30);
 	}
 
 	@Override
 	public void updateRoleInfo(String email, String phone, String username) {
-		// TODO Auto-generated method stub
-		studentMapper.updateRoleInfo(email,  phone,  username);
+		studentMapper.updateRoleInfo(email, phone, username);
 	}
-
 }

@@ -44,13 +44,11 @@ import com.cdtu.util.OAUtil;
 @Controller
 @RequestMapping(value = "work")
 public class WorkFileController {
+	private static String[] fileType = { "jpg", "png", "gif", "psd", "webp", "txt", "doc", "docx", "XLS", "XLSX", "ppt",
+			"pptx", "pdf" };
+	private @Resource(name = "workService") WorkService workService;
+	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 
-	static String[] fileType = { "jpg", "png", "gif", "psd", "webp", "txt", "doc", "docx", "XLS", "XLSX", "ppt", "pptx",
-			"pdf" };
-	@Resource(name = "workService")
-	private WorkService workService;
-	@Resource(name = "publishWorkService")
-	private PublishWorkService publishWorkService;
 	@RequestMapping("uploadFiles")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> upFiles(@RequestParam("file") CommonsMultipartFile[] file,
@@ -237,7 +235,7 @@ public class WorkFileController {
 			throws IOException {
 		String pwId = (String) maps.get("pwId");
 		System.out.println(pwId);
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		try {
 			List<Map<String, Object>> Addrs = workService.selectWorkAllAddr(pwId);
 			List<Map<String, Object>> wId = workService.selectWorkId(pwId);
@@ -247,8 +245,8 @@ public class WorkFileController {
 			System.out.println(workFile);
 			String resourcesName = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator
 					+ "zip" + File.separator + (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
-			String resourcesNames = File.separator + "workfile" + File.separator + 
-					"zip" + File.separator + (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
+			String resourcesNames = File.separator + "workfile" + File.separator + "zip" + File.separator
+					+ (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
 			File file = new File(workFile);
 			if (!file.exists()) {
 				file.mkdirs();// 创建目录
@@ -271,7 +269,7 @@ public class WorkFileController {
 						String filen = filename.substring(filename.lastIndexOf("\\") + 1);
 						String filenames = filen.substring(0, 5) + Addr.get("s_f_name");
 						String filePath = works + Addra.substring(9);
-						
+
 						String filePaths = studentworkFile + File.separator + filenames;
 						File files = new File(filePath);
 						input = new FileInputStream(files);
@@ -325,14 +323,14 @@ public class WorkFileController {
 				} else if ((Boolean) workScore.get("tWstate") == false) {
 					content[i][2] = "未批改";
 				} else {
-					Integer a=(Integer) workScore.get("wScore");
-					content[i][2] =Integer.toString(a) ;
+					Integer a = (Integer) workScore.get("wScore");
+					content[i][2] = Integer.toString(a);
 				}
 			}
 			HSSFWorkbook wb = ExportExcel.getHSSFWorkbook(sheetName, title, content, null);
 			FileOutputStream output = new FileOutputStream(workFile + File.separator + fileName);
 			wb.write(output);
-		
+
 			output.close();
 			Map<String, String> publishwork = publishWorkService.selectPublishwork(pwId);
 			if (publishwork.get("pwName") == null) {
@@ -358,6 +356,5 @@ public class WorkFileController {
 		}
 		return map;
 	}
-	
-	}
 
+}

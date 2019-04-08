@@ -9,8 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cdtu.mapper.CourseMapper;
 import com.cdtu.service.CourseService;
+
 @Transactional
-@Service("courseService")
+@Service(value = "courseService")
 public class CourseServiceImpl implements CourseService {
 	public @Resource CourseMapper courseMapper;
 

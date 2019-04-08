@@ -36,27 +36,25 @@ public class CourseController {
 	@ResponseBody
 	@RequestMapping(value = "/details.do")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	public Map<String, Object> doDetails(@RequestBody Map<String, Object> paramsMap,HttpServletRequest request) {
+	public Map<String, Object> doDetails(@RequestBody Map<String, Object> paramsMap, HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
-		int pubENum=0;
+		int pubENum = 0;
 		try {
 			String cId = (String) paramsMap.get("cId");
-			map.putAll(courseService.getDetails(cId));// 未进行空值校验，后期斟酌s
+			map.putAll(courseService.getDetails(cId));// 未进行空值校验，后期斟酌
 			int stusNum = sscService.countStudents(cId);
-			map.put("stusNum", stusNum);//学生数量
+			map.put("stusNum", stusNum);// 学生数量
 			int pubWNum = publishWorkService.countPublishWorks(cId);
-			if("teacher".equals(role.getRole())){
-				pubENum=publishWorkService.countPublishEstimates(cId);
+			if ("teacher".equals(role.getRole())) {
+				pubENum = publishWorkService.countPublishEstimates(cId);
+			} else if ("student".equals(role.getRole())) {
+				String sId = role.getUsername();
+				pubENum = publishWorkService.countSPublishEstimates(cId, sId);
 			}
-			else if("student".equals(role.getRole())){
-				String sId=role.getUsername();
-				pubENum=publishWorkService.countSPublishEstimates(cId,sId);
-			}
-			map.put("pubWNum", pubWNum);//活动数量
-			map.put("pubENum", pubENum);//活动数量
-			
+			map.put("pubWNum", pubWNum);// 活动数量
+			map.put("pubENum", pubENum);// 活动数量
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);
