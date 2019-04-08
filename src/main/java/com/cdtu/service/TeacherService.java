@@ -168,4 +168,6 @@ public interface TeacherService {
      */
 	public Map<String,Object> selectEstimate(String epId);
 	public void updateRoleInfo(String email, String phone, String username);
+	public int countSelectPublishEstimateCount(String tId,String cId);
+	public List<Map<String,Object>> selectPublishEstimate(String tId,String cId,int start,int end);
 }

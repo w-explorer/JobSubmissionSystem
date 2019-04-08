@@ -8,7 +8,15 @@ public class PublishEstimate {
     private Integer ctId;
     private Integer id;
     private String cId;
-    
+    private String epName;
+
+	public String getEpName() {
+		return epName;
+	}
+
+	public void setEpName(String epName) {
+		this.epName = epName;
+	}
 
 	public String getcId() {
 		return cId;

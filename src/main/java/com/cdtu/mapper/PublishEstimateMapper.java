@@ -58,5 +58,7 @@ public interface PublishEstimateMapper {
      * @return
      */
     List<PublishEstimate> selectPublishEstimateByctId(@Param("sId") String sId,@Param("ctId") Integer ctId);
+    int selectPublishEstimateCount(@Param("tId")String tId, @Param("cId")String cId);
+    List<Map<String,Object>> selectPublishEstimateBytId(@Param("tId") String tId,@Param("cId") String cId,@Param("start")int start,@Param("end")int end);
     
 }
