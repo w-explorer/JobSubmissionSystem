@@ -837,4 +837,8 @@ SELECT t_file.t_f_add AS tfAdd ,t_file.`t_f_name` AS tfName FROM t_file
 WHERE pw_id=#{pwId}
 
 </select>
+
+<delete id="deletePublishWork">
+delete from publish_work where pw_id=#{pwId}
+</delete>
 </mapper>
