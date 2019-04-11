@@ -380,7 +380,7 @@ public class WorkFileController {
 	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps
 			){
 		Map<String, Object> map =teacherservice.selectEstimate((String) maps.get("epId"));
-		map.put("suggests",teacherservice.selectEsuggest((String) maps.get("epId")));
+		map.put("eSuggests",teacherservice.selectEsuggest((String) maps.get("epId")));
 		
 		String moban = "D:\\uploadFile" + File.separator+"estimate";
 		
