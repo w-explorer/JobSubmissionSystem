@@ -151,7 +151,7 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 	}
 
 	@Override
-	public Map<String, String> selectPublishwork(String pwId) {
+	public Map<String, Object> selectPublishwork(String pwId) {
 
 		return publishWorkMapper.selectpublishwork(pwId);
 	}

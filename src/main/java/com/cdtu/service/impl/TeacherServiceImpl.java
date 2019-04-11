@@ -393,8 +393,8 @@ public class TeacherServiceImpl implements TeacherService {
 		for (int i = 1; i <= 5; i++) {
 			Map<String, Object> map = new HashMap<>();
 
-			map.put("StareSpeed", i);
-			map.put("NumeSpeeds", a[i - 1]);
+			map.put("name", i+"星人数");
+			map.put("value", a[i - 1]);
 			eSpeeds.add(map);
 		}
 		List<Map<String, Object>> eDifficult = estimateMapper.selecteDifficult(epId);
@@ -407,8 +407,8 @@ public class TeacherServiceImpl implements TeacherService {
 		}
 		for (int i = 1; i <= 5; i++) {
 			Map<String, Object> map = new HashMap<>();
-			map.put("StareDifficult", i);
-			map.put("NumeDifficults", b[i - 1]);
+			map.put("name", i+"星人数");
+			map.put("value", b[i - 1]);
 			eDifficults.add(map);
 		}
 		List<Map<String, Object>> eFeel = estimateMapper.selecteFeel(epId);
@@ -421,15 +421,14 @@ public class TeacherServiceImpl implements TeacherService {
 		}
 		for (int i = 1; i <= 5; i++) {
 			Map<String, Object> map = new HashMap<>();
-			map.put("StareFeel", i);
-			map.put("NumeFeels", c[i - 1]);
+			map.put("name", i+"星人数");
+			map.put("value", c[i - 1]);
 			eFeels.add(map);
 		}
 		Map<String, Object> map = new HashMap<>();
 		map.put("eDifficults", eDifficults);
 		map.put("eSpeeds", eSpeeds);
 		map.put("eFeels", eFeels);
-		map.put("eSuggests", estimateMapper.selecteSuggest(epId));
 		return map;
 	}
 
@@ -449,5 +448,10 @@ public class TeacherServiceImpl implements TeacherService {
 		
 		return publishEstimateMapper.selectPublishEstimateCount(tId, cId);
 	}
-
+	public Map<String, Object> selectEsuggest(String epId) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<>();
+		map.put("eSuggests", estimateMapper.selecteSuggest(epId));
+		return map;
+	}
 }
