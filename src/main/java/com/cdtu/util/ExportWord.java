@@ -11,7 +11,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 public class ExportWord {
-	   public static void createWord(Map<String,String> dataMap, String moban,  
+	   public static void createWord(Map<String,Object> dataMap, String moban,  
 	            String filePath) {  
 		   
 	        try {

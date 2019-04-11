@@ -249,7 +249,7 @@
 	</select>
 	
 	
-	<select id="selectPublishEstimateBytId">
+	<select id="selectPublishEstimateBytId" resultType="java.util.HashMap">
 	SELECT
 		publish_estimate.ep_id AS epId,publish_estimate.ep_name AS epName,publish_estimate.ep_start_time AS epStartTime,publish_estimate.ep_img_src AS activityImgSrc
 		FROM publish_estimate,teacher_select_course tsc
@@ -260,7 +260,7 @@
 		ORDER BY publish_estimate.ep_start_time
 		LIMIT #{start},#{end}
 	</select>
-	<select id="selectPublishEstimateCount">
+	<select id="selectPublishEstimateCount" resultType="int">
 	SELECT
 		count(*)
 		from publish_estimate,teacher_select_course tsc

@@ -37,6 +37,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.cdtu.model.Role;
 import com.cdtu.service.PublishWorkService;
+import com.cdtu.service.TeacherService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
 import com.cdtu.util.ExportExcel;
@@ -50,6 +51,7 @@ public class WorkFileController {
 			"pptx", "pdf" };
 	private @Resource(name = "workService") WorkService workService;
 	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
+	private @Resource(name = "teacherService") TeacherService teacherservice;
 
 	@RequestMapping("uploadFiles")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
@@ -341,7 +343,7 @@ public class WorkFileController {
 			wb.write(output);
 
 			output.close();
-			Map<String, String> publishwork = publishWorkService.selectPublishwork(pwId);
+			Map<String, Object> publishwork = (Map<String, Object>) publishWorkService.selectPublishwork(pwId);
 			if (publishwork.get("pwName") == null) {
 				publishwork.put("pwName", "null");
 			}
@@ -366,4 +368,34 @@ public class WorkFileController {
 		return map;
 	}
 
+	
+	/**
+	 * @author weiyuhang
+	 * @param work
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "downloadEstimate.do")
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps
+			){
+		Map<String, Object> map =teacherservice.selectEstimate((String) maps.get("epId"));
+		map.put("suggests",teacherservice.selectEsuggest((String) maps.get("epId")));
+		
+		String moban = "D:\\uploadFile" + File.separator+"estimate";
+		
+		String filePaths =  moban + File.separator + maps.get("epId") ;
+		String filePath =  moban + File.separator +  maps.get("epId") + File.separator + "评价详情" + ".docx";
+		File file = new File(filePaths);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		ExportWord.createWord(map, moban, filePath);
+		Map<String, Object> mapd =new HashMap<String, Object>();
+		mapd.put("fd", map);
+		mapd.put("Addr", filePath);
+		mapd.put("status", 200);
+				return mapd;
+		
+	}
 }
