@@ -45,7 +45,7 @@ public interface EstimateMapper {
 
 	public List<Map<String, Object>> selecteSpeed(@Param("epId") String epId);
 
-	public List<Map<String, Object>> selecteSuggest(@Param("epId") String epId);
+	public List<String> selecteSuggest(@Param("epId") String epId);
 
 	/**
 	 * @author 李红兵
