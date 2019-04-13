@@ -49,7 +49,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 			//token解析失败  重定向
 			if(role==null){
 				responseMessage(response, request);
-				System.out.println("token拦截了");
+				System.out.println("token失效");
 				return false;
 			}
 			if(!subject.isAuthenticated()||(Role) request.getSession().getAttribute("role")==null){
