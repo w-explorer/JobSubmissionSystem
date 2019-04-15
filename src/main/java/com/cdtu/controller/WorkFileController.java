@@ -369,33 +369,4 @@ public class WorkFileController {
 	}
 
 	
-	/**
-	 * @author weiyuhang
-	 * @param work
-	 * @param response
-	 * @throws IOException
-	 */
-	@RequestMapping(value = "downloadEstimate.do")
-	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps
-			){
-		Map<String, Object> map =teacherservice.selectEstimate((String) maps.get("epId"));
-		map.put("eSuggests",teacherservice.selectEsuggest((String) maps.get("epId")));
-		
-		String moban = "D:\\uploadFile" + File.separator+"estimate";
-		
-		String filePaths =  moban + File.separator + maps.get("epId") ;
-		String filePath =  moban + File.separator +  maps.get("epId") + File.separator + "评价详情" + ".docx";
-		File file = new File(filePaths);
-		if (!file.exists()) {
-			file.mkdir();
-		}
-		ExportWord.createWord(map, moban, filePath);
-		Map<String, Object> mapd =new HashMap<String, Object>();
-		mapd.put("fd", map);
-		mapd.put("Addr", filePath);
-		mapd.put("status", 200);
-				return mapd;
-		
-	}
 }

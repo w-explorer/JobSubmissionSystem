@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
@@ -53,6 +54,7 @@ public class TeacherController {
 	private @Resource(name = "publishWorkMapper") PublishWorkMapper publishWorkMapper;
 	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 	private @Resource(name = "adminstratorService") AdminstratorService adminstratorService;
+	private @Resource(name = "teacherService") TeacherService teacherservice;
 
 	/**
 	 * 老师统计作业提交情况，参数是发布作业码
@@ -863,6 +865,31 @@ public class TeacherController {
 		}
 		return map;
 
+	}
+	/**
+	 * @author weiyuhang
+	 * @param work
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "downloadEstimate.do")
+	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
+	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps
+			){
+		
+		String moban = "D:\\uploadFile" + File.separator+"estimate";
+		
+		String filePaths =  moban + File.separator + maps.get("epId") ;
+		String filePath =  moban + File.separator +  maps.get("epId") + File.separator + "评价详情" + ".docx";
+		File file = new File(filePaths);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		Map<String, Object> mapd =new HashMap<String, Object>();
+		mapd.put("Addr", filePath);
+		mapd.put("status", 200);
+		return mapd;
+		
 	}
 
 }

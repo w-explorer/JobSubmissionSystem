@@ -178,10 +178,11 @@ public class RoleController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/checkCode")
-	public void checkCode(HttpServletRequest request, HttpServletResponse response)
+	public @ResponseBody Map<String, Object>  checkCode(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		 Map<String, Object> map = new HashMap<String, Object>();
 		// 设置相应类型,告诉浏览器输出的内容为图片
-		response.setContentType("image/jpeg");
+		response.setContentType("image/png");
 
 		// 设置响应头信息，告诉浏览器不要缓存此内容
 		response.setHeader("pragma", "no-cache");
@@ -189,11 +190,15 @@ public class RoleController {
 		response.setDateHeader("Expire", 0);
 
 		RandomValidateCode randomValidateCode = new RandomValidateCode();
+		String randcode = null;
 		try {
-			randomValidateCode.getRandcode(request, response);// 输出图片方法
+			randcode=randomValidateCode.getRandcode(request, response);// 输出图片方法
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		map.put("status", 200);
+		map.put("randcodSrc", randcode);
+		return map;
 	}
 
 	/**

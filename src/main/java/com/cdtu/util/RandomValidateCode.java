@@ -5,8 +5,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
- 
+
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,8 +34,9 @@ public class RandomValidateCode {
     
     /**
      * 生成随机图片
+     * @return 
      */
-    public void getRandcode(HttpServletRequest request,
+    public String getRandcode(HttpServletRequest request,
             HttpServletResponse response) {
         HttpSession session = request.getSession();
         //BufferedImage类是具有缓冲区的Image类,Image类是用于描述图像信息的类
@@ -54,12 +58,25 @@ public class RandomValidateCode {
         session.removeAttribute(RANDOMCODEKEY);
         session.setAttribute(RANDOMCODEKEY, randomString);
         g.dispose();
+        String path = null;
         try {
         	//将内存中的图片通过流动形式输出到客户端
-            ImageIO.write(image, "JPEG", response.getOutputStream());
+//            ImageIO.write(image, "png", response.getOutputStream());
+            SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
+            String dateDirectory = sdf.format(new Date()); //只管创建目录 File file = new
+            path ="D:" +File.separator +"uploadFile"+ File.separator +"checkcode"+ File.separator +dateDirectory;
+            File file = new File(path);
+	       	if(!file.exists()){ 
+	       		file.mkdir();
+	       	}
+	       	String uuid = OAUtil.getId();
+	       	path += File.separator +uuid+".png";
+	       	ImageIO.write(image, "png", new File(path));
+	       	path = File.separator +"checkcodefile"+ File.separator +dateDirectory+ File.separator +uuid+".png";
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return path;
     }
     /*
      * 获得字体
@@ -109,5 +126,12 @@ public class RandomValidateCode {
     public String getRandomString(int num){
         return String.valueOf(randString.charAt(num));
     }
+    
+    public static void main(String[] args) {
+    	HttpServletRequest request = null;
+        HttpServletResponse response = null;
+        RandomValidateCode randomValidateCode = new RandomValidateCode();
+		randomValidateCode.getRandcode(request, response);// 输出图片方法
+	}
 }
 

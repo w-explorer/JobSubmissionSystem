@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 public class FormatDateToString {
 
 	public static String fromatData(Object date) {
-		SimpleDateFormat mySDF = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat mySDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return mySDF.format(date);
 	}
 }
