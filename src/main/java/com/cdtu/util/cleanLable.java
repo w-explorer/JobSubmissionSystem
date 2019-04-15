@@ -35,7 +35,6 @@ public class cleanLable {
     
     public static String getTextFrom(String htmlStr){
     	htmlStr = delHTMLTag(htmlStr);
-    	System.out.println(htmlStr);
     	htmlStr = htmlStr.replaceAll(" ", "");
     	return htmlStr;
     }

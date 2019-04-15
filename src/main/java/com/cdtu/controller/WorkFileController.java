@@ -258,11 +258,18 @@ public class WorkFileController {
 			BufferedInputStream binput = null;
 			BufferedOutputStream boutput = null;
 			for (Map<String, Object> w : wId) {
-				String studentworkFile = workFile + File.separator + (String) w.get("s_name");
+				String studentworkFile = workFile + File.separator+(String) w.get("s_id") + (String) w.get("s_name");
 				File studentfile = new File(studentworkFile);
 				if (!studentfile.exists()) {
 					studentfile.mkdirs();// 创建目录
 				}
+				String moban = "D:"+File.separator+"uploadFile"+File.separator+"works";
+				String workpath = studentworkFile+ File.separator + "作业详情" + ".docx";
+				if((String)w.get("w_context")==null){
+					w.put("w_context", com.cdtu.util.cleanLable.getTextFrom("未作答"));
+				}
+			     w.put("w_context", com.cdtu.util.cleanLable.getTextFrom((String)w.get("w_context")));
+				ExportWord.createWord(w, moban,workpath);
 				for (Map<String, Object> Addr : Addrs) {
 					String ws = (String) Addr.get("w_id");
 					if (w.get("w_id").equals(ws)) {
@@ -392,10 +399,8 @@ public class WorkFileController {
 		}
 		ExportWord.createWord(map, moban, filePath);
 		Map<String, Object> mapd =new HashMap<String, Object>();
-		mapd.put("fd", map);
 		mapd.put("Addr", filePath);
 		mapd.put("status", 200);
 				return mapd;
-		
 	}
 }
