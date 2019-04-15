@@ -170,5 +170,5 @@ public interface TeacherService {
 	public void updateRoleInfo(String email, String phone, String username);
 	public int countSelectPublishEstimateCount(String tId,String cId);
 	public List<Map<String,Object>> selectPublishEstimate(String tId,String cId,int start,int end);
-	public Map<String, Object> selectEsuggest(String epId);
+	public List<String> selectEsuggest(String epId);
 }

@@ -448,10 +448,13 @@ public class TeacherServiceImpl implements TeacherService {
 		
 		return publishEstimateMapper.selectPublishEstimateCount(tId, cId);
 	}
-	public Map<String, Object> selectEsuggest(String epId) {
+	public List<String> selectEsuggest(String epId) {
 		// TODO Auto-generated method stub
-		Map<String, Object> map = new HashMap<>();
-		map.put("eSuggests", estimateMapper.selecteSuggest(epId));
-		return map;
+		List<String> map=estimateMapper.selecteSuggest(epId);
+		List<String> eSuggests=new ArrayList<String>();
+		for (String eSuggest : map) {
+			eSuggests.add(com.cdtu.util.cleanLable.getTextFrom(eSuggest));
+		}
+		return eSuggests;
 	}
 }

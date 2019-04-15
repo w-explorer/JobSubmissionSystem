@@ -269,7 +269,7 @@
 		ORDER BY e_speed 
 	</select>
 
-	<select  id="selecteSuggest" resultType="java.util.HashMap">
+	<select  id="selecteSuggest" resultType="String">
 		SELECT e_suggest AS eSuggest
 		FROM estimate
 		WHERE ep_id = 1
