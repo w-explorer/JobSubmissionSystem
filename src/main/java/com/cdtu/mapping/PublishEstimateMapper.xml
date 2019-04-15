@@ -99,10 +99,8 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.cdtu.model.PublishEstimate" >
-    insert into publish_estimate (ep_id, tsc_id, ct_id, 
-      ep_start_time)
-    values (#{epId,jdbcType=CHAR}, #{tscId,jdbcType=INTEGER}, #{ctId,jdbcType=INTEGER}, 
-      #{epStartTime,jdbcType=DATE})
+    insert into publish_estimate (ep_id, tsc_id, ct_id,ep_start_time)
+    values (#{epId,jdbcType=CHAR}, #{tscId,jdbcType=INTEGER}, #{ctId,jdbcType=INTEGER},#{epStartTime,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="com.cdtu.model.PublishEstimate" >
     insert into publish_estimate
@@ -199,7 +197,7 @@
 	<insert id="insertByTscId" parameterType="com.cdtu.model.PublishEstimate">
 		INSERT INTO
 		publish_estimate(ep_id,tsc_id,ep_start_time,ep_name)
-		VALUES(#{epId},#{tscId},#{epStartTime},#{epName}))
+		VALUES(#{epId},#{tscId},#{epStartTime},#{epName})
 	</insert>
 	<!-- 添加发布创课点评表 by:黎睿-->
 	<insert id="insertByCtId" parameterType="com.cdtu.model.PublishEstimate">

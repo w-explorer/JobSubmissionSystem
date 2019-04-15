@@ -842,7 +842,7 @@ public class TeacherController {
 	 * @param studentSelectCourse
 	 * @return
 	 */
-	@RequestMapping("selectPET.do")
+	@RequestMapping("selectPE.do")
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> selectPE(@RequestBody Map<String, Object> paramsMap,
 			HttpServletRequest request) {
