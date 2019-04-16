@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.CourseNoticeMapper">
+<insert id="insertCourseNotice" >
+INSERT INTO course_notice(cn_title,cn_content,tsc_id,cn_p_date)
+VALUES(#{cnTitle},#{cnContent},#{tscId},#{cnPdate})
+</insert>
+<delete id="deleteCourseNotice"  parameterType="int">
+DELETE FROM course_notice WHERE cn_id=#{cnId}
+</delete>
+<select id="selectCourseNotices"  resultType="java.util.HashMap">
+SELECT course_notice.`cn_id`AS cnId,course_notice.`cn_title`AS cnTitle , 
+course_notice.`cn_p_date`AS cnPdate,course_notice.`cn_content`AS cnContent,
+teacher.`t_name`AS tName,teacher.`t_img_src`
+FROM course_notice,teacher_select_course,teacher
+WHERE 
+course_notice.`tsc_id`=#{tscId}
+AND course_notice.`tsc_id`=teacher_select_course.`tsc_id`
+AND teacher_select_course.`t_id`=teacher.`t_id`
+</select>
+
+</mapper>

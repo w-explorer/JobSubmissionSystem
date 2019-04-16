@@ -11,4 +11,9 @@
 		AND course.c_id = #{cId}
 	</select>
 	<!-- 李红兵e -->
+	<select id="selecttscId" resultType="int">
+	SELECT teacher_select_course.`tsc_id`AS tscId FROM teacher_select_course WHERE  teacher_select_course.`c_id`=#{cId}
+AND t_id=#{tId}
+	
+	</select>
 </mapper>

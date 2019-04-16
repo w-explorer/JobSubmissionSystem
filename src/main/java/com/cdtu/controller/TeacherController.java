@@ -42,6 +42,7 @@ import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
+import com.cdtu.util.ExportWord;
 import com.cdtu.util.MaxPage;
 
 @Controller
@@ -885,11 +886,58 @@ public class TeacherController {
 		if (!file.exists()) {
 			file.mkdir();
 		}
+		Map<String, Object> map =teacherservice.selectEstimate((String)maps.get("epId"));
+		map.put("eSuggests", teacherservice.selectEsuggest((String)maps.get("epId")));
+		ExportWord.createWord(map, moban, filePath);
 		Map<String, Object> mapd =new HashMap<String, Object>();
 		mapd.put("Addr", filePath);
 		mapd.put("status", 200);
 		return mapd;
 		
 	}
+	/**
+	 * 
+	 */
+	@RequestMapping(value = "createcoursenotice.do")
+	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
+	public @ResponseBody Map<String, Object> createcoursenotice(@RequestBody Map<String, Object> maps) {
+		Map<String, Object> map = new HashMap<String, Object>();
+	
+			Subject subject = SecurityUtils.getSubject();
+			Role role = (Role) subject.getPrincipal();
+			String tId = role.getUsername();
+			teacherService.insertCoursenoticeSrvice((String) maps.get("cnTitle"), (String) maps.get("cnContent"), tId,
+					(String) maps.get("cId"));
+		
+		map.put("status", 200);
+		return map;
+	}
 
+	@RequestMapping(value = "deletecoursenotice.do")
+	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
+	public @ResponseBody Map<String, Object> deletecoursenotice(@RequestBody Map<String, Object> maps) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			teacherService.deleteCoursenoticeSrvice((int) maps.get("cnId"));
+		} catch (Exception e) {
+			map.put("status", 0);
+			map.put("msg", "服务器异常");
+			return map;
+		}
+		map.put("status", 200);
+		return map;
+	}
+	@RequestMapping(value = "selectcoursenotice.do")
+	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
+	public @ResponseBody Map<String, Object> selectcoursenotice(@RequestBody Map<String, Object> maps) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+			Subject subject = SecurityUtils.getSubject();
+			Role role = (Role) subject.getPrincipal();
+			String tId = role.getUsername();
+			map.put("CourseNotices", teacherService.selectCoursenoticeSrvice(tId, (String) maps.get("cId")));
+		
+		map.put("status", 200);
+		return map;
+	}
 }
