@@ -91,7 +91,7 @@ public class RoleController {
 			// 给用户jwt加密生成token
 			String token = Jwt.sign(role, 60L * 1000L * 30L);
 //			System.out.println(token + "//");
-			int timeOut = 0;
+			int timeOut = 1;
 			if (role.isRememberMe() != false) {
 				timeOut = 30;
 			}

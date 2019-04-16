@@ -104,25 +104,7 @@ public class StudentController {
 		return map;
 	}
 
-	/**
-	 * 执行查询选课记录操作，返回选课列表
-	 *
-	 * @author 李红兵
-	 */
-	@ResponseBody
-	@RequiresRoles(value = { "student" })
-	@RequestMapping(value = "/queryJoinedCourses.do")
-	public Map<String, Object> doQueryJoinedCourses() {
-		Map<String, Object> map = new HashMap<>();
-		try {
-			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
-			map.put("status", 200);
-			map.put("joinedCourses", sscService.getJoinedCourses(sId));
-		} catch (Exception e) {
-			handlException(map, e);
-		}
-		return map;
-	}
+	
 
 	/**
 	 * 学生查询对应课程的所有作业，参数是学生id和课程id
@@ -441,7 +423,7 @@ public class StudentController {
 	@RequestMapping(value = "selectCourseStudent.do")
 	@RequiresRoles({ "student" })
 	@ResponseBody
-	public Map<String, Object> selectCourseStudent(@RequestBody CourseWapper coursewapper) {
+	public Map<String, Object> selectCourseStud(@RequestBody CourseWapper coursewapper) {
 		List<CourseStudent> coursestudentslist;
 		Map<String, Object> data = new HashMap<>();
 		try {

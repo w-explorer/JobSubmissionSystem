@@ -135,34 +135,6 @@ public class TeacherController {
 		return data;
 	}
 
-	/**
-	 * 教师查询课程
-	 *
-	 * @author weiyuhang
-	 * @param id
-	 * @return
-	 */
-	@RequestMapping("selectClass.do")
-	@RequiresRoles({ "teacher" })
-	public @ResponseBody Map<String, Object> selectAllCourse() {
-
-		Subject subject = SecurityUtils.getSubject();
-		Role role = (Role) subject.getPrincipal();
-		String tId = role.getUsername();
-		Map<String, Object> data = new HashMap<>();
-
-		List<CourseWapper> courseList;
-		try {
-			courseList = teacherService.selectAllCourceService(tId);
-			data.put("status", 200);
-			data.put("courseList", courseList);
-		} catch (Exception e) {
-			e.printStackTrace();
-			data.put("status", 0);
-			data.put("msg", "服务器错误");
-		}
-		return data;
-	}
 
 	/**
 	 * 添加课程
@@ -878,18 +850,19 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps
 			){
 		
+		Map<String, Object> map =teacherservice.selectEstimate((String) maps.get("epId"));
+		map.put("eSuggests",teacherservice.selectEsuggest((String) maps.get("epId")));
 		String moban = "D:\\uploadFile" + File.separator+"estimate";
-		
 		String filePaths =  moban + File.separator + maps.get("epId") ;
 		String filePath =  moban + File.separator +  maps.get("epId") + File.separator + "评价详情" + ".docx";
 		File file = new File(filePaths);
 		if (!file.exists()) {
 			file.mkdir();
 		}
-		Map<String, Object> map =teacherservice.selectEstimate((String)maps.get("epId"));
-		map.put("eSuggests", teacherservice.selectEsuggest((String)maps.get("epId")));
 		ExportWord.createWord(map, moban, filePath);
 		Map<String, Object> mapd =new HashMap<String, Object>();
+		filePath =File.separator+ "estimatefile"+ File.separator +  maps.get("epId") + File.separator + "评价详情" + ".docx";
+		mapd.put("fd", map);
 		mapd.put("Addr", filePath);
 		mapd.put("status", 200);
 		return mapd;
