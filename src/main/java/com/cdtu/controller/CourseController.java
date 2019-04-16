@@ -1,6 +1,7 @@
 package com.cdtu.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cdtu.model.CourseWapper;
 import com.cdtu.model.Role;
 import com.cdtu.service.CourseService;
 import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.StudentSelectCourseService;
+import com.cdtu.service.TeacherService;
 import com.cdtu.util.MaxPage;
 
 @Controller
@@ -27,6 +30,7 @@ public class CourseController {
 	private @Resource(name = "courseService") CourseService courseService;
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
 	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
+	private @Resource(name = "teacherService") TeacherService teacherService;
 
 	/**
 	 * 查询课堂详情
@@ -95,5 +99,41 @@ public class CourseController {
 		e.printStackTrace();
 		map.put("status", 500);
 		map.put("msg", "抱歉，服务器开小差了");
+	}
+	
+	/**
+	 * 执行查询选课记录操作，返回选课列表
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	@RequestMapping(value = "/queryJoinedCourses.do")
+	public Map<String, Object> doQueryJoinedCourses() {
+		
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String roleName =role.getRole();
+		String id = role.getUsername();
+		Map<String, Object> map = new HashMap<>();
+		if("teacher".equals(roleName)){
+			List<CourseWapper> courseList;
+			try {
+				courseList = teacherService.selectAllCourceService(id);
+				map.put("status", 200);
+				map.put("courseList", courseList);
+			} catch (Exception e) {
+				handlException(map, e);
+			}
+			return map;
+		}else{
+			try {
+				map.put("status", 200);
+				map.put("courseList", sscService.getJoinedCourses(id));
+			} catch (Exception e) {
+				handlException(map, e);
+			}
+			return map;
+		}
 	}
 }

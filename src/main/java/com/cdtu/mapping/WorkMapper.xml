@@ -49,7 +49,7 @@
 	</select>
 
 	<select id="SearchPwByPwName" resultType="java.util.HashMap">
-		SELECT COUNT(w.pw_id) AS finishedNum ,pw.pw_id AS pwId,pw.tsc_id AS cId,pw.pw_name AS pwName,pw.pw_end AS
+		SELECT SUM(CASE WHEN  w.s_w_state=1 THEN 1 ELSE 0 END) AS finishedNum ,pw.pw_id AS pwId,pw.tsc_id AS cId,pw.pw_name AS pwName,pw.pw_end AS
 		pwEnd,pw.pw_state AS pwState,pw.pw_img_src AS activityImgSrc,pw.pw_score as pwScore
 		FROM WORK w,publish_work pw
 		WHERE
@@ -64,13 +64,12 @@
 			AND c.c_id=#{cId}
 			)
 		AND pw.pw_id=w.pw_id
-		AND w.s_w_state=1
 		AND pw.pw_name=#{pwName}
 		GROUP BY w.pw_id
 	</select>
 
 	<select id="SsearchPwByPwName" resultType="java.util.HashMap">
-	SELECT COUNT(w.pw_id) AS finishedNum ,pw.pw_id AS pwId,pw.tsc_id AS cId,pw.pw_name AS pwName,pw.pw_end AS
+	SELECT SUM(CASE WHEN  w.s_w_state=1 THEN 1 ELSE 0 END) AS finishedNum ,pw.pw_id AS pwId,pw.tsc_id AS cId,pw.pw_name AS pwName,pw.pw_end AS
 		pwEnd,pw.pw_state AS pwState,pw.pw_img_src AS activityImgSrc,w.w_score as wScore,pw.pw_score as pwScore
 		FROM WORK w,publish_work pw
 		WHERE
@@ -85,7 +84,6 @@
 		AND c.c_id=#{cId}	
 		)
 		AND pw.pw_id=w.pw_id
-		AND w.s_w_state=1
 		AND pw.pw_name=#{pwName}
 		GROUP BY w.pw_id
 	</select>
