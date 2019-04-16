@@ -293,11 +293,11 @@
 	</select>
 	
 	<select id="selectWorkId" resultType="java.util.HashMap">
-		SELECT  DISTINCT work.w_id ,student.`s_name`,student.`s_id`,publish_work.`pw_name`,course.`c_name`
-		FROM WORK,s_file,student,publish_work,teacher_select_course,course
+		SELECT  DISTINCT work.w_id ,student.`s_name`,student.`s_id`,publish_work.`pw_name`,course.`c_name`,work.`w_context`,publish_work.`pw_content`
+		FROM WORK,student,publish_work,teacher_select_course,course
 		WHERE
 		work.`pw_id`=#{pwId}
-		AND work.`w_id`=s_file.`w_id`
+		AND work.`s_w_state`=1
 		AND student.`s_id`=work.`s_id`
 		AND work.`pw_id`=publish_work.`pw_id`
 		AND publish_work.`tsc_id`=teacher_select_course.`tsc_id`
