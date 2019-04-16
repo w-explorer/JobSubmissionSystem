@@ -26,7 +26,7 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 
 	@Override
 	public void changePublishWorkStateByConparetoEndTime() {
-		SimpleDateFormat mySDF = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat mySDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		Date nowDate = null;
 		Date endDate = null;

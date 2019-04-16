@@ -885,6 +885,7 @@ public class TeacherController {
 		if (!file.exists()) {
 			file.mkdir();
 		}
+		filePath =File.separator+ "estimatefile"+ File.separator +  maps.get("epId") + File.separator + "评价详情" + ".docx";
 		Map<String, Object> mapd =new HashMap<String, Object>();
 		mapd.put("Addr", filePath);
 		mapd.put("status", 200);

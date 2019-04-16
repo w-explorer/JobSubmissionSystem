@@ -210,6 +210,7 @@ public class TeacherServiceImpl implements TeacherService {
 			publishWorks.put("countall",
 					publishWorkMapper.selectTeacherPublishWorkCount(tId, courseWapper.getcId(), null));
 			for (PublishWork publishWork : publishWorkLs) {
+				publishWork.setPwEnd(publishWork.getPwEnd().substring(0, 16));
 				if (publishWork.getPwState() == true) {
 					publishWork.setPwStringState("进行中");
 					publishWork.setPwBooleanState(publishWork.getPwState());
@@ -375,7 +376,7 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public String updatepublishWork(PublishWork publishWork) {
-		publishWork.setPwEnd(publishWork.getPwEnd().substring(0, 10));
+		publishWork.setPwEnd(publishWork.getPwEnd());
 		publishWorkMapper.updatePublishWork(publishWork);
 		return null;
 	}

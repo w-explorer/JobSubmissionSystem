@@ -26,6 +26,7 @@ import com.cdtu.model.Role;
 import com.cdtu.model.StudentSelectCourse;
 import com.cdtu.model.Work;
 import com.cdtu.service.StudentService;
+import com.cdtu.util.FormatDateToString;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
 
@@ -102,6 +103,7 @@ public class StudentServiceImpl implements StudentService {
 			publishWorks.put("countall",
 					publishWorkMapper.selectStudentPublishWorkCount(sId, studentSelectCourse.getcId(), null));
 			for (PublishWork publishWork : publishWorkLs) {
+				publishWork.setPwEnd(publishWork.getPwEnd().substring(0, 16));
 				if (publishWork.getwState()) {
 					publishWork.setwStringState("已参与");
 					publishWork.setwBooleanState(true);
@@ -127,7 +129,7 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public Integer submitWork(Work work) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		if (work != null) {
 			String nowDate = dateFormat.format(date);
