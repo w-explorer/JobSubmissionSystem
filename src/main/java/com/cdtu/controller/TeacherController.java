@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cdtu.mapper.PublishWorkMapper;
 import com.cdtu.model.ClassCreate;
@@ -39,6 +41,7 @@ import com.cdtu.service.AdminstratorService;
 import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.StudentService;
+import com.cdtu.service.TeacherFileService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
@@ -49,13 +52,85 @@ import com.cdtu.util.MaxPage;
 @RequestMapping(value = "teacher")
 public class TeacherController {
 	private @Resource(name = "workService") WorkService workService;
+	private @Resource(name = "tFileService") TeacherFileService tFileService;
 	private @Resource(name = "studentService") StudentService studentService;
 	private @Resource(name = "teacherService") TeacherService teacherService;
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
 	private @Resource(name = "publishWorkMapper") PublishWorkMapper publishWorkMapper;
 	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 	private @Resource(name = "adminstratorService") AdminstratorService adminstratorService;
-	private @Resource(name = "teacherService") TeacherService teacherservice;
+
+	/**
+	 * 老师上传资源
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequiresRoles(value = { "teacher" })
+	@RequestMapping(value = "uploadResource.do")
+	public Map<String, Object> doUploadResource(@RequestParam("files") MultipartFile[] files,
+			@RequestParam("cId") String cId) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			if (files.length != 0) {
+				String[] onlineReadTypes = { "jpg", "png", "gif", "psd", "webp", "txt", "doc", "docx", "XLS", "XLSX",
+						"ppt", "pptx", "pdf" };
+				String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+				for (int i = 0; i < files.length; i++) {
+					if (!files[i].isEmpty()) {
+						String fileName = files[i].getOriginalFilename();// 文件名
+						int suffixPos = fileName.lastIndexOf('.');// 后缀位置
+						String fileType = suffixPos == -1 ? "file" : fileName.substring(suffixPos + 1);// 文件类型
+						String pathName = "/uploadFile/resource/" + tId + "/" + cId;// 路径名
+						boolean onlineReadAble = Arrays.asList(onlineReadTypes).contains(fileType);// 是否可以在线阅读
+						File directory = new File(pathName, fileName);// 文件目录
+						if (!directory.exists()) {
+							directory.mkdirs();
+							files[i].transferTo(directory);
+							tFileService.uploadFile(tId, cId, pathName, fileName, onlineReadAble, fileType);
+						}
+					}
+				}
+				map.put("msg", "资源上传成功！");
+				map.put("status", 200);
+			} else {
+				map.put("msg", "请选择要上传的文件！");
+				map.put("status", 400);
+			}
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
+
+	/**
+	 * 老师删除资源
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequiresRoles(value = { "teacher" })
+	@RequestMapping(value = "deleteResource.do")
+	public Map<String, Object> doDeleteResource(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			String pathName = (String) paramsMap.get("path");
+			String fileName = (String) paramsMap.get("fileName");
+			File directory = new File(pathName, fileName);
+			if (directory.exists()) {
+				directory.delete();
+				tFileService.deleteFile(pathName, fileName);
+				map.put("msg", "删除资源成功！");
+				map.put("status", 200);
+			} else {
+				map.put("msg", "资源不存在！");
+				map.put("status", 404);
+			}
+		} catch (Exception e) {
+			handlException(map, e);
+		}
+		return map;
+	}
 
 	/**
 	 * 老师统计作业提交情况，参数是发布作业码
@@ -64,7 +139,7 @@ public class TeacherController {
 	 */
 	@ResponseBody
 	@RequiresRoles(value = { "teacher" })
-	@RequestMapping(value = "/statistic.do")
+	@RequestMapping(value = "statistic.do")
 	public Map<String, Object> doStatistic(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -134,7 +209,6 @@ public class TeacherController {
 		}
 		return data;
 	}
-
 
 	/**
 	 * 添加课程
@@ -684,8 +758,9 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> teacherupadtework(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			
-			workService.teacherupdatework((String)paramsMap.get("sId"),(String)paramsMap.get("pwId"),(Integer)paramsMap.get("wScore"),(String)paramsMap.get("wRemark"));
+
+			workService.teacherupdatework((String) paramsMap.get("sId"), (String) paramsMap.get("pwId"),
+					(Integer) paramsMap.get("wScore"), (String) paramsMap.get("wRemark"));
 			map.put("status", 200);
 		} catch (Exception e) {
 			handlException(map, e);
@@ -796,6 +871,7 @@ public class TeacherController {
 		}
 		return map;
 	}
+
 	@RequestMapping(value = "deletePublishWork.do")
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> deletePublishWork(@RequestBody Map<String, Object> paramsMap) {
@@ -804,12 +880,13 @@ public class TeacherController {
 		try {
 			publishWorkService.deletePublishWorkService(pwId);
 			map.put("status", 200);
-	        map.put("msg", "删除成功");
+			map.put("msg", "删除成功");
 		} catch (Exception e) {
 			handlException(map, e);
 		}
 		return map;
 	}
+
 	/**
 	 * 查询发布的评价
 	 *
@@ -839,6 +916,7 @@ public class TeacherController {
 		return map;
 
 	}
+
 	/**
 	 * @author weiyuhang
 	 * @param work
@@ -847,41 +925,42 @@ public class TeacherController {
 	 */
 	@RequestMapping(value = "downloadEstimate.do")
 	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
-	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps
-			){
-		
-		Map<String, Object> map =teacherservice.selectEstimate((String) maps.get("epId"));
-		map.put("eSuggests",teacherservice.selectEsuggest((String) maps.get("epId")));
-		String moban = "D:\\uploadFile" + File.separator+"estimate";
-		String filePaths =  moban + File.separator + maps.get("epId") ;
-		String filePath =  moban + File.separator +  maps.get("epId") + File.separator + "评价详情" + ".docx";
+	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps) {
+
+		Map<String, Object> map = teacherService.selectEstimate((String) maps.get("epId"));
+		map.put("eSuggests", teacherService.selectEsuggest((String) maps.get("epId")));
+		String moban = "D:\\uploadFile" + File.separator + "estimate";
+		String filePaths = moban + File.separator + maps.get("epId");
+		String filePath = moban + File.separator + maps.get("epId") + File.separator + "评价详情" + ".docx";
 		File file = new File(filePaths);
 		if (!file.exists()) {
 			file.mkdir();
 		}
 		ExportWord.createWord(map, moban, filePath);
-		Map<String, Object> mapd =new HashMap<String, Object>();
-		filePath =File.separator+ "estimatefile"+ File.separator +  maps.get("epId") + File.separator + "评价详情" + ".docx";
+		Map<String, Object> mapd = new HashMap<>();
+		filePath = File.separator + "estimatefile" + File.separator + maps.get("epId") + File.separator + "评价详情"
+				+ ".docx";
 		mapd.put("fd", map);
 		mapd.put("Addr", filePath);
 		mapd.put("status", 200);
 		return mapd;
-		
+
 	}
+
 	/**
-	 * 
+	 *
 	 */
 	@RequestMapping(value = "createcoursenotice.do")
 	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> createcoursenotice(@RequestBody Map<String, Object> maps) {
-		Map<String, Object> map = new HashMap<String, Object>();
-	
-			Subject subject = SecurityUtils.getSubject();
-			Role role = (Role) subject.getPrincipal();
-			String tId = role.getUsername();
-			teacherService.insertCoursenoticeSrvice((String) maps.get("cnTitle"), (String) maps.get("cnContent"), tId,
-					(String) maps.get("cId"));
-		
+		Map<String, Object> map = new HashMap<>();
+
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String tId = role.getUsername();
+		teacherService.insertCoursenoticeSrvice((String) maps.get("cnTitle"), (String) maps.get("cnContent"), tId,
+				(String) maps.get("cId"));
+
 		map.put("status", 200);
 		return map;
 	}
@@ -889,7 +968,7 @@ public class TeacherController {
 	@RequestMapping(value = "deletecoursenotice.do")
 	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> deletecoursenotice(@RequestBody Map<String, Object> maps) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		try {
 			teacherService.deleteCoursenoticeSrvice((int) maps.get("cnId"));
 		} catch (Exception e) {
@@ -900,16 +979,17 @@ public class TeacherController {
 		map.put("status", 200);
 		return map;
 	}
+
 	@RequestMapping(value = "selectcoursenotice.do")
 	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> selectcoursenotice(@RequestBody Map<String, Object> maps) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-			Subject subject = SecurityUtils.getSubject();
-			Role role = (Role) subject.getPrincipal();
-			String tId = role.getUsername();
-			map.put("CourseNotices", teacherService.selectCoursenoticeSrvice(tId, (String) maps.get("cId")));
-		
+		Map<String, Object> map = new HashMap<>();
+
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String tId = role.getUsername();
+		map.put("CourseNotices", teacherService.selectCoursenoticeSrvice(tId, (String) maps.get("cId")));
+
 		map.put("status", 200);
 		return map;
 	}
