@@ -29,7 +29,6 @@
 	        <!-- token拦截器-->  
 	        <mvc:mapping path="/**" />  
 	        <!-- /register 和 /login 不需要拦截-->  
-	        <mvc:exclude-mapping path="/role/checkCode" />
 	        <mvc:exclude-mapping path="/role/login.*" />
 	        <mvc:exclude-mapping path="/role/quit.do" />
 	        <mvc:exclude-mapping path="/role/forgetpassword.do" />

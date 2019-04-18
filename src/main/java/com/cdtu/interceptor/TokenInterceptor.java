@@ -2,6 +2,7 @@ package com.cdtu.interceptor;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,7 +13,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cdtu.model.Role;
-import com.cdtu.util.CookieUtils;
 import com.cdtu.util.Jwt;
 /**
  * 
@@ -34,13 +34,31 @@ public class TokenInterceptor implements HandlerInterceptor {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView model)
 			throws Exception {
 	}
-
+	/**
+	 * 设置成静态以后不是不会改变，而是改变以后其他人如果访问这个变量或是方法
+		它已经的被修改过的
+		所以利用这个性质可以做验证来保证初始化一次
+	 */
+	static boolean flag = true;
 	// 拦截每个请求
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		
+		//  <mvc:exclude-mapping path="/role/checkCode" />
+		if (flag) {
+			flag = false;
+			String path = request.getSession().getServletContext().getRealPath("/");  
+			path = path.substring(0, path.length()-20)+"ROOT";
+			ServletContext application = request.getServletContext();
+			application.setAttribute("path", path);
+			//写要执行的代码
+			}
+		String servletPath = request.getServletPath();
+     	if(servletPath.contains("checkCode")){
+			return true;
+		}
 		String token = request.getHeader("token");
-		String cookieValue = CookieUtils.getCookieValue(request, "token");
 		//如果登录认证或记住我，则再一次授权
 		Subject subject = SecurityUtils.getSubject();
 		if (token!=null&&!"null".equals(token)) {

@@ -64,7 +64,7 @@ public class RandomValidateCode {
 //            ImageIO.write(image, "png", response.getOutputStream());
             SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
             String dateDirectory = sdf.format(new Date()); //只管创建目录 File file = new
-            path ="D:" +File.separator +"uploadFile"+ File.separator +"checkcode"+ File.separator +dateDirectory;
+            path =GetRootPath.getRootPath(request)+ File.separator +"uploadFile"+ File.separator +"checkcode"+ File.separator +dateDirectory;
             File file = new File(path);
 	       	if(!file.exists()){ 
 	       		file.mkdir();
