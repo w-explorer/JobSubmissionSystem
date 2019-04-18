@@ -60,7 +60,7 @@ public class RandomValidateCode {
         g.dispose();
         String path = null;
         try {
-        	//将内存中的图片通过流动形式输出到客户
+        	//将内存中的图片通过流动形式输出到客户端
 //            ImageIO.write(image, "png", response.getOutputStream());
             SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
             String dateDirectory = sdf.format(new Date()); //只管创建目录 File file = new
