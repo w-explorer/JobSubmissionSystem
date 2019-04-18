@@ -475,7 +475,7 @@ public class TeacherServiceImpl implements TeacherService {
 			String a=FormatDateToString.fromatData(map.get("cnPdate"));
 			map.put("cnPdate",a);
 		}
-		return courseNoticeMapper.selectCourseNotices(tscId);
+		return courseNotice;
 	}
 
 	@Override

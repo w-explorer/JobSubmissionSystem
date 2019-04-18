@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
@@ -508,6 +509,19 @@ public class StudentController {
 		} catch (Exception e) {
 			handlException(map, e);
 		}
+		return map;
+	}
+	@RequestMapping(value = "selectcoursenotice.do")
+	@RequiresRoles(value = { "student" }, logical = Logical.OR)
+	public @ResponseBody Map<String, Object> selectcoursenotice(@RequestBody Map<String, Object> maps) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+			Subject subject = SecurityUtils.getSubject();
+			Role role = (Role) subject.getPrincipal();
+			String sId = role.getUsername();
+			map.put("CourseNotices", studentService.selectCoursenoticeSrvice((String) maps.get("cId"),sId));
+		
+		map.put("status", 200);
 		return map;
 	}
 }

@@ -13,6 +13,7 @@ public interface CourseNoticeMapper {
  * @return
  */
 public List<Map<String,Object>> selectCourseNotices(@Param("tscId") int tscId);
+public List<Map<String,Object>> selectCourseNoticess(@Param("cId") String cId,@Param("sId") String sId);
 public void deleteCourseNotice(@Param("cnId")int cnId);
 public void insertCourseNotice(@Param("cnTitle")String cnTitle,
 @Param("cnContent")String cnContent,@Param("tscId")int tscId,@Param("cnPdate")String cnPdate);
