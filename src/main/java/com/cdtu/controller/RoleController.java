@@ -32,6 +32,7 @@ import com.cdtu.service.MenuService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.service.UserService;
+import com.cdtu.util.GetRootPath;
 import com.cdtu.util.Jwt;
 import com.cdtu.util.RandomValidateCode;
 import com.cdtu.util.SendEmail;
@@ -235,7 +236,7 @@ public class RoleController {
 			String contentType = file.getContentType();
 			// 获得文件后缀名称
 			String imageName = contentType.substring(contentType.lastIndexOf("/") + 1);
-			path = "D:" + File.separator + "uploadFile" + File.separator + "avatar" + File.separator + role.getRole()
+			path = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "avatar" + File.separator + role.getRole()
 					+ File.separator + role.getUsername() + File.separator + "avatar." + imageName;
 			File storeDirectory = new File(path);// 即代表文件又代表目录
 			if (!storeDirectory.exists()) {

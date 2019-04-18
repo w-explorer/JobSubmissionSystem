@@ -1,6 +1,5 @@
 package com.cdtu.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,7 +11,6 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.auth0.jwt.internal.org.bouncycastle.asn1.dvcs.Data;
 import com.cdtu.mapper.CourseMapper;
 import com.cdtu.mapper.CourseNoticeMapper;
 import com.cdtu.mapper.EstimateMapper;
@@ -48,7 +46,7 @@ public class TeacherServiceImpl implements TeacherService {
 	private @Resource StudentSelectCourseMapper studentSelectCourseMapper;
 	private @Resource EstimateMapper estimateMapper;
 	private @Resource CourseNoticeMapper courseNoticeMapper;
-	private @Resource TeacherSelectCourseMapper  teacherSelectCourseMapper;
+	private @Resource TeacherSelectCourseMapper teacherSelectCourseMapper;
 
 	@Override
 	public Map<String, Object> getTeacherBytIdAndtPassword(Role role) {
@@ -402,7 +400,7 @@ public class TeacherServiceImpl implements TeacherService {
 		for (int i = 1; i <= 5; i++) {
 			Map<String, Object> map = new HashMap<>();
 
-			map.put("name", i+"星人数");
+			map.put("name", i + "星人数");
 			map.put("value", a[i - 1]);
 			eSpeeds.add(map);
 		}
@@ -416,7 +414,7 @@ public class TeacherServiceImpl implements TeacherService {
 		}
 		for (int i = 1; i <= 5; i++) {
 			Map<String, Object> map = new HashMap<>();
-			map.put("name", i+"星人数");
+			map.put("name", i + "星人数");
 			map.put("value", b[i - 1]);
 			eDifficults.add(map);
 		}
@@ -430,7 +428,7 @@ public class TeacherServiceImpl implements TeacherService {
 		}
 		for (int i = 1; i <= 5; i++) {
 			Map<String, Object> map = new HashMap<>();
-			map.put("name", i+"星人数");
+			map.put("name", i + "星人数");
 			map.put("value", c[i - 1]);
 			eFeels.add(map);
 		}
@@ -448,19 +446,21 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectPublishEstimate(String tId, String cId,int start,int end) {
-		return publishEstimateMapper.selectPublishEstimateBytId(tId, cId,start,end);
+	public List<Map<String, Object>> selectPublishEstimate(String tId, String cId, int start, int end) {
+		return publishEstimateMapper.selectPublishEstimateBytId(tId, cId, start, end);
 	}
 
 	@Override
 	public int countSelectPublishEstimateCount(String tId, String cId) {
-		
+
 		return publishEstimateMapper.selectPublishEstimateCount(tId, cId);
 	}
+
+	@Override
 	public List<String> selectEsuggest(String epId) {
 		// TODO Auto-generated method stub
-		List<String> map=estimateMapper.selecteSuggest(epId);
-		List<String> eSuggests=new ArrayList<String>();
+		List<String> map = estimateMapper.selecteSuggest(epId);
+		List<String> eSuggests = new ArrayList<>();
 		for (String eSuggest : map) {
 			eSuggests.add(com.cdtu.util.cleanLable.getTextFrom(eSuggest));
 		}
@@ -468,12 +468,12 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectCoursenoticeSrvice(String tId,String cId) {
-		int tscId =teacherSelectCourseMapper.selecttscId(tId, cId);
-		List<Map<String,Object>> courseNotice=courseNoticeMapper.selectCourseNotices(tscId);
+	public List<Map<String, Object>> selectCoursenoticeSrvice(String tId, String cId) {
+		int tscId = teacherSelectCourseMapper.selecttscId(tId, cId);
+		List<Map<String, Object>> courseNotice = courseNoticeMapper.selectCourseNotices(tscId);
 		for (Map<String, Object> map : courseNotice) {
-			String a=FormatDateToString.fromatData(map.get("cnPdate"));
-			map.put("cnPdate",a);
+			String a = FormatDateToString.fromatData(map.get("cnPdate"));
+			map.put("cnPdate", a);
 		}
 		return courseNotice;
 	}
@@ -481,15 +481,15 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public void deleteCoursenoticeSrvice(int cnId) {
 		courseNoticeMapper.deleteCourseNotice(cnId);
-		
+
 	}
 
 	@Override
 	public void insertCoursenoticeSrvice(String cnTitle, String cnContent, String tId, String cId) {
-		int tscId =teacherSelectCourseMapper.selecttscId(tId, cId);
+		int tscId = teacherSelectCourseMapper.selecttscId(tId, cId);
 		Date nowDate = new Date();
 		String fromatData = FormatDateToString.fromatData(nowDate);
 		courseNoticeMapper.insertCourseNotice(cnTitle, cnContent, tscId, fromatData);
-		
+
 	}
 }

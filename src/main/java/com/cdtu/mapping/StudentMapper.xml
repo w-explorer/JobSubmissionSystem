@@ -12,7 +12,7 @@
 	<select id="getStudentBysIdAndsPassword" parameterType="com.cdtu.model.Role" 
 	resultType="java.util.HashMap">
 		SELECT S_ID AS userName,s_name as name,s_img_src as userImgSrc,s_major as userMajor,s_email as userEmail,s_phone as userPhone
-		FROM STUDENT 
+		FROM student 
 		WHERE S_ID =#{username,jdbcType=VARCHAR}
 	</select>
 	
