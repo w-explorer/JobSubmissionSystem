@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cdtu.mapper.CourseNoticeMapper;
 import com.cdtu.mapper.EstimateMapper;
 import com.cdtu.mapper.PublishEstimateMapper;
 import com.cdtu.mapper.PublishWorkMapper;
@@ -26,6 +27,7 @@ import com.cdtu.model.Role;
 import com.cdtu.model.StudentSelectCourse;
 import com.cdtu.model.Work;
 import com.cdtu.service.StudentService;
+import com.cdtu.util.FormatDateToString;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
 
@@ -38,6 +40,7 @@ public class StudentServiceImpl implements StudentService {
 	private @Resource PublishWorkMapper publishWorkMapper;
 	private @Resource PublishEstimateMapper publishEstimateMapper;
 	private @Resource StudentSelectCourseMapper studentSelectCourseMapper;
+	private @Resource CourseNoticeMapper courseNoticeMapper;
 
 	@Override
 	public Map<String, Object> getStudentBysIdAndsPassword(Role role) {
@@ -202,5 +205,15 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public void updateRoleInfo(String email, String phone, String username) {
 		studentMapper.updateRoleInfo(email, phone, username);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectCoursenoticeSrvice(String cId, String sId) {
+		List<Map<String,Object>> courseNotice=courseNoticeMapper.selectCourseNoticess(cId, sId);
+		for (Map<String, Object> map : courseNotice) {
+			String a=FormatDateToString.fromatData(map.get("cnPdate"));
+			map.put("cnPdate",a);
+		}
+		return courseNotice;
 	}
 }

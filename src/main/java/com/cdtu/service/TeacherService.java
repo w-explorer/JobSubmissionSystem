@@ -171,4 +171,11 @@ public interface TeacherService {
 	public int countSelectPublishEstimateCount(String tId,String cId);
 	public List<Map<String,Object>> selectPublishEstimate(String tId,String cId,int start,int end);
 	public List<String> selectEsuggest(String epId);
+	/**
+	 * 对公告进行增删改
+	 */
+	public List<Map<String,Object>> selectCoursenoticeSrvice(String tId,String cId);
+	public void deleteCoursenoticeSrvice(int cnId);
+	public void insertCoursenoticeSrvice(String cnTitle,String cnContent,String tId,String cId);
+    	
 }

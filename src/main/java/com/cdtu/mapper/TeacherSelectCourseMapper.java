@@ -37,4 +37,6 @@ public interface TeacherSelectCourseMapper {
 	 * @author 李红兵
 	 */
 	Map<String, Object> selectByTIdAndCId(@Param("tId") String tId, @Param("cId") String cId);
+	
+	int selecttscId(@Param("tId") String tId, @Param("cId") String cId);
 }

@@ -1,6 +1,8 @@
 package com.cdtu.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,13 +12,16 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.auth0.jwt.internal.org.bouncycastle.asn1.dvcs.Data;
 import com.cdtu.mapper.CourseMapper;
+import com.cdtu.mapper.CourseNoticeMapper;
 import com.cdtu.mapper.EstimateMapper;
 import com.cdtu.mapper.PublishEstimateMapper;
 import com.cdtu.mapper.PublishWorkMapper;
 import com.cdtu.mapper.StudentMapper;
 import com.cdtu.mapper.StudentSelectCourseMapper;
 import com.cdtu.mapper.TeacherMapper;
+import com.cdtu.mapper.TeacherSelectCourseMapper;
 import com.cdtu.mapper.WorkMapper;
 import com.cdtu.model.ClassCreate;
 import com.cdtu.model.CourseStudent;
@@ -26,6 +31,7 @@ import com.cdtu.model.PublishWork;
 import com.cdtu.model.Role;
 import com.cdtu.model.Work;
 import com.cdtu.service.TeacherService;
+import com.cdtu.util.FormatDateToString;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.OAUtil;
 
@@ -41,6 +47,8 @@ public class TeacherServiceImpl implements TeacherService {
 	private @Resource PublishEstimateMapper publishEstimateMapper;
 	private @Resource StudentSelectCourseMapper studentSelectCourseMapper;
 	private @Resource EstimateMapper estimateMapper;
+	private @Resource CourseNoticeMapper courseNoticeMapper;
+	private @Resource TeacherSelectCourseMapper  teacherSelectCourseMapper;
 
 	@Override
 	public Map<String, Object> getTeacherBytIdAndtPassword(Role role) {
@@ -457,5 +465,31 @@ public class TeacherServiceImpl implements TeacherService {
 			eSuggests.add(com.cdtu.util.cleanLable.getTextFrom(eSuggest));
 		}
 		return eSuggests;
+	}
+
+	@Override
+	public List<Map<String, Object>> selectCoursenoticeSrvice(String tId,String cId) {
+		int tscId =teacherSelectCourseMapper.selecttscId(tId, cId);
+		List<Map<String,Object>> courseNotice=courseNoticeMapper.selectCourseNotices(tscId);
+		for (Map<String, Object> map : courseNotice) {
+			String a=FormatDateToString.fromatData(map.get("cnPdate"));
+			map.put("cnPdate",a);
+		}
+		return courseNotice;
+	}
+
+	@Override
+	public void deleteCoursenoticeSrvice(int cnId) {
+		courseNoticeMapper.deleteCourseNotice(cnId);
+		
+	}
+
+	@Override
+	public void insertCoursenoticeSrvice(String cnTitle, String cnContent, String tId, String cId) {
+		int tscId =teacherSelectCourseMapper.selecttscId(tId, cId);
+		Date nowDate = new Date();
+		String fromatData = FormatDateToString.fromatData(nowDate);
+		courseNoticeMapper.insertCourseNotice(cnTitle, cnContent, tscId, fromatData);
+		
 	}
 }
