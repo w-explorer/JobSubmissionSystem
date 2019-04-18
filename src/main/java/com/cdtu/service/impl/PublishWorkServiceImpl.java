@@ -103,7 +103,11 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 	@Override
 	public List<Map<String, Object>> getTPwDetails(String pwId) {
 		// TODO Auto-generated method stub
-		return publishWorkMapper.getTPwDetails(pwId);
+		List<Map<String,Object>> tPwDetails = publishWorkMapper.getTPwDetails(pwId);
+		for (Map<String, Object> map : tPwDetails) {
+			map.put("pwEnd",FormatDateToString.fromatData(map.get("pwEnd")));
+		}
+		return tPwDetails;
 	}
 
 	@Override
