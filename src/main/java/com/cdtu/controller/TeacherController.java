@@ -851,7 +851,7 @@ public class TeacherController {
 			){
 		Map<String, Object> map =teacherservice.selectEstimate((String) maps.get("epId"));
 		map.put("eSuggests",teacherservice.selectEsuggest((String) maps.get("epId")));
-		String moban = "D:\\uploadFile" + File.separator+"estimate";
+		String moban = File.separator +"opt"+"/uploadFile" + File.separator+"estimate";
 		String filePaths =  moban + File.separator + maps.get("epId") ;
 		String filePath =  moban + File.separator +  maps.get("epId") + File.separator + "评价详情" + ".docx";
 		File file = new File(filePaths);

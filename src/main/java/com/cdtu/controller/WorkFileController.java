@@ -70,7 +70,7 @@ public class WorkFileController {
 					// 保存文件s
 					if (!file1.isEmpty()) { // w.txt 5 3
 
-						String savePath = "D:\\" + File.separator + "uploadFile" + File.separator + "works"
+						String savePath = File.separator +"opt"+ "uploadFile" + File.separator + "works"
 								+ File.separator + pwId + File.separator + role.getRole() + File.separator
 								+ role.getUsername();
 						String filename = file1.getOriginalFilename();
@@ -127,7 +127,7 @@ public class WorkFileController {
 		if (role.getRole() == "teacher") {
 			Integer tfId = (Integer) paramsMap.get("tfId");
 			String tfAdd = (String) paramsMap.get("tfAdd");
-			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
+			String workFile = File.separator +"opt"+ "uploadFile" + File.separator + "works";
 			String filePath = workFile + tfAdd.substring(9);
 			File file = new File(filePath);
 			file.delete();
@@ -135,7 +135,7 @@ public class WorkFileController {
 		} else {
 			Integer sfId = (Integer) paramsMap.get("tfId");
 			String sfAdd = (String) paramsMap.get("tfAdd");
-			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
+			String workFile = File.separator +"opt"+"uploadFile" + File.separator + "works";
 			String filePath = workFile + sfAdd.substring(9);
 			File file = new File(filePath);
 			file.delete();
@@ -155,7 +155,7 @@ public class WorkFileController {
 		try {
 			String fileName = workService.selecttfNameService(Addr);
 
-			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
+			String workFile = File.separator +"opt"+ "uploadFile" + File.separator + "works";
 			String filePath = workFile + Addr.substring(9);
 			File file = new File(filePath);
 			DownloadFile.downloadFile(file, fileName, response, request);
@@ -185,7 +185,7 @@ public class WorkFileController {
 		Role role = (Role) subject.getPrincipal();
 		@SuppressWarnings("unchecked")
 		List<String> Addrs = (List<String>) maps.get("Addrs");
-		String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator
+		String workFile = File.separator +"opt"+"uploadFile" + File.separator + "works" + File.separator
 				+ role.getUsername();
 		String resourcesName = workFile + ".zip";
 		String zipname = role.getUsername() + ".zip";
@@ -193,7 +193,7 @@ public class WorkFileController {
 			ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(resourcesName));
 			InputStream input = null;
 			for (String Addr : Addrs) {
-				String works = "D:" + File.separator + "uploadFile" + File.separator + "works";
+				String works = File.separator +"opt"+ "uploadFile" + File.separator + "works";
 				String filePath = works + Addr.substring(9);
 				File file = new File(filePath);
 				input = new FileInputStream(file);
@@ -224,7 +224,7 @@ public class WorkFileController {
 			HttpServletRequest request) throws IOException {
 		String Addr = (String) maps.get("tfAdd");
 		String fileName = workService.selecttfNameService(Addr);
-		String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works";
+		String workFile =File.separator +"opt"+"uploadFile" + File.separator + "works";
 		String filePath = workFile + Addr.substring(9);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -242,9 +242,9 @@ public class WorkFileController {
 			List<Map<String, Object>> Addrs = workService.selectWorkAllAddr(pwId);
 			List<Map<String, Object>> wId = workService.selectWorkId(pwId);
 			Map<String, Object> name = workService.selectcName(pwId);
-			String workFile = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator + "zip"
+			String workFile = File.separator +"opt"+"uploadFile" + File.separator + "works" + File.separator + "zip"
 					+ File.separator + (String) name.get("c_name") + (String) name.get("pw_name");
-			String resourcesName = "D:" + File.separator + "uploadFile" + File.separator + "works" + File.separator
+			String resourcesName = File.separator +"opt"+"uploadFile" + File.separator + "works" + File.separator
 					+ "zip" + File.separator + (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
 			String resourcesNames = File.separator + "workfile" + File.separator + "zip" + File.separator
 					+ (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
@@ -273,7 +273,7 @@ public class WorkFileController {
 				for (Map<String, Object> Addr : Addrs) {
 					String ws = (String) Addr.get("w_id");
 					if (w.get("w_id").equals(ws)) {
-						String works = "D:" + File.separator + "uploadFile" + File.separator + "works";
+						String works = File.separator +"opt"+"uploadFile" + File.separator + "works";
 						String Addra = (String) Addr.get("s_f_add");
 						String filename = (String) Addr.get("s_f_add");
 						String filen = filename.substring(filename.lastIndexOf("\\") + 1);
@@ -308,7 +308,7 @@ public class WorkFileController {
 				String teacherfilename = (String) teacherfile.get("tfName");
 				String teacherfileAddr = (String) teacherfile.get("tfAdd");
 				String Addr = teacherfileAddr.substring(teacherfileAddr.lastIndexOf("\\") + 1);
-				String works = "D:" + File.separator + "uploadFile" + File.separator + "works";
+				String works = File.separator +"opt"+"uploadFile" + File.separator + "works";
 				FileInputStream inputs = new FileInputStream(works + teacherfileAddr.substring(9));
 				FileOutputStream outputn = new FileOutputStream(
 						teacherworkfile + File.separator + Addr.substring(0, 5) + teacherfilename);
@@ -357,7 +357,7 @@ public class WorkFileController {
 			if (publishwork.get("pwContent") == null) {
 				publishwork.put("pwContent", "null");
 			}
-			String moban = "D:\\uploadFile";
+			String moban = File.separator +"opt"+"/uploadFile";
 			String filePath = workFile + File.separator + "任务详情" + File.separator + "作业详情" + ".docx";
 			ExportWord.createWord(publishwork, moban, filePath);
 			com.cdtu.util.compresszip.compress(file, zipOut, (String) name.get("c_name") + (String) name.get("pw_name"),

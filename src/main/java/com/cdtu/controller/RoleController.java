@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -180,6 +181,8 @@ public class RoleController {
 	@RequestMapping(value = "/checkCode")
 	public @ResponseBody Map<String, Object>  checkCode(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String path = request.getSession().getServletContext().getRealPath("/");  
+		System.out.println("............."+path.substring(0, path.length()-20));
 		 Map<String, Object> map = new HashMap<String, Object>();
 		// 设置相应类型,告诉浏览器输出的内容为图片
 		response.setContentType("image/png");
@@ -235,7 +238,7 @@ public class RoleController {
 			String contentType = file.getContentType();
 			// 获得文件后缀名称
 			String imageName = contentType.substring(contentType.lastIndexOf("/") + 1);
-			path = "D:" + File.separator + "uploadFile" + File.separator + "avatar" + File.separator + role.getRole()
+			path = File.separator +"opt"+"uploadFile" + File.separator + "avatar" + File.separator + role.getRole()
 					+ File.separator + role.getUsername() + File.separator + "avatar." + imageName;
 			File storeDirectory = new File(path);// 即代表文件又代表目录
 			if (!storeDirectory.exists()) {
