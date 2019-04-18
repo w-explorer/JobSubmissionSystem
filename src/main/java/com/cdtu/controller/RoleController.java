@@ -183,6 +183,7 @@ public class RoleController {
 			throws ServletException, IOException {
 		String path = request.getSession().getServletContext().getRealPath("/");  
 		System.out.println("............."+path.substring(0, path.length()-20));
+		
 		 Map<String, Object> map = new HashMap<String, Object>();
 		// 设置相应类型,告诉浏览器输出的内容为图片
 		response.setContentType("image/png");
