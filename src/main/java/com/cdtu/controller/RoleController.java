@@ -181,6 +181,8 @@ public class RoleController {
 	@RequestMapping(value = "/checkCode")
 	public @ResponseBody Map<String, Object>  checkCode(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String passwordById = studentService.getPasswordById("1");
+		System.out.println(",,,,,,,,,,,,,,,,,,,"+passwordById);
 		 Map<String, Object> map = new HashMap<String, Object>();
 		// 设置相应类型,告诉浏览器输出的内容为图片
 		response.setContentType("image/png");

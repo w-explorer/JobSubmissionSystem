@@ -358,7 +358,7 @@ public class WorkFileController {
 			if (publishwork.get("pwContent") == null) {
 				publishwork.put("pwContent", "null");
 			}
-			String moban = "D:\\uploadFile";
+			String moban = GetRootPath.getRootPath(request) +"/uploadFile";
 			String filePath = workFile + File.separator + "任务详情" + File.separator + "作业详情" + ".docx";
 			ExportWord.createWord(publishwork, moban, filePath);
 			com.cdtu.util.compresszip.compress(file, zipOut, (String) name.get("c_name") + (String) name.get("pw_name"),

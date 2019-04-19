@@ -54,6 +54,7 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public String getPasswordById(String id) {
+		System.out.println("jinruservice");
 		return studentMapper.selectPasswordById(id);
 	}
 
