@@ -51,13 +51,16 @@ public class MyRealm extends AuthorizingRealm {
 			password = teacherService.getPasswordById(userName);
 			role.setPassword(password);
 		} else if ("student".equals(roleName)) {
+			System.out.println("学生进来数据库密码/////////"+password);
 			password = studentService.getPasswordById(userName);
 			role.setPassword(password);
+			System.out.println("数据库密码/////////"+password);
 		} else if ("admin".equals(roleName)) {
 			password = adminService.getPasswordById(userName);
 			role.setPassword(password);
 		}
 		if (password == null) {
+			System.out.println("数据库密码////////无/");
 			// 用户名不存在
 			return null;
 		} else {
