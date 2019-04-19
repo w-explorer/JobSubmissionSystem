@@ -1,13 +1,18 @@
 package com.cdtu.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-public class UploadFileUtil {
+public class FileUtil {
 
 	/**
 	 * 获取Tomcat的ROOT目录的绝对路径，将上传的文件都保存在ROOT目录下的uploadFile文件夹内
@@ -18,6 +23,28 @@ public class UploadFileUtil {
 		String absolutePath = (String) request.getSession().getServletContext().getAttribute("path");// ROOT绝对路径
 		absolutePath = absolutePath.substring(absolutePath.indexOf(':') + 1).replace('\\', '/');// Windows去掉盘符，替换\
 		return absolutePath;
+	}
+
+	/**
+	 * 下载文件
+	 *
+	 * @author 李红兵
+	 */
+	public static void downloadFile(File file, HttpServletResponse response) throws Exception {
+		String fileName = URLEncoder.encode(file.getName(), "UTF-8");
+		response.setContentType("application/octet-stream");
+		response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+		if (file.exists()) {
+			BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(file));
+			BufferedOutputStream outStream = new BufferedOutputStream(response.getOutputStream());
+			byte[] buffer = new byte[1024 * 1024 * 50];// 50兆缓冲区，防止内存溢出
+			for (int currBytes = inStream.read(buffer); currBytes != -1; currBytes = inStream.read(buffer)) {
+				outStream.write(buffer, 0, currBytes);
+				outStream.flush();
+			}
+			inStream.close();
+			outStream.close();
+		}
 	}
 
 	/**

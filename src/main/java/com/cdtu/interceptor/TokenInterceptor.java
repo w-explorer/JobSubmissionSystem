@@ -32,28 +32,28 @@ public class TokenInterceptor implements HandlerInterceptor {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView model)
 			throws Exception {
 	}
+
 	/**
-	 * 设置成静态以后不是不会改变，而是改变以后其他人如果访问这个变量或是方法
-		它已经的被修改过的
-		所以利用这个性质可以做验证来保证初始化一次
+	 * 设置成静态以后不是不会改变，而是改变以后其他人如果访问这个变量或是方法 它已经的被修改过的 所以利用这个性质可以做验证来保证初始化一次
 	 */
 	static boolean flag = true;
+
 	// 拦截每个请求
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		
-		//  <mvc:exclude-mapping path="/role/checkCode" />
+
+		// <mvc:exclude-mapping path="/role/checkCode" />
 		if (flag) {
 			flag = false;
-			String path = request.getSession().getServletContext().getRealPath("/");  
-			path = path.substring(0, path.length()-20)+"ROOT";
+			String path = request.getSession().getServletContext().getRealPath("/");
+			path = path.substring(0, path.length() - 20) + "ROOT";
 			ServletContext application = request.getServletContext();
 			application.setAttribute("path", path);
-			//写要执行的代码
-			}
+			// 写要执行的代码
+		}
 		String servletPath = request.getServletPath();
-     	if(servletPath.contains("checkCode")){
+		if (servletPath.contains("checkCode")) {
 			return true;
 		}
 		String token = request.getHeader("token");

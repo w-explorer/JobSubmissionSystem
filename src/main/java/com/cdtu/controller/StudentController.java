@@ -35,8 +35,8 @@ import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
+import com.cdtu.util.FileUtil;
 import com.cdtu.util.MaxPage;
-import com.cdtu.util.UploadFileUtil;
 
 @Controller
 @RequestMapping(value = "student")
@@ -54,7 +54,7 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@RequiresRoles(value = { "student" })
-	@RequestMapping(value = "/queryCourse.do")
+	@RequestMapping(value = "queryCourse.do")
 	public Map<String, Object> doQueryCourse(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -80,7 +80,7 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@RequiresRoles(value = { "student" })
-	@RequestMapping(value = "/joinCourse.do")
+	@RequestMapping(value = "joinCourse.do")
 	public Map<String, Object> doJoinCourse(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -105,8 +105,6 @@ public class StudentController {
 		return map;
 	}
 
-	
-
 	/**
 	 * 学生查询对应课程的所有作业，参数是学生id和课程id
 	 *
@@ -114,7 +112,7 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@RequiresRoles(value = { "student" })
-	@RequestMapping(value = "/queryWorks.do")
+	@RequestMapping(value = "queryWorks.do")
 	public Map<String, Object> doQueryWorks(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -135,7 +133,7 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@RequiresRoles(value = { "student" })
-	@RequestMapping(value = "/statisticScore.do")
+	@RequestMapping(value = "statisticScore.do")
 	public Map<String, Object> doStatisticScore(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -157,7 +155,7 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@RequiresRoles(value = { "student" })
-	@RequestMapping(value = "/staWorkInfo.do")
+	@RequestMapping(value = "staWorkInfo.do")
 	public Map<String, Object> doStaWorkInfo(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -206,6 +204,26 @@ public class StudentController {
 			handlException(map, e);
 		}
 		return map;
+	}
+
+	/**
+	 * 学生下载老师上传的资源文件
+	 *
+	 * @author 李红兵
+	 */
+	@RequiresRoles(value = { "student" })
+	@RequestMapping(value = "downloadResource.do")
+	public void doDownloadResource(@RequestBody Map<String, Object> paramsMap, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			String relativePath = (String) paramsMap.get("path");
+			String absolutePath = FileUtil.getAbsolutePath(request);
+			String fileName = (String) paramsMap.get("name");
+			File file = new File(absolutePath + relativePath, fileName);
+			FileUtil.downloadFile(file, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -368,7 +386,7 @@ public class StudentController {
 		String sId = role.getUsername();
 		String oldPath = studentService.selectWorkwAddr(sId, pwId);
 		try {
-			String newPath = UploadFileUtil.updateFile(file, oldPath, sId, pwId);
+			String newPath = FileUtil.updateFile(file, oldPath, sId, pwId);
 			if ("-1".equals(newPath)) {
 				msg.put("status", -1);
 				msg.put("msg", "保存文件类型有误");
@@ -511,16 +529,17 @@ public class StudentController {
 		}
 		return map;
 	}
+
 	@RequestMapping(value = "selectcoursenotice.do")
 	@RequiresRoles(value = { "student" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> selectcoursenotice(@RequestBody Map<String, Object> maps) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-			Subject subject = SecurityUtils.getSubject();
-			Role role = (Role) subject.getPrincipal();
-			String sId = role.getUsername();
-			map.put("CourseNotices", studentService.selectCoursenoticeSrvice((String) maps.get("cId"),sId));
-		
+		Map<String, Object> map = new HashMap<>();
+
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String sId = role.getUsername();
+		map.put("CourseNotices", studentService.selectCoursenoticeSrvice((String) maps.get("cId"), sId));
+
 		map.put("status", 200);
 		return map;
 	}
