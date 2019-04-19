@@ -3,10 +3,26 @@ package com.cdtu.util;
 import java.io.File;
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 public class UploadFileUtil {
-	/**文件上传
+
+	/**
+	 * 获取Tomcat的ROOT目录的绝对路径，将上传的文件都保存在ROOT目录下的uploadFile文件夹内
+	 *
+	 * @author 李红兵
+	 */
+	public static String getAbsolutePath(HttpServletRequest request) {
+		String absolutePath = (String) request.getSession().getServletContext().getAttribute("path");// ROOT绝对路径
+		absolutePath = absolutePath.substring(absolutePath.indexOf(':') + 1).replace('\\', '/');// Windows去掉盘符，替换\
+		return absolutePath;
+	}
+
+	/**
+	 * 文件上传
+	 *
 	 * @author LR
 	 * @param file
 	 * @param path
@@ -14,48 +30,54 @@ public class UploadFileUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String updateFile(CommonsMultipartFile file,String path,String id,String pwId)throws IOException{
-		if(path==null){
-			return addMutiparFile(file,id,pwId);
-		}else{
+	public static String updateFile(CommonsMultipartFile file, String path, String id, String pwId) throws IOException {
+		if (path == null) {
+			return addMutiparFile(file, id, pwId);
+		} else {
 			File newfile = new File(path);
 			newfile.delete();
-			return addMutiparFile(file,id,pwId);
+			return addMutiparFile(file, id, pwId);
 
-		}		
+		}
 	}
+
 	/**
 	 * 分文件类型上传
+	 *
 	 * @author LR
 	 * @param file
 	 * @param id
 	 * @return
 	 * @throws IOException
 	 */
-	public static String addMutiparFile(CommonsMultipartFile file,String id,String pwId) throws IOException {
+	public static String addMutiparFile(CommonsMultipartFile file, String id, String pwId) throws IOException {
 		if (file.isEmpty()) {
 			return null;
 		} else {
 			String fileName = file.getOriginalFilename();
-	        String type = fileName.substring(fileName.lastIndexOf(".") + 1);
-			String realPath="D:"+File.separator+"uploadFile"+File.separator+pwId+File.separator+id+File.separator;
-			if(type.equals("png")||type.equals("jpg")||type.equals("gif")||type.equals("jpeg")){
-				String path=realPath+"image"+File.separator+fileName;
+			String type = fileName.substring(fileName.lastIndexOf(".") + 1);
+			String realPath = "D:" + File.separator + "uploadFile" + File.separator + pwId + File.separator + id
+					+ File.separator;
+			if (type.equals("png") || type.equals("jpg") || type.equals("gif") || type.equals("jpeg")) {
+				String path = realPath + "image" + File.separator + fileName;
 				file.transferTo(createFile(path));
-				path=File.separator+"workfile"+File.separator+pwId+File.separator+id+File.separator+"image"+File.separator+fileName;
+				path = File.separator + "workfile" + File.separator + pwId + File.separator + id + File.separator
+						+ "image" + File.separator + fileName;
 				return path;
 			}
-			if(type.equals("rar")||type.equals("zip")||type.equals("7z")){
-				String path=realPath+"package"+File.separator+fileName;
+			if (type.equals("rar") || type.equals("zip") || type.equals("7z")) {
+				String path = realPath + "package" + File.separator + fileName;
 				file.transferTo(createFile(path));
-				path=File.separator+"workfile"+File.separator+pwId+File.separator+id+File.separator+"package"+File.separator+fileName;
+				path = File.separator + "workfile" + File.separator + pwId + File.separator + id + File.separator
+						+ "package" + File.separator + fileName;
 				return path;
-	
+
 			}
-			if(type.equals("doc")||type.equals("docx")||type.equals("txt")){
-				String path=realPath+"file"+File.separator+fileName;
+			if (type.equals("doc") || type.equals("docx") || type.equals("txt")) {
+				String path = realPath + "file" + File.separator + fileName;
 				file.transferTo(createFile(path));
-				path=File.separator+"workfile"+File.separator+pwId+File.separator+id+File.separator+"file"+File.separator+fileName;
+				path = File.separator + "workfile" + File.separator + pwId + File.separator + id + File.separator
+						+ "file" + File.separator + fileName;
 				return path;
 			}
 			return "-1";
@@ -63,8 +85,10 @@ public class UploadFileUtil {
 		}
 
 	}
+
 	/**
 	 * 文件夹创建
+	 *
 	 * @author LR
 	 * @param realPath
 	 * @param fileName
@@ -72,12 +96,13 @@ public class UploadFileUtil {
 	 */
 	public static File createFile(String path) throws IOException {
 		File newfile = new File(path);
-		if(!newfile.exists()){
+		if (!newfile.exists()) {
 			newfile.getParentFile().mkdirs();
 		}
 		return newfile;
-		
+
 	}
+
 	public static String updateFile(CommonsMultipartFile file) {
 		// TODO Auto-generated method stub
 		return null;

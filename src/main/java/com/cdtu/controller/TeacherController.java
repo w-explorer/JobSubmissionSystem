@@ -47,6 +47,7 @@ import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
 import com.cdtu.util.ExportWord;
 import com.cdtu.util.MaxPage;
+import com.cdtu.util.UploadFileUtil;
 
 @Controller
 @RequestMapping(value = "teacher")
@@ -69,8 +70,9 @@ public class TeacherController {
 	@RequiresRoles(value = { "teacher" })
 	@RequestMapping(value = "uploadResource.do")
 	public Map<String, Object> doUploadResource(@RequestParam("files") MultipartFile[] files,
-			@RequestParam("cId") String cId) {
+			@RequestParam("cId") String cId, HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
+		System.out.println();
 		try {
 			if (files.length != 0) {
 				String[] onlineReadTypes = { "jpg", "png", "gif", "psd", "webp", "txt", "doc", "docx", "XLS", "XLSX",
@@ -80,14 +82,15 @@ public class TeacherController {
 					if (!files[i].isEmpty()) {
 						String fileName = files[i].getOriginalFilename();// 文件名
 						int suffixPos = fileName.lastIndexOf('.');// 后缀位置
+						String relativePath = "/uploadFile/resource/" + tId + "/" + cId;// 相对路径
+						String absolutePath = UploadFileUtil.getAbsolutePath(request);// ROOT目录绝对路径
 						String fileType = suffixPos == -1 ? "file" : fileName.substring(suffixPos + 1);// 文件类型
-						String pathName = "/uploadFile/resource/" + tId + "/" + cId;// 路径名
 						boolean onlineReadAble = Arrays.asList(onlineReadTypes).contains(fileType);// 是否可以在线阅读
-						File directory = new File(pathName, fileName);// 文件目录
+						File directory = new File(absolutePath + relativePath, fileName);// 文件目录
 						if (!directory.exists()) {
 							directory.mkdirs();
 							files[i].transferTo(directory);
-							tFileService.uploadFile(tId, cId, pathName, fileName, onlineReadAble, fileType);
+							tFileService.uploadFile(tId, cId, relativePath, fileName, onlineReadAble, fileType);
 						}
 					}
 				}
@@ -111,15 +114,17 @@ public class TeacherController {
 	@ResponseBody
 	@RequiresRoles(value = { "teacher" })
 	@RequestMapping(value = "deleteResource.do")
-	public Map<String, Object> doDeleteResource(@RequestBody Map<String, Object> paramsMap) {
+	public Map<String, Object> doDeleteResource(@RequestBody Map<String, Object> paramsMap,
+			HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			String pathName = (String) paramsMap.get("path");
 			String fileName = (String) paramsMap.get("fileName");
-			File directory = new File(pathName, fileName);
+			String relativePath = (String) paramsMap.get("path");
+			String absolutePath = UploadFileUtil.getAbsolutePath(request);
+			File directory = new File(absolutePath + relativePath, fileName);
 			if (directory.exists()) {
 				directory.delete();
-				tFileService.deleteFile(pathName, fileName);
+				tFileService.deleteFile(relativePath, fileName);
 				map.put("msg", "删除资源成功！");
 				map.put("status", 200);
 			} else {
