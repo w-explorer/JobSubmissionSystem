@@ -928,7 +928,6 @@ public class TeacherController {
 		Map<String, Object> mapd = new HashMap<>();
 		filePath = File.separator + "estimatefile" + File.separator + maps.get("epId") + File.separator + "评价详情"
 				+ ".docx";
-		mapd.put("fd", map);
 		mapd.put("Addr", filePath);
 		mapd.put("status", 200);
 		return mapd;
