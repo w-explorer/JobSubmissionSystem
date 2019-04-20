@@ -46,6 +46,7 @@ import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
 import com.cdtu.util.ExportWord;
 import com.cdtu.util.FileUtil;
+import com.cdtu.util.GetRootPath;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.MyExceptionResolver;
 
@@ -912,11 +913,11 @@ public class TeacherController {
 	 */
 	@RequestMapping(value = "downloadEstimate.do")
 	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
-	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps) {
+	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps,HttpServletRequest request) {
 
 		Map<String, Object> map = teacherService.selectEstimate((String) maps.get("epId"));
 		map.put("eSuggests", teacherService.selectEsuggest((String) maps.get("epId")));
-		String moban = "D:\\uploadFile" + File.separator + "estimate";
+		String moban = GetRootPath.getRootPath(request)+ File.separator+"uploadFile" + File.separator + "estimate";
 		String filePaths = moban + File.separator + maps.get("epId");
 		String filePath = moban + File.separator + maps.get("epId") + File.separator + "评价详情" + ".docx";
 		File file = new File(filePaths);
