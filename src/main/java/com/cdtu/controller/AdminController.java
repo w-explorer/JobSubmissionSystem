@@ -16,6 +16,7 @@ import com.cdtu.service.AdminstratorService;
 import com.cdtu.service.CourseService;
 import com.cdtu.service.EstimateService;
 import com.cdtu.service.TeacherSelectCourseService;
+import com.cdtu.util.MyExceptionResolver;
 
 @Controller
 @RequestMapping(value = "admin")
@@ -71,19 +72,8 @@ public class AdminController {
 			map.put("estimats", estimateService.getEstimats(tId, cId));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
-	}
-
-	/**
-	 * 统一异常处理
-	 *
-	 * @author 李红兵
-	 */
-	private void handlException(Map<String, Object> map, Exception e) {
-		e.printStackTrace();
-		map.put("status", 500);
-		map.put("msg", "抱歉，服务器开小差了");
 	}
 }

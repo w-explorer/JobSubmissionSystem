@@ -33,7 +33,6 @@ public class AdminstratorServiceImpl implements AdminstratorService {
 
 	@Override
 	public void updateRoleInfo(String email, String phone, String username) {
-		// TODO Auto-generated method stub
 		adminstratorMapper.updateRoleInfo(email, phone, username);
 	}
 
@@ -45,7 +44,7 @@ public class AdminstratorServiceImpl implements AdminstratorService {
 
 	/**
 	 * 查询学院
-	 * 
+	 *
 	 * @author weiyuhang
 	 */
 	@Override
@@ -56,7 +55,7 @@ public class AdminstratorServiceImpl implements AdminstratorService {
 
 	/**
 	 * 查询学院课程
-	 * 
+	 *
 	 * @author weiyuhang
 	 */
 	@Override

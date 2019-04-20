@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +47,7 @@ import com.cdtu.util.DownloadFile;
 import com.cdtu.util.ExportWord;
 import com.cdtu.util.FileUtil;
 import com.cdtu.util.MaxPage;
+import com.cdtu.util.MyExceptionResolver;
 
 @Controller
 @RequestMapping(value = "teacher")
@@ -74,21 +74,16 @@ public class TeacherController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			if (files.length != 0) {
-				String[] onlineReadTypes = { "jpg", "png", "gif", "psd", "webp", "txt", "doc", "docx", "XLS", "XLSX",
-						"ppt", "pptx", "pdf" };
 				String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 				for (int i = 0; i < files.length; i++) {
 					if (!files[i].isEmpty()) {
-						String fileName = files[i].getOriginalFilename();// 文件名
-						int suffixPos = fileName.lastIndexOf('.');// 后缀位置
-						String relativePath = "/uploadFile/resource/" + tId + "/" + cId;// 相对路径
-						String absolutePath = FileUtil.getAbsolutePath(request);// ROOT目录绝对路径
-						String fileType = suffixPos == -1 ? "file" : fileName.substring(suffixPos + 1);// 文件类型
-						boolean onlineReadAble = Arrays.asList(onlineReadTypes).contains(fileType);// 是否可以在线阅读
+						String fileName = files[i].getOriginalFilename();
+						String relativePath = "/uploadFile/resource/" + tId + "/" + cId;
+						String absolutePath = FileUtil.getAbsolutePath(request);
 						File file = new File(absolutePath + relativePath, fileName);
-						if (!file.exists()) {
-							file.mkdirs();
-							files[i].transferTo(file);
+						if (FileUtil.uploadFile(files[i], file, request)) {
+							String fileType = FileUtil.getFileType(file);
+							boolean onlineReadAble = FileUtil.canOnlineRead(file);
 							tFileService.uploadFile(tId, cId, relativePath, fileName, onlineReadAble, fileType);
 						}
 					}
@@ -100,7 +95,7 @@ public class TeacherController {
 				map.put("status", 400);
 			}
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -121,8 +116,7 @@ public class TeacherController {
 			String relativePath = (String) paramsMap.get("path");
 			String absolutePath = FileUtil.getAbsolutePath(request);
 			File file = new File(absolutePath + relativePath, fileName);
-			if (file.exists()) {
-				file.delete();
+			if (FileUtil.deleteFile(file)) {
 				tFileService.deleteFile(relativePath, fileName);
 				map.put("msg", "删除资源成功！");
 				map.put("status", 200);
@@ -131,7 +125,7 @@ public class TeacherController {
 				map.put("status", 404);
 			}
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -150,20 +144,9 @@ public class TeacherController {
 			map.put("subCondition", workService.staSubCon((String) paramsMap.get("pwId")));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
-	}
-
-	/**
-	 * 统一异常处理
-	 *
-	 * @author 李红兵
-	 */
-	private void handlException(Map<String, Object> map, Exception e) {
-		e.printStackTrace();
-		map.put("status", 500);
-		map.put("msg", "抱歉，服务器开小差了");
 	}
 
 	/**
@@ -543,7 +526,7 @@ public class TeacherController {
 			map.put("status", 200);
 			map.put("fuzzySearchWorks", workService.fuzzySearchWorkByTidAndCid(tId, cId, pwName));
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -566,7 +549,7 @@ public class TeacherController {
 			map.put("status", 200);
 			map.put("fuzzySearchWorks", workService.SearchPwByPwName(tId, cId, pwName));
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -586,7 +569,7 @@ public class TeacherController {
 			map.put("status", 200);
 			map.put("msg", "删除成功");
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 			map.put("status", 0);
 			map.put("msg", "无法踢人");
 		}
@@ -611,7 +594,7 @@ public class TeacherController {
 			map.put("teacherFiles", publishWorkService.getTTFiles(pwId));// 发布作业老师附件
 			map.put("teacherFilesImages", publishWorkService.getTTFilesImages(pwId));// 发布作业老师图片附件
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -635,7 +618,7 @@ public class TeacherController {
 			map.put("status", 200);
 
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -661,7 +644,7 @@ public class TeacherController {
 			map.put("students", studentService.fuzzySearchStudentByNameOrId(nameOrId));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -720,7 +703,7 @@ public class TeacherController {
 			map.put("listInt", scores);
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -750,8 +733,8 @@ public class TeacherController {
 			map.put("students", studentService.selectStudents(page));
 			map.put("stusNum", stusNum);
 			map.put("max", MaxPage.getMaxPage(stusNum, 30));
-		} catch (Exception e1) {
-			handlException(map, e1);
+		} catch (Exception e) {
+			MyExceptionResolver.handlException(map, e);
 		}
 		map.put("status", 200);
 		return map;
@@ -767,7 +750,7 @@ public class TeacherController {
 					(Integer) paramsMap.get("wScore"), (String) paramsMap.get("wRemark"));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 			map.put("status", 0);
 			map.put("msg", "批阅失败");
 
@@ -784,7 +767,7 @@ public class TeacherController {
 			map.put("Estimate", teacherService.selectEstimate((String) paramsMap.get("epId")));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -825,7 +808,7 @@ public class TeacherController {
 			}
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -850,7 +833,7 @@ public class TeacherController {
 			map.put("studentFiles", publishWorkService.getSFiles(sId, pwId));
 			map.put("studentFilesImages", publishWorkService.getSFilesImages(sId, pwId));
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -871,7 +854,7 @@ public class TeacherController {
 			map.put("status", 200);
 			map.put("work", publishWorkService.getWorkBySid(pwId, sId));
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -886,7 +869,7 @@ public class TeacherController {
 			map.put("status", 200);
 			map.put("msg", "删除成功");
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -914,7 +897,7 @@ public class TeacherController {
 			map.put("max", MaxPage.getMaxPage(pubENum, 5));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 			e.printStackTrace();
 		}
 		return map;

@@ -6,14 +6,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 public class FileUtil {
-
 	/**
 	 * 获取Tomcat的ROOT目录的绝对路径，将上传的文件都保存在ROOT目录下的uploadFile文件夹内
 	 *
@@ -26,14 +27,58 @@ public class FileUtil {
 	}
 
 	/**
-	 * 下载文件
+	 * 获取文件类型
 	 *
 	 * @author 李红兵
 	 */
-	public static void downloadFile(File file, HttpServletResponse response) throws Exception {
+	public static String getFileType(File file) {
+		String fileName = file.getName();
+		int suffixPos = fileName.lastIndexOf('.');
+		return suffixPos == -1 ? "file" : fileName.substring(suffixPos + 1);
+	}
+
+	/**
+	 * 获取文件是否能够在线阅读
+	 *
+	 * @author 李红兵
+	 */
+	public static boolean canOnlineRead(File file) {
+		String[] onlineReadTypes = { "jpg", "png", "gif", "psd", "webp", "txt", "doc", "docx", "XLS", "XLSX", "ppt",
+				"pptx", "pdf" };
+		return Arrays.asList(onlineReadTypes).contains(getFileType(file));
+	}
+
+	/**
+	 * 上传文件，将上传的文件转换到新创建的文件，并写入磁盘
+	 *
+	 * @param upFile  上传的文件
+	 * @param newFile 新创建的文件（内存对象）
+	 * @param request Http请求
+	 * @return true 文件不存在，上传文件成功
+	 * @return false 文件已存在
+	 * @author 李红兵
+	 */
+	public static boolean uploadFile(MultipartFile upFile, File newFile, HttpServletRequest request) throws Exception {
+		if (!newFile.exists()) {
+			newFile.mkdirs();
+			upFile.transferTo(newFile);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 下载文件
+	 *
+	 * @param file     读取到内存中的磁盘文件
+	 * @param response Http响应
+	 * @author 李红兵
+	 */
+	public static boolean downloadFile(File file, HttpServletResponse response) throws Exception {
 		String fileName = URLEncoder.encode(file.getName(), "UTF-8");
 		response.setContentType("application/octet-stream");
-		response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+		response.setHeader("Content-Length", "" + file.length());
+		response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
 		if (file.exists()) {
 			BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(file));
 			BufferedOutputStream outStream = new BufferedOutputStream(response.getOutputStream());
@@ -44,7 +89,25 @@ public class FileUtil {
 			}
 			inStream.close();
 			outStream.close();
+			return true;
 		}
+		return false;
+	}
+
+	/**
+	 * 删除文件
+	 *
+	 * @param file 要删除的文件（内存对象）
+	 * @return true 文件存在且删除成功
+	 * @return false 文件不存在，删除失败
+	 * @author 李红兵
+	 */
+	public static boolean deleteFile(File file) throws Exception {
+		if (file.exists()) {
+			file.delete();
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -131,7 +194,6 @@ public class FileUtil {
 	}
 
 	public static String updateFile(CommonsMultipartFile file) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

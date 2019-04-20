@@ -441,7 +441,6 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public void updateRoleInfo(String email, String phone, String username) {
-		// TODO Auto-generated method stub
 		teacherMapper.updateRoleInfo(email, phone, username);
 	}
 
@@ -452,13 +451,11 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public int countSelectPublishEstimateCount(String tId, String cId) {
-
 		return publishEstimateMapper.selectPublishEstimateCount(tId, cId);
 	}
 
 	@Override
 	public List<String> selectEsuggest(String epId) {
-		// TODO Auto-generated method stub
 		List<String> map = estimateMapper.selecteSuggest(epId);
 		List<String> eSuggests = new ArrayList<>();
 		for (String eSuggest : map) {

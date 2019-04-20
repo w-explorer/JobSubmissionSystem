@@ -37,6 +37,7 @@ import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
 import com.cdtu.util.FileUtil;
 import com.cdtu.util.MaxPage;
+import com.cdtu.util.MyExceptionResolver;
 
 @Controller
 @RequestMapping(value = "student")
@@ -68,7 +69,7 @@ public class StudentController {
 				map.put("msg", "未查询到课程");
 			}
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -100,7 +101,7 @@ public class StudentController {
 				map.put("msg", "课程未找到");
 			}
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -121,7 +122,7 @@ public class StudentController {
 			map.put("allWorks", workService.getAllWorks(sId, cId));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -143,7 +144,7 @@ public class StudentController {
 			map.put("scores", workService.getScoreInLastDays(sId, cId, days));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -201,7 +202,7 @@ public class StudentController {
 			map.put("listInt", scores);
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -211,30 +212,27 @@ public class StudentController {
 	 *
 	 * @author 李红兵
 	 */
+	@ResponseBody
 	@RequiresRoles(value = { "student" })
 	@RequestMapping(value = "downloadResource.do")
-	public void doDownloadResource(@RequestBody Map<String, Object> paramsMap, HttpServletRequest request,
-			HttpServletResponse response) {
+	public Map<String, Object> doDownloadResource(@RequestBody Map<String, Object> paramsMap,
+			HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> map = new HashMap<>();
 		try {
+			String fileName = (String) paramsMap.get("name");
 			String relativePath = (String) paramsMap.get("path");
 			String absolutePath = FileUtil.getAbsolutePath(request);
-			String fileName = (String) paramsMap.get("name");
 			File file = new File(absolutePath + relativePath, fileName);
-			FileUtil.downloadFile(file, response);
+			if (FileUtil.downloadFile(file, response)) {
+				map.put("status", 200);
+			} else {
+				map.put("msg", "资源不存在！");
+				map.put("status", 404);
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			MyExceptionResolver.handlException(map, e);
 		}
-	}
-
-	/**
-	 * 统一异常处理
-	 *
-	 * @author 李红兵
-	 */
-	private void handlException(Map<String, Object> map, Exception e) {
-		e.printStackTrace();
-		map.put("status", 500);
-		map.put("msg", "抱歉，服务器开小差了");
+		return map;
 	}
 
 	/**
@@ -260,7 +258,7 @@ public class StudentController {
 			map.put("max", MaxPage.getMaxPage(pubENum, 5));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 			e.printStackTrace();
 		}
 		return map;
@@ -477,7 +475,7 @@ public class StudentController {
 			map.put("status", 200);
 			map.put("fuzzySearchWorks", workService.fuzzySearchWorkBySidAndCid(sId, cId, pwName));
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -500,7 +498,7 @@ public class StudentController {
 			map.put("status", 200);
 			map.put("fuzzySearchWorks", workService.SsearchPwByPwName(sId, cId, pwName));
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -525,7 +523,7 @@ public class StudentController {
 			map.put("studentFiles", publishWorkService.getSFiles(sId, pwId));
 			map.put("studentFilesImages", publishWorkService.getSFilesImages(sId, pwId));
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
