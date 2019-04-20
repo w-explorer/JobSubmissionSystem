@@ -34,6 +34,7 @@ import com.cdtu.service.TeacherService;
 import com.cdtu.service.UserService;
 import com.cdtu.util.GetRootPath;
 import com.cdtu.util.Jwt;
+import com.cdtu.util.MyExceptionResolver;
 import com.cdtu.util.RandomValidateCode;
 import com.cdtu.util.SendEmail;
 
@@ -48,17 +49,6 @@ public class RoleController {
 	private @Resource(name = "studentService") StudentService studentService;
 	private @Resource(name = "teacherService") TeacherService teacherService;
 	private @Resource(name = "adminstratorService") AdminstratorService adminstratorService;
-
-	/**
-	 * 统一异常处理
-	 *
-	 * @author 李红兵
-	 */
-	private void handlException(Map<String, Object> map, Exception e) {
-		e.printStackTrace();
-		map.put("status", 500);
-		map.put("msg", "抱歉，服务器开小差了");
-	}
 
 	// 执行登陆方法
 	@RequestMapping(value = "/login.do", method = RequestMethod.POST)
@@ -105,7 +95,7 @@ public class RoleController {
 
 	/**
 	 * 获取用户信息
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -179,11 +169,11 @@ public class RoleController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/checkCode")
-	public @ResponseBody Map<String, Object>  checkCode(HttpServletRequest request, HttpServletResponse response)
+	public @ResponseBody Map<String, Object> checkCode(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String passwordById = studentService.getPasswordById("1");
-		System.out.println(",,,,,,,,,,,,,,,,,,,"+passwordById);
-		 Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println(",,,,,,,,,,,,,,,,,,," + passwordById);
+		Map<String, Object> map = new HashMap<>();
 		// 设置相应类型,告诉浏览器输出的内容为图片
 		response.setContentType("image/png");
 
@@ -195,7 +185,7 @@ public class RoleController {
 		RandomValidateCode randomValidateCode = new RandomValidateCode();
 		String randcode = null;
 		try {
-			randcode=randomValidateCode.getRandcode(request, response);// 输出图片方法
+			randcode = randomValidateCode.getRandcode(request, response);// 输出图片方法
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -238,8 +228,9 @@ public class RoleController {
 			String contentType = file.getContentType();
 			// 获得文件后缀名称
 			String imageName = contentType.substring(contentType.lastIndexOf("/") + 1);
-			path = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "avatar" + File.separator + role.getRole()
-					+ File.separator + role.getUsername() + File.separator + "avatar." + imageName;
+			path = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "avatar"
+					+ File.separator + role.getRole() + File.separator + role.getUsername() + File.separator + "avatar."
+					+ imageName;
 			File storeDirectory = new File(path);// 即代表文件又代表目录
 			if (!storeDirectory.exists()) {
 				storeDirectory.mkdirs();// 创建一个指定的目录
@@ -265,14 +256,14 @@ public class RoleController {
 			map.put("activityImgSrc", path);
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
 
 	/**
 	 * 更具出入邮箱实现忘记密码功能
-	 * 
+	 *
 	 * @param paramsMap
 	 * @return
 	 */
@@ -315,7 +306,7 @@ public class RoleController {
 			}
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}

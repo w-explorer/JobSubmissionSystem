@@ -13,4 +13,17 @@
 		WHERE t_f_add = #{pathName}
 		AND t_f_name = #{fileName}
   	</delete>
+  	
+  	<select id="select" resultType="java.util.HashMap">
+  		SELECT t_f_add AS path, t_f_name AS name, t_f_state AS onlineReadAble
+		FROM t_file, teacher_select_course
+		WHERE teacher_select_course.t_id = #{rId}
+		AND teacher_select_course.c_id = #{cId}
+		AND t_file.tsc_id = teacher_select_course.tsc_id
+		UNION
+		SELECT t_f_add AS path, t_f_name AS name, t_f_state AS onlineReadAble
+		FROM t_file, student_select_course
+		WHERE student_select_course.s_id = #{rId}
+		AND t_file.tsc_id = student_select_course.tsc_id
+  	</select>
 </mapper>

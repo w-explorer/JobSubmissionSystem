@@ -35,8 +35,9 @@ import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
+import com.cdtu.util.FileUtil;
 import com.cdtu.util.MaxPage;
-import com.cdtu.util.UploadFileUtil;
+import com.cdtu.util.MyExceptionResolver;
 
 @Controller
 @RequestMapping(value = "student")
@@ -54,7 +55,7 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@RequiresRoles(value = { "student" })
-	@RequestMapping(value = "/queryCourse.do")
+	@RequestMapping(value = "queryCourse.do")
 	public Map<String, Object> doQueryCourse(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -68,7 +69,7 @@ public class StudentController {
 				map.put("msg", "未查询到课程");
 			}
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -80,7 +81,7 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@RequiresRoles(value = { "student" })
-	@RequestMapping(value = "/joinCourse.do")
+	@RequestMapping(value = "joinCourse.do")
 	public Map<String, Object> doJoinCourse(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -100,12 +101,10 @@ public class StudentController {
 				map.put("msg", "课程未找到");
 			}
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
-
-	
 
 	/**
 	 * 学生查询对应课程的所有作业，参数是学生id和课程id
@@ -114,7 +113,7 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@RequiresRoles(value = { "student" })
-	@RequestMapping(value = "/queryWorks.do")
+	@RequestMapping(value = "queryWorks.do")
 	public Map<String, Object> doQueryWorks(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -123,7 +122,7 @@ public class StudentController {
 			map.put("allWorks", workService.getAllWorks(sId, cId));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -135,7 +134,7 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@RequiresRoles(value = { "student" })
-	@RequestMapping(value = "/statisticScore.do")
+	@RequestMapping(value = "statisticScore.do")
 	public Map<String, Object> doStatisticScore(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -145,7 +144,7 @@ public class StudentController {
 			map.put("scores", workService.getScoreInLastDays(sId, cId, days));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -157,7 +156,7 @@ public class StudentController {
 	 */
 	@ResponseBody
 	@RequiresRoles(value = { "student" })
-	@RequestMapping(value = "/staWorkInfo.do")
+	@RequestMapping(value = "staWorkInfo.do")
 	public Map<String, Object> doStaWorkInfo(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -203,20 +202,37 @@ public class StudentController {
 			map.put("listInt", scores);
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
 
 	/**
-	 * 统一异常处理
+	 * 学生下载老师上传的资源文件
 	 *
 	 * @author 李红兵
 	 */
-	private void handlException(Map<String, Object> map, Exception e) {
-		e.printStackTrace();
-		map.put("status", 500);
-		map.put("msg", "抱歉，服务器开小差了");
+	@ResponseBody
+	@RequiresRoles(value = { "student" })
+	@RequestMapping(value = "downloadResource.do")
+	public Map<String, Object> doDownloadResource(@RequestBody Map<String, Object> paramsMap,
+			HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			String fileName = (String) paramsMap.get("name");
+			String relativePath = (String) paramsMap.get("path");
+			String absolutePath = FileUtil.getAbsolutePath(request);
+			File file = new File(absolutePath + relativePath, fileName);
+			if (FileUtil.downloadFile(file, response)) {
+				map.put("status", 200);
+			} else {
+				map.put("msg", "资源不存在！");
+				map.put("status", 404);
+			}
+		} catch (Exception e) {
+			MyExceptionResolver.handlException(map, e);
+		}
+		return map;
 	}
 
 	/**
@@ -242,7 +258,7 @@ public class StudentController {
 			map.put("max", MaxPage.getMaxPage(pubENum, 5));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 			e.printStackTrace();
 		}
 		return map;
@@ -368,7 +384,7 @@ public class StudentController {
 		String sId = role.getUsername();
 		String oldPath = studentService.selectWorkwAddr(sId, pwId);
 		try {
-			String newPath = UploadFileUtil.updateFile(file, oldPath, sId, pwId);
+			String newPath = FileUtil.updateFile(file, oldPath, sId, pwId);
 			if ("-1".equals(newPath)) {
 				msg.put("status", -1);
 				msg.put("msg", "保存文件类型有误");
@@ -459,7 +475,7 @@ public class StudentController {
 			map.put("status", 200);
 			map.put("fuzzySearchWorks", workService.fuzzySearchWorkBySidAndCid(sId, cId, pwName));
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -482,7 +498,7 @@ public class StudentController {
 			map.put("status", 200);
 			map.put("fuzzySearchWorks", workService.SsearchPwByPwName(sId, cId, pwName));
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -507,20 +523,21 @@ public class StudentController {
 			map.put("studentFiles", publishWorkService.getSFiles(sId, pwId));
 			map.put("studentFilesImages", publishWorkService.getSFilesImages(sId, pwId));
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
+
 	@RequestMapping(value = "selectcoursenotice.do")
 	@RequiresRoles(value = { "student" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> selectcoursenotice(@RequestBody Map<String, Object> maps) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-			Subject subject = SecurityUtils.getSubject();
-			Role role = (Role) subject.getPrincipal();
-			String sId = role.getUsername();
-			map.put("CourseNotices", studentService.selectCoursenoticeSrvice((String) maps.get("cId"),sId));
-		
+		Map<String, Object> map = new HashMap<>();
+
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String sId = role.getUsername();
+		map.put("CourseNotices", studentService.selectCoursenoticeSrvice((String) maps.get("cId"), sId));
+
 		map.put("status", 200);
 		return map;
 	}

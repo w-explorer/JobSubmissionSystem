@@ -23,6 +23,7 @@ import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.util.MaxPage;
+import com.cdtu.util.MyExceptionResolver;
 
 @Controller
 @RequestMapping(value = "/course")
@@ -61,7 +62,7 @@ public class CourseController {
 			map.put("pubENum", pubENum);// 活动数量
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
@@ -85,22 +86,11 @@ public class CourseController {
 			map.put("pageNum", MaxPage.getMaxPage(stusNum, 30));
 			map.put("status", 200);
 		} catch (Exception e) {
-			handlException(map, e);
+			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
 	}
 
-	/**
-	 * 统一异常处理
-	 *
-	 * @author 李红兵
-	 */
-	private void handlException(Map<String, Object> map, Exception e) {
-		e.printStackTrace();
-		map.put("status", 500);
-		map.put("msg", "抱歉，服务器开小差了");
-	}
-	
 	/**
 	 * 执行查询选课记录操作，返回选课列表
 	 *
@@ -110,28 +100,28 @@ public class CourseController {
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	@RequestMapping(value = "/queryJoinedCourses.do")
 	public Map<String, Object> doQueryJoinedCourses() {
-		
+
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
-		String roleName =role.getRole();
+		String roleName = role.getRole();
 		String id = role.getUsername();
 		Map<String, Object> map = new HashMap<>();
-		if("teacher".equals(roleName)){
+		if ("teacher".equals(roleName)) {
 			List<CourseWapper> courseList;
 			try {
 				courseList = teacherService.selectAllCourceService(id);
 				map.put("status", 200);
 				map.put("courseList", courseList);
 			} catch (Exception e) {
-				handlException(map, e);
+				MyExceptionResolver.handlException(map, e);
 			}
 			return map;
-		}else{
+		} else {
 			try {
 				map.put("status", 200);
 				map.put("courseList", sscService.getJoinedCourses(id));
 			} catch (Exception e) {
-				handlException(map, e);
+				MyExceptionResolver.handlException(map, e);
 			}
 			return map;
 		}

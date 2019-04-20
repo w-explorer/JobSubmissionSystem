@@ -51,7 +51,6 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 
 	@Override
 	public List<Map<String, Object>> getPwDetails(String sId, String pwId) {
-		// TODO Auto-generated method stub
 		List<Map<String, Object>> pwDetails = publishWorkMapper.getPwDetails(sId, pwId);
 		for (Map<String, Object> map : pwDetails) {
 			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));
@@ -66,59 +65,50 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 
 	@Override
 	public List<Map<String, Object>> getSFiles(String sId, String pwId) {
-		// TODO Auto-generated method stub
 		return publishWorkMapper.getSFiles(sId, pwId);
 	}
 
 	@Override
 	public int countPublishWorks(String cId) {
-		// TODO Auto-generated method stub
 		return publishWorkMapper.countPublishWorks(cId);
 	}
 
 	@Override
 	public int countPublishEstimates(String cId) {
-		// TODO Auto-generated method stub
 		return publishWorkMapper.countPublishEstimates(cId);
 	}
 
 	@Override
 	public List<Map<String, Object>> getTFilesImages(String sId, String pwId) {
-		// TODO Auto-generated method stub
 		return publishWorkMapper.getTFilesImages(sId, pwId);
 	}
 
 	@Override
 	public List<Map<String, Object>> getSFilesImages(String sId, String pwId) {
-		// TODO Auto-generated method stub
 		return publishWorkMapper.getSFilesImages(sId, pwId);
 	}
 
 	@Override
 	public int countSPublishEstimates(String cId, String sId) {
-		// TODO Auto-generated method stub
 		return publishWorkMapper.countSPublishEstimates(cId, sId);
 	}
 
 	@Override
 	public List<Map<String, Object>> getTPwDetails(String pwId) {
-		// TODO Auto-generated method stub
-		List<Map<String,Object>> tPwDetails = publishWorkMapper.getTPwDetails(pwId);
+		List<Map<String, Object>> tPwDetails = publishWorkMapper.getTPwDetails(pwId);
 		for (Map<String, Object> map : tPwDetails) {
-			map.put("pwEnd",FormatDateToString.fromatData(map.get("pwEnd")));
+			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));
 		}
 		return tPwDetails;
 	}
 
 	@Override
 	public List<Map<String, Object>> getTTFiles(String pwId) {
-		// TODO Auto-generated method stub
 		return publishWorkMapper.getTTFiles(pwId);
 	}
 
 	@Override
 	public List<Map<String, Object>> getTTFilesImages(String pwId) {
-		// TODO Auto-generated method stub
 		return publishWorkMapper.getTTFilesImages(pwId);
 	}
 
@@ -136,13 +126,11 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 
 	@Override
 	public List<Map<String, Object>> getWorkDetails(String sId, String pwId) {
-		// TODO Auto-generated method stub
 		return publishWorkMapper.getWorkDetails(sId, pwId);
 	}
 
 	@Override
 	public List<Map<String, Object>> getStudentsBywStateAndpwId(int state, String pwId, int page) {
-		// TODO Auto-generated method stub
 		List<Map<String, Object>> students = null;
 		if (state == 1) {// 带批改
 			students = publishWorkMapper.getFinishsAndNotCheckStudent(pwId, (page - 1) * 5, 5);// 为批改同学作业，不包含未提交作业同学
@@ -156,19 +144,16 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 
 	@Override
 	public Map<String, Object> selectPublishwork(String pwId) {
-
 		return publishWorkMapper.selectpublishwork(pwId);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectTeacherFile(String pwId) {
-
 		return publishWorkMapper.selectTeacherFile(pwId);
 	}
 
 	@Override
 	public List<Map<String, Object>> getWorkBySid(String pwId, String sId) {
-		// TODO Auto-generated method stub
 		List<Map<String, Object>> workBySid = publishWorkMapper.getWorkBySid(pwId, sId);
 		for (Map<String, Object> map : workBySid) {
 			if ((boolean) map.get("swState") == false) {
@@ -184,7 +169,6 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 
 	@Override
 	public void deletePublishWorkService(String pwId) {
-
 		publishWorkMapper.deletePublishWork(pwId);
 	}
 
