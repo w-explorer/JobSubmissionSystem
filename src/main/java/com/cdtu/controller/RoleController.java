@@ -88,10 +88,13 @@ public class RoleController {
 		}
 		if (subject.isAuthenticated()) {
 			System.out.println("认证成功");
+			String checkcodePath = (String) request.getSession().getAttribute("checkcodePath");
+			request.getSession().removeAttribute("checkcodePath");
+			File file = new File(checkcodePath);
+			file.delete();
 			request.getSession().setAttribute("role", role);
 			// 给用户jwt加密生成token
 			String token = Jwt.sign(role, 60L * 1000L * 30L);
-//			System.out.println(token + "//");
 			int timeOut = 1;
 			if (role.isRememberMe() != false) {
 				timeOut = 30;
@@ -181,8 +184,6 @@ public class RoleController {
 	@RequestMapping(value = "/checkCode")
 	public @ResponseBody Map<String, Object>  checkCode(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String passwordById = studentService.getPasswordById("1");
-		System.out.println(",,,,,,,,,,,,,,,,,,,"+passwordById);
 		 Map<String, Object> map = new HashMap<String, Object>();
 		// 设置相应类型,告诉浏览器输出的内容为图片
 		response.setContentType("image/png");
