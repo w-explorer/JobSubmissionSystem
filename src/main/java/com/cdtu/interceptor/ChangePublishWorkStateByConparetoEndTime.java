@@ -11,7 +11,8 @@ import com.cdtu.service.PublishWorkService;
 
 public class ChangePublishWorkStateByConparetoEndTime implements HandlerInterceptor {
 
-	private @Resource(name="publishWorkService") PublishWorkService publishWorkService;
+	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
+
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -22,15 +23,11 @@ public class ChangePublishWorkStateByConparetoEndTime implements HandlerIntercep
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 }

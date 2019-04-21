@@ -106,7 +106,7 @@ public class WorkServiseImpl implements WorkService {
 		List<Map<String, Object>> maps = workMapper.SearchPwByPwName(tId, cId, pwName);
 		for (Map<String, Object> map : maps) {
 			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));// 将时间秒变成字符串形式
-			if ( (Boolean)map.get("pwState") == false) {
+			if ((Boolean) map.get("pwState") == false) {
 				map.put("pwStringState", "已结束");
 				map.put("pwBooleanState", false);
 			} else {
@@ -150,7 +150,6 @@ public class WorkServiseImpl implements WorkService {
 	public void insertTeacherFilewAddr(String pwId, String wAddr, String filename, String type, Boolean state) {
 		System.out.println(pwId);
 		workMapper.insertTeacherFilewAddr(pwId, wAddr, filename, type, state);
-
 	}
 
 	@Override
@@ -177,13 +176,11 @@ public class WorkServiseImpl implements WorkService {
 
 	@Override
 	public String selecttfNameService(String tfAdd) {
-
 		return workMapper.selecttfName(tfAdd);
 	}
 
 	@Override
 	public String selectsfNameService(String sfAdd) {
-		// TODO Auto-generated method stub
 		return workMapper.selectsfName(sfAdd);
 	}
 
@@ -194,31 +191,27 @@ public class WorkServiseImpl implements WorkService {
 
 	@Override
 	public List<Map<String, Object>> selectWorkId(String pwId) {
-
 		return workMapper.selectWorkId(pwId);
 	}
 
 	@Override
 	public Map<String, Object> selectcName(String pwId) {
-		// TODO Auto-generated method stub
 		return workMapper.selectcName(pwId);
 	}
 
 	@Override
-	public void teacherupdatework(String sId,String pwId,Integer wScore,String wRemark) {
-		workMapper.teacherupdateworks(sId,pwId, wScore, wRemark);
+	public void teacherupdatework(String sId, String pwId, Integer wScore, String wRemark) {
+		workMapper.teacherupdateworks(sId, pwId, wScore, wRemark);
 
 	}
 
 	@Override
 	public Map<String, Object> selectestimate(String epId) {
-		// TODO Auto-generated method stub
 		return workMapper.selectestimate(epId);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectScore(String pwId) {
-		// TODO Auto-generated method stub
 		return workMapper.selectScore(pwId);
 	}
 

@@ -37,27 +37,50 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.cdtu.model.Role;
 import com.cdtu.service.PublishWorkService;
+import com.cdtu.service.TeacherFileService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
 import com.cdtu.util.ExportExcel;
 import com.cdtu.util.ExportWord;
 import com.cdtu.util.GetRootPath;
+import com.cdtu.util.MyExceptionResolver;
 import com.cdtu.util.OAUtil;
 
 @Controller
-@RequestMapping(value = "work")
-public class WorkFileController {
+@RequestMapping(value = { "work", "file" })
+public class FileController {
 	private static String[] fileType = { "jpg", "png", "gif", "psd", "webp", "txt", "doc", "docx", "XLS", "XLSX", "ppt",
 			"pptx", "pdf" };
 	private @Resource(name = "workService") WorkService workService;
-	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
+	private @Resource(name = "tFileService") TeacherFileService tFileService;
 	private @Resource(name = "teacherService") TeacherService teacherservice;
+	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
+
+	/**
+	 * 老师、学生查看资源
+	 *
+	 * @author 李红兵
+	 */
+	@RequestMapping(value = "queryResource.do")
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	public @ResponseBody Map<String, Object> doQueryResource(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			String cId = (String) paramsMap.get("cId");
+			String rId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+			map.put("resources", tFileService.getResource(rId, cId));
+			map.put("status", 200);
+		} catch (Exception e) {
+			MyExceptionResolver.handlException(map, e);
+		}
+		return map;
+	}
 
 	@RequestMapping("uploadFiles")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> upFiles(@RequestParam("file") CommonsMultipartFile[] file,
-			@RequestParam("pwId") String pwId,HttpServletRequest request) {
+			@RequestParam("pwId") String pwId, HttpServletRequest request) {
 //		System.out.println("uploadFiles-multipartResolver:" + file.length);
 		// 判断file数组不能为空并且长度大于0
 		Subject subject = SecurityUtils.getSubject();
@@ -71,9 +94,9 @@ public class WorkFileController {
 					// 保存文件s
 					if (!file1.isEmpty()) { // w.txt 5 3
 
-						String savePath = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works"
-								+ File.separator + pwId + File.separator + role.getRole() + File.separator
-								+ role.getUsername();
+						String savePath = GetRootPath.getRootPath(request) + File.separator + "uploadFile"
+								+ File.separator + "works" + File.separator + pwId + File.separator + role.getRole()
+								+ File.separator + role.getUsername();
 						String filename = file1.getOriginalFilename();
 						String type = filename.substring(filename.lastIndexOf(".") + 1);
 						Boolean state = false;
@@ -121,14 +144,16 @@ public class WorkFileController {
 
 	@RequestMapping("/deleteFiles")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	public @ResponseBody Map<String, Object> deleteFiles(@RequestBody Map<String, Object> paramsMap,HttpServletRequest request) {
+	public @ResponseBody Map<String, Object> deleteFiles(@RequestBody Map<String, Object> paramsMap,
+			HttpServletRequest request) {
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		Map<String, Object> map = new HashMap<>();
 		if (role.getRole() == "teacher") {
 			Integer tfId = (Integer) paramsMap.get("tfId");
 			String tfAdd = (String) paramsMap.get("tfAdd");
-			String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works";
+			String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+					+ "works";
 			String filePath = workFile + tfAdd.substring(9);
 			File file = new File(filePath);
 			file.delete();
@@ -136,7 +161,8 @@ public class WorkFileController {
 		} else {
 			Integer sfId = (Integer) paramsMap.get("tfId");
 			String sfAdd = (String) paramsMap.get("tfAdd");
-			String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works";
+			String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+					+ "works";
 			String filePath = workFile + sfAdd.substring(9);
 			File file = new File(filePath);
 			file.delete();
@@ -156,7 +182,8 @@ public class WorkFileController {
 		try {
 			String fileName = workService.selecttfNameService(Addr);
 
-			String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works";
+			String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+					+ "works";
 			String filePath = workFile + Addr.substring(9);
 			File file = new File(filePath);
 			DownloadFile.downloadFile(file, fileName, response, request);
@@ -186,15 +213,16 @@ public class WorkFileController {
 		Role role = (Role) subject.getPrincipal();
 		@SuppressWarnings("unchecked")
 		List<String> Addrs = (List<String>) maps.get("Addrs");
-		String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works" + File.separator
-				+ role.getUsername();
+		String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works"
+				+ File.separator + role.getUsername();
 		String resourcesName = workFile + ".zip";
 		String zipname = role.getUsername() + ".zip";
 		try {
 			ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(resourcesName));
 			InputStream input = null;
 			for (String Addr : Addrs) {
-				String works = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works";
+				String works = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+						+ "works";
 				String filePath = works + Addr.substring(9);
 				File file = new File(filePath);
 				input = new FileInputStream(file);
@@ -235,18 +263,20 @@ public class WorkFileController {
 
 	@RequestMapping(value = "downloadFileWork.do")
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
-	public @ResponseBody Map<String, Object> downloadFileWork(@RequestBody Map<String, Object> maps,HttpServletRequest request)
-			throws IOException {
+	public @ResponseBody Map<String, Object> downloadFileWork(@RequestBody Map<String, Object> maps,
+			HttpServletRequest request) throws IOException {
 		String pwId = (String) maps.get("pwId");
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		try {
 			List<Map<String, Object>> Addrs = workService.selectWorkAllAddr(pwId);
 			List<Map<String, Object>> wId = workService.selectWorkId(pwId);
 			Map<String, Object> name = workService.selectcName(pwId);
-			String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works" + File.separator + "zip"
-					+ File.separator + (String) name.get("c_name") + (String) name.get("pw_name");
-			String resourcesName = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works" + File.separator
-					+ "zip" + File.separator + (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
+			String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+					+ "works" + File.separator + "zip" + File.separator + (String) name.get("c_name")
+					+ (String) name.get("pw_name");
+			String resourcesName = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+					+ "works" + File.separator + "zip" + File.separator + (String) name.get("c_name")
+					+ (String) name.get("pw_name") + ".zip";
 			String resourcesNames = File.separator + "workfile" + File.separator + "zip" + File.separator
 					+ (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
 			com.cdtu.util.deleteFolder.delFolder(workFile);
@@ -259,22 +289,24 @@ public class WorkFileController {
 			BufferedInputStream binput = null;
 			BufferedOutputStream boutput = null;
 			for (Map<String, Object> w : wId) {
-				String studentworkFile = workFile + File.separator+(String) w.get("s_id") + (String) w.get("s_name");
+				String studentworkFile = workFile + File.separator + (String) w.get("s_id") + (String) w.get("s_name");
 				File studentfile = new File(studentworkFile);
 				if (!studentfile.exists()) {
 					studentfile.mkdirs();// 创建目录
 				}
-				String moban = GetRootPath.getRootPath(request)+File.separator+"uploadFile"+File.separator+"works";
-				String workpath = studentworkFile+ File.separator + "作业详情" + ".docx";
-				if((String)w.get("w_context")==null){
+				String moban = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+						+ "works";
+				String workpath = studentworkFile + File.separator + "作业详情" + ".docx";
+				if ((String) w.get("w_context") == null) {
 					w.put("w_context", com.cdtu.util.cleanLable.getTextFrom("未作答"));
 				}
-			     w.put("w_context", com.cdtu.util.cleanLable.getTextFrom((String)w.get("w_context")));
-				ExportWord.createWord(w, moban,workpath);
+				w.put("w_context", com.cdtu.util.cleanLable.getTextFrom((String) w.get("w_context")));
+				ExportWord.createWord(w, moban, workpath);
 				for (Map<String, Object> Addr : Addrs) {
 					String ws = (String) Addr.get("w_id");
 					if (w.get("w_id").equals(ws)) {
-						String works = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works";
+						String works = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+								+ "works";
 						String Addra = (String) Addr.get("s_f_add");
 						String filename = (String) Addr.get("s_f_add");
 						String filen = filename.substring(filename.lastIndexOf("\\") + 1);
@@ -309,7 +341,8 @@ public class WorkFileController {
 				String teacherfilename = (String) teacherfile.get("tfName");
 				String teacherfileAddr = (String) teacherfile.get("tfAdd");
 				String Addr = teacherfileAddr.substring(teacherfileAddr.lastIndexOf("\\") + 1);
-				String works = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works";
+				String works = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+						+ "works";
 				FileInputStream inputs = new FileInputStream(works + teacherfileAddr.substring(9));
 				FileOutputStream outputn = new FileOutputStream(
 						teacherworkfile + File.separator + Addr.substring(0, 5) + teacherfilename);
@@ -351,14 +384,14 @@ public class WorkFileController {
 			wb.write(output);
 
 			output.close();
-			Map<String, Object> publishwork = (Map<String, Object>) publishWorkService.selectPublishwork(pwId);
+			Map<String, Object> publishwork = publishWorkService.selectPublishwork(pwId);
 			if (publishwork.get("pwName") == null) {
 				publishwork.put("pwName", "null");
 			}
 			if (publishwork.get("pwContent") == null) {
 				publishwork.put("pwContent", "null");
 			}
-			String moban = GetRootPath.getRootPath(request) +"/uploadFile";
+			String moban = GetRootPath.getRootPath(request) + "/uploadFile";
 			String filePath = workFile + File.separator + "任务详情" + File.separator + "作业详情" + ".docx";
 			ExportWord.createWord(publishwork, moban, filePath);
 			com.cdtu.util.compresszip.compress(file, zipOut, (String) name.get("c_name") + (String) name.get("pw_name"),
@@ -368,7 +401,6 @@ public class WorkFileController {
 			map.put("status", 200);
 			map.put("Addr", resourcesNames);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			map.put("status", 0);
 			map.put("msg", "导出失败");
