@@ -38,6 +38,12 @@ public class RandomValidateCode {
      */
     public String getRandcode(HttpServletRequest request,
             HttpServletResponse response) {
+    	try {
+			String checkcodePath = (String) request.getSession().getAttribute("checkcodePath");
+			File file = new File(checkcodePath);
+			file.delete();
+		} catch (Exception e1) {
+		}
         HttpSession session = request.getSession();
         //BufferedImage类是具有缓冲区的Image类,Image类是用于描述图像信息的类
         BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_BGR);
@@ -71,6 +77,7 @@ public class RandomValidateCode {
 	       	}
 	       	String uuid = OAUtil.getId();
 	       	path += File.separator +uuid+".png";
+	        request.getSession().setAttribute("checkcodePath", path);
 	       	ImageIO.write(image, "png", new File(path));
 	       	path = File.separator +"checkcodefile"+ File.separator +dateDirectory+ File.separator +uuid+".png";
         } catch (Exception e) {

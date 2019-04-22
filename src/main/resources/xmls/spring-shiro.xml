@@ -34,7 +34,6 @@
 
 	<!-- 注册自定义realm -->
 	<bean id="MyRealm" class="com.cdtu.shiro.MyRealm"></bean>
-
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<!-- 注入上面的realm -->
 		<property name="realm" ref="MyRealm" />

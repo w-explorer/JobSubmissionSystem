@@ -26,7 +26,7 @@ import com.cdtu.util.MaxPage;
 import com.cdtu.util.MyExceptionResolver;
 
 @Controller
-@RequestMapping(value = "/course")
+@RequestMapping(value = "course")
 public class CourseController {
 	private @Resource(name = "courseService") CourseService courseService;
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
