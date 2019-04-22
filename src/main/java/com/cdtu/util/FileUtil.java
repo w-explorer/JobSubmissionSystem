@@ -103,11 +103,7 @@ public class FileUtil {
 	 * @author 李红兵
 	 */
 	public static boolean deleteFile(File file) throws Exception {
-		if (file.exists()) {
-			file.delete();
-			return true;
-		}
-		return false;
+		return file.delete();
 	}
 
 	/**
