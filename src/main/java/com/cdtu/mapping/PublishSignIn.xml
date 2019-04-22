@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.PublishSignInMapper">
+	<insert id="insert">
+		INSERT publish_sign_in (ps_id, tsc_id, s_start_time)
+		SELECT #{psId}, tsc_id, #{time}
+		FROM teacher_select_course
+		WHERE t_id = #{tId}
+		AND c_id = #{cId}
+	</insert>
+</mapper>
