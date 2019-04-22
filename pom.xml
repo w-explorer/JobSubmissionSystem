@@ -255,6 +255,13 @@
 		    <version>2.3.23</version>
 		</dependency>
 		<!--读取word文件start-->
+		<!-- baidu api start -->
+		<dependency>
+            <groupId>com.baidu.aip</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>4.8.0</version>
+        </dependency>
+		<!-- baidu api send -->
 		<!-- 上传组件包 end -->
 	</dependencies>
 

@@ -21,6 +21,7 @@ import com.cdtu.model.Role;
 import com.cdtu.service.CourseService;
 import com.cdtu.service.PublishWorkService;
 import com.cdtu.service.StudentSelectCourseService;
+import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.MyExceptionResolver;
@@ -32,6 +33,7 @@ public class CourseController {
 	private @Resource(name = "sscService") StudentSelectCourseService sscService;
 	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 	private @Resource(name = "teacherService") TeacherService teacherService;
+	private @Resource(name = "studentService") StudentService studentService;
 
 	/**
 	 * 查询课堂详情
@@ -52,6 +54,7 @@ public class CourseController {
 			int stusNum = sscService.countStudents(cId);
 			map.put("stusNum", stusNum);// 学生数量
 			int pubWNum = publishWorkService.countPublishWorks(cId);
+			//将作业数量 放入session 用于解决  班级排名
 			if ("teacher".equals(role.getRole())) {
 				pubENum = publishWorkService.countPublishEstimates(cId);
 			} else if ("student".equals(role.getRole())) {
@@ -126,4 +129,46 @@ public class CourseController {
 			return map;
 		}
 	}
+	/**
+	 * 通过建立一张临时表 存储班级成绩排名 每个同学的总分(sql 高级排名 开启mybatis 一次执行多条SQL )
+	 * 怎么开启呢？在拼装mysql链接的url时，为其加上allowMultiQueries参数，设置为true，如下：
+	 * jdbc.jdbcUrl=jdbc:mysql://127.0.0.1:3306/database?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+	 *
+	 * @author 文成
+	 * @param paramsMap
+	 * @return
+	 */
+	@RequestMapping(value = "membersOfClass.do")
+	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
+	public @ResponseBody Map<String, Object> SearchStudentsBycId(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String id = role.getUsername();
+		String roleName = role.getRole();
+		String cId = (String) paramsMap.get("cId");
+		int pubWNum = publishWorkService.countPublishWorks(cId);//用于解决  班级排名
+		int page = (int) paramsMap.get("page");
+		int stusNum = sscService.countStudents(cId);
+		if(pubWNum==0){
+			map.put("students", courseService.selectStudents(page,cId,id));
+		}
+		else{
+			try {
+				if("teacher".equals(roleName)){
+					studentService.CreatStudentTableDescRank(cId, id);
+				}else{
+					studentService.CreatStudentTableDescRankByStudent(cId, id);
+				}
+				map.put("students", studentService.selectStudents(page));
+			} catch (Exception e) {
+				MyExceptionResolver.handlException(map, e);
+			}
+		}
+		map.put("stusNum", stusNum);
+		map.put("max", MaxPage.getMaxPage(stusNum, 30));
+		map.put("status", 200);
+		return map;
+	}
+
 }

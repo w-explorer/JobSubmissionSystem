@@ -429,32 +429,6 @@ public class StudentController {
 		// ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),
 		// headers, HttpStatus.CREATED);
 	}
-
-	/**
-	 * 查询班级学生
-	 *
-	 * @author weiyuhang
-	 * @param coursewapper
-	 * @return
-	 */
-	@RequestMapping(value = "selectCourseStudent.do")
-	@RequiresRoles({ "student" })
-	@ResponseBody
-	public Map<String, Object> selectCourseStud(@RequestBody CourseWapper coursewapper) {
-		List<CourseStudent> coursestudentslist;
-		Map<String, Object> data = new HashMap<>();
-		try {
-			coursestudentslist = studentService.selectCourseStudentService(coursewapper);
-			data.put("status", 200);
-			data.put("coursestudentslist", coursestudentslist);
-		} catch (Exception e) {
-			e.printStackTrace();
-			data.put("status", 0);
-			data.put("msg", "服务器错误");
-		}
-		return data;
-	}
-
 	/**
 	 * @author 文成 模糊查询作业
 	 * @param paramsMap

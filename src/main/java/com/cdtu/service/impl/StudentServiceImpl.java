@@ -217,4 +217,9 @@ public class StudentServiceImpl implements StudentService {
 		}
 		return courseNotice;
 	}
+
+	@Override
+	public void CreatStudentTableDescRankByStudent(String cId, String id) {
+		studentMapper.CreatStudentTableDescRankByStudent(cId, id);
+	}
 }

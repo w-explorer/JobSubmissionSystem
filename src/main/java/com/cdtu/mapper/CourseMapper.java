@@ -53,4 +53,6 @@ public interface CourseMapper {
 	 * @author weiyuhang
 	 */
 	List<Map<String,Object>> selectSchoolCourse(@Param("scId") String scId);
+
+	public List<Map<String, Object>> selectStudents(@Param("start")int start,@Param("end")int end,@Param("id")String id,@Param("cId")String cId);
 }

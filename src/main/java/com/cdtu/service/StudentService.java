@@ -133,4 +133,6 @@ public interface StudentService {
 	public void updateRoleInfo(String email, String phone, String username);
 	
 	public List<Map<String,Object>> selectCoursenoticeSrvice(String cId,String sId);
+
+	public void CreatStudentTableDescRankByStudent(String cId, String id);
 }

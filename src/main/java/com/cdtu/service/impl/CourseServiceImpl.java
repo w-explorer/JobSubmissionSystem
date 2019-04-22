@@ -1,5 +1,6 @@
 package com.cdtu.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -45,5 +46,11 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	public Map<String, Object> getDetails(String cId) {
 		return courseMapper.selectDetails(cId);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectStudents(int page,String id,String cId) {
+		System.out.println(page+" /////"+id+cId);
+		return courseMapper.selectStudents((page - 1) * 30, page * 30,id,cId);
 	}
 }

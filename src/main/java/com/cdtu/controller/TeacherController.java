@@ -709,38 +709,7 @@ public class TeacherController {
 		return map;
 	}
 
-	/**
-	 * 通过建立一张临时表 存储班级成绩排名 每个同学的总分(sql 高级排名 开启mybatis 一次执行多条SQL )
-	 * 怎么开启呢？在拼装mysql链接的url时，为其加上allowMultiQueries参数，设置为true，如下：
-	 * jdbc.jdbcUrl=jdbc:mysql://127.0.0.1:3306/database?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
-	 *
-	 * @author 文成
-	 * @param paramsMap
-	 * @return
-	 */
-	@RequestMapping(value = "SearchStudents.do")
-	@RequiresRoles({ "teacher" })
-	public @ResponseBody Map<String, Object> SearchStudentsBycId(@RequestBody Map<String, Object> paramsMap) {
-		Map<String, Object> map = new HashMap<>();
-		Subject subject = SecurityUtils.getSubject();
-		Role role = (Role) subject.getPrincipal();
-		String tId = role.getUsername();
-		String cId = (String) paramsMap.get("cId");
-		int page = (int) paramsMap.get("page");
-		int stusNum = sscService.countStudents(cId);
-
-		try {
-			studentService.CreatStudentTableDescRank(cId, tId);
-			map.put("students", studentService.selectStudents(page));
-			map.put("stusNum", stusNum);
-			map.put("max", MaxPage.getMaxPage(stusNum, 30));
-		} catch (Exception e) {
-			MyExceptionResolver.handlException(map, e);
-		}
-		map.put("status", 200);
-		return map;
-	}
-
+	
 	@RequestMapping(value = "TeacherUpadte.do")
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> teacherupadtework(@RequestBody Map<String, Object> paramsMap) {

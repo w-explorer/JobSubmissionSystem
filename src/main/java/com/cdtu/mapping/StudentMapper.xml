@@ -76,6 +76,43 @@
 		 ORDER BY sumScore DESC) firstView;
 		DROP TABLE firstView;
 	</select>
+	<select id="CreatStudentTableDescRankByStudent">
+		drop table if exists secondView;
+		CREATE TEMPORARY TABLE firstView (sId VARCHAR(10) NOT NULL,sName VARCHAR(10) NOT NULL,sImgSrc TEXT NOT NULL,sumScore INT(3)NOT NULL);
+		INSERT INTO firstView(sId,sName,sImgSrc,sumScore)
+		SELECT  w.s_id AS sId,s.s_name AS sName,s.s_img_src AS sImgSrc ,SUM(w.w_score) AS sumScore
+			FROM WORK w,student s
+				WHERE w.s_id IN (
+					SELECT   s.s_id 
+					FROM student s,course c,teacher_select_course tsc,student_select_course ssc,publish_work pw,WORK w
+					WHERE
+					tsc.t_id=(
+						SELECT DISTINCT tsc.t_id FROM student s,course c,teacher_select_course tsc,student_select_course ssc
+						WHERE ssc.s_id=#{id}
+						AND ssc.tsc_id=tsc.tsc_id
+						AND tsc.c_id=#{cId})
+					AND tsc.c_id=#{cId}
+					AND ssc.tsc_id=tsc.tsc_id
+					AND s.s_id=ssc.s_id
+					AND pw.tsc_id=tsc.tsc_id
+					AND w.pw_id=pw.pw_id
+					AND w.s_id=s.s_id
+					GROUP BY  s.s_id 
+				)
+				AND w.s_id=s.s_id
+				GROUP BY w.s_id;
+	
+		CREATE   TEMPORARY TABLE secondView (sId VARCHAR(10) NOT NULL,sName VARCHAR(10) NOT NULL,sImgSrc TEXT NOT NULL,sumScore INT(3)NOT NULL,rank INT(3)NOT NULL, PRIMARY KEY (sId));
+		INSERT INTO secondView(sId,sName,sImgSrc,sumScore,rank)
+		 SELECT firstView.sId,firstView.sName,firstView.sImgSrc,firstView.sumScore ,firstView.rank FROM
+		 (SELECT sId,sName,sImgSrc,sumScore ,
+		 @curRank := IF (@prevRank = sumScore, @curRank, @incRank) AS rank,
+		 @incRank := @incRank + 1,@prevRank := sumScore
+		 FROM firstView p,
+		(SELECT @curRank :=0, @prevRank := NULL, @incRank := 1) r 
+		 ORDER BY sumScore DESC) firstView;
+		DROP TABLE firstView;
+	</select>
 	<select id="selectStudents" resultType="java.util.HashMap">
 		SELECT DISTINCT * FROM secondView ORDER BY secondView.sumScore DESC LIMIT #{start}, #{end}
 	</select>
@@ -85,9 +122,6 @@
   		WHERE s.s_id =#{username};
 	</update>
 	<!-- 文成end -->
-	
-	
-	
 	<select id="selectStudentName" resultType="java.lang.String">
 		select s_name
 		from student
