@@ -34,56 +34,49 @@
 	</insert>
 
 	<select id="selectBySId" resultType="java.util.HashMap">
-		SELECT course.c_id AS cId,
-		course.c_name AS cName, teacher.t_name AS tName, teacher.t_img_src AS
-		tImgSrc, school.sc_name AS scName, course.c_img_src AS cImgSrc
-		FROM
-		student_select_course,teacher_select_course, course, teacher, school
+		SELECT course.c_id AS cId, course.c_name AS cName,
+		teacher.t_name AS tName, teacher.t_img_src AS tImgSrc,
+		school.sc_name AS scName, course.c_img_src AS cImgSrc
+		FROM student_select_course,teacher_select_course, course, teacher, school
 		WHERE student_select_course.s_id = #{sId}
-		AND
-		teacher_select_course.tsc_id = student_select_course.tsc_id
-		AND
-		course.c_id = teacher_select_course.c_id
-		AND teacher.t_id =
-		teacher_select_course.t_id
+		AND teacher_select_course.tsc_id = student_select_course.tsc_id
+		AND course.c_id = teacher_select_course.c_id
+		AND teacher.t_id = teacher_select_course.t_id
 		AND school.sc_id = teacher.sc_id
 	</select>
 
 	<select id="countBySIdAndCId" resultType="java.lang.Integer">
 		SELECT COUNT(*)
-		FROM
-		student_select_course, teacher_select_course
-		WHERE
-		student_select_course.s_id = #{sId}
-		AND teacher_select_course.tsc_id =
-		student_select_course.tsc_id
+		FROM student_select_course, teacher_select_course
+		WHERE student_select_course.s_id = #{sId}
+		AND teacher_select_course.tsc_id = student_select_course.tsc_id
 		AND teacher_select_course.c_id = #{cId}
 		LIMIT 1
 	</select>
 
 	<select id="countStudents" resultType="java.lang.Integer">
 		SELECT COUNT(*)
-		FROM
-		student_select_course, teacher_select_course
-		WHERE
-		teacher_select_course.c_id = #{cId}
-		AND student_select_course.tsc_id =
-		teacher_select_course.tsc_id
+		FROM student_select_course, teacher_select_course
+		WHERE teacher_select_course.c_id = #{cId}
+		AND student_select_course.tsc_id = teacher_select_course.tsc_id
 	</select>
 
 	<select id="selectStudents" resultType="java.util.HashMap">
-		SELECT student.s_name AS
-		sName, student.s_id AS sId, student.s_img_src AS sImgSrc
-		FROM student,
-		teacher_select_course, student_select_course
-		WHERE
-		teacher_select_course.c_id = #{cId}
-		AND student_select_course.tsc_id =
-		teacher_select_course.tsc_id
-		AND student_select_course.s_id =
-		student.s_id
+		SELECT student.s_name AS sName,
+		student.s_id AS sId, student.s_img_src AS sImgSrc
+		FROM student, teacher_select_course, student_select_course
+		WHERE teacher_select_course.c_id = #{cId}
+		AND student_select_course.tsc_id = teacher_select_course.tsc_id
+		AND student.s_id = student_select_course.s_id
 		ORDER BY sId ASC
 		LIMIT #{start}, #{end}
+	</select>
+
+	<select id="selectSIds" resultType="java.util.HashMap">
+		SELECT s_id AS sId
+		FROM teacher_select_course, student_select_course
+		WHERE teacher_select_course.c_id = #{cId}
+		AND student_select_course.tsc_id = teacher_select_course.tsc_id
 	</select>
 	<!-- 李红兵end -->
 

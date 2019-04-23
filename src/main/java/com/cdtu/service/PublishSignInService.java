@@ -1,6 +1,7 @@
 package com.cdtu.service;
 
 public interface PublishSignInService {
-	void startSignIn(String tId, String cId, String time);
+	public void stopSignIn(String psId);
 
+	public void startSignIn(String psId, String tId, String cId, String time, String checkCode);
 }

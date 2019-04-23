@@ -2,8 +2,7 @@ package com.cdtu.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -16,15 +15,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cdtu.model.Role;
 import com.cdtu.service.PublishSignInService;
+import com.cdtu.service.StudentSignInService;
 import com.cdtu.util.MyExceptionResolver;
+import com.cdtu.util.MyTimerTask;
 
 @Controller
 @RequestMapping(value = "signIn")
 public class SignInController {
+	private @Resource(name = "ssService") StudentSignInService ssService;
 	private @Resource(name = "psService") PublishSignInService psService;
 
 	/**
-	 * 老师开始签到
+	 * 老师开始签到，5分钟后停止签到
 	 *
 	 * @author 李红兵
 	 */
@@ -34,17 +36,20 @@ public class SignInController {
 	public Map<String, Object> doStartSignIn(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
+			String checkCode = "";
+			Random rander = new Random();
+			for (int i = 0; i < 4; i++) {
+				checkCode += rander.nextInt(10);
+			}
 			String cId = (String) paramsMap.get("cId");
 			String time = (String) paramsMap.get("time");
+			String psId = time.replace("-", "").replace(" ", "").replace(":", "");
 			String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
-			psService.startSignIn(tId, cId, time);
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					System.out.println("stop");
-					cancel();
-				}
-			}, 1000 * 60 * 5);
+			psService.startSignIn(psId, tId, cId, time, checkCode);
+			ssService.initDatabase(psId, cId);
+			MyTimerTask.start(psId, psService);
+			map.put("psId", psId);
+			map.put("checkCode", checkCode);
 			map.put("status", 200);
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
@@ -63,10 +68,9 @@ public class SignInController {
 	public Map<String, Object> doStopSignIn(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-//			String cId = (String) paramsMap.get("cId");
-//			String time = (String) paramsMap.get("time");
-//			String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
-//			psService.stoptSignIn(tId, cId, time);
+			psService.stopSignIn((String) paramsMap.get("psId"));
+			MyTimerTask.cancel();
+			map.put("status", 200);
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
 		}

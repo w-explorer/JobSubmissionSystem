@@ -31,10 +31,14 @@ public interface StudentSelectCourseMapper {
 			@Param("end") int end);
 
 	/**
-	 *
 	 * @author 李红兵
 	 */
 	public int countStudents(@Param("cId") String cId);
+
+	/**
+	 * @author 李红兵
+	 */
+	public List<Map<String, Object>> selectSIds(@Param("cId") String cId);
 
 	/**
 	 * 查询该课程的学生

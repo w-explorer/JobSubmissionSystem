@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.StudentSignInMapper">
+	<insert id="insertAll" parameterType="java.util.List">
+		INSERT INTO student_sign_in (ss_id, ps_id, s_id)
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.ssId}, #{item.psId}, #{item.sId})
+		</foreach>
+	</insert>
+</mapper>
