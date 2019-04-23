@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../css/layer.css">
+<link rel="stylesheet" href="../css/storage.css" />
+<title>人脸注册</title>
+<script type="text/javascript" src="../js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="../js/layer.js"></script>
+<style type="text/css">
+body {
+	background: url('../img/AI3.jpg') no-repeat;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	background-size: cover;
+}
+</style>
+</head>
+<body>
+	<div class="storage">
+		<div class="text1">
+			<p>人脸注册</p>
+		</div>
+		<div class="vid">
+			<video id="video" autoplay></video>
+		</div>
+		<div class="canv">
+			<canvas id="canvas"></canvas>
+		</div>
+		<div>
+			<!--<button onclick="startVideo()">启用摄像头</button>-->
+			<button id="snap" onclick="Shoot()">拍照</button>
+			<span class='user_info'>用户名称:</span> <input type="text" name="user_info" id="user_info" placeholder="请输入名称">
+			<button id="download" onclick="download()">上传</button>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var ctx = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+    var aVideo = document.getElementById('video');
+    var aCanvas = document.getElementById('canvas');
+      navigator.getUserMedia = navigator.getUserMedia ||
+      navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia ||
+      navigator.msGetUserMedia; //获取媒体对象（这里指摄像头）
+      navigator.getUserMedia({
+        video: true
+    }, gotStream, noStream); //参数1获取用户打开权限；参数二是一个回调函数，自动传入视屏流，成功后调用，并传一个视频流对象，参数三打开失败后调用，传错误信息
+    function gotStream(stream) {
+       // video.src = URL.createObjectURL(stream); // 老写法
+        aVideo.srcObject = stream;
+        aVideo.onerror = function() {
+            stream.stop();
+        };
+        stream.onended = noStream;
+        aVideo.onloadedmetadata = function() {
+            console.info('摄像头成功打开！');
+        };
+    }
+    function noStream(err) {
+        alert(err);
+    }
+    function Shoot() {
+        var context = canvas.getContext('2d');
+        //把当前视频帧内容渲染到画布上
+        context.drawImage(aVideo, 0, 5, 320,160);
+    }
+    //将图片下载到本地
+    function download() {
+    	var userInfo = $('#user_info').val();
+        var dom = document.createElement("a");
+        dom.href = this.canvas.toDataURL("image/png");
+        dom.download = new Date().getTime() + ".png";
+        dom.click();
+        //删除字符串前的提示信息 "data:image/png;base64,"
+        var data = aCanvas.toDataURL();
+		var b64 = data.substring(22);
+		var path = ctx+"/facemanager/add";
+		var name = new Date().getTime() + ".png";
+		var context = canvas.getContext('2d');
+		$.ajax({
+			type : 'post',
+			dataType : 'json',
+			url : path,
+			data : {
+				imgdata:b64,
+				imgname:name,
+				user_info:userInfo,
+			},
+			success : function(result){
+			    if(result.error_msg=='SUCCESS'){
+			    layer.open({
+				  title: '温馨提示',
+				  content: '人脸用户注册成功',
+				  yes: function(index, layero){
+				    layer.close(index); //如果设定了yes回调，需进行手工关闭
+				  }
+				});
+			    }else{
+			    layer.open({
+				  title: '温馨提示',
+				  content: "注册失败:"+result.error_msg,
+				  yes: function(index, layero){
+       				 //把画布上的图清空
+       				 context.clearRect(0, 5, 320,160);
+				    layer.close(index); //如果设定了yes回调，需进行手工关闭
+				  }
+				});
+			    }
+			}
+		})
+	}
+</script>
+</html>

@@ -103,6 +103,7 @@
 			AND pw.pw_state=#{pwState}
 		</if>
 		GROUP BY w.pw_id
+		ORDER BY pw.pw_end
 		LIMIT #{start}, #{end}
 	</select>
 	<!-- 学生查询发布作业表通过课程号（cId）数量 by:黎睿-->
@@ -237,6 +238,7 @@
 			AND pw.pw_state=#{pwState}
 		</if>
 		GROUP BY w.pw_id
+		ORDER BY pw.pw_end
 		LIMIT #{start}, #{end}
 	</select>
 	<!-- 教师查询发布作业表通过课程号（cId）数量 by:黎睿-->

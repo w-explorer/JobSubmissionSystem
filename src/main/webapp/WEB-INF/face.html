@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>人脸识别</title>
+  <link rel="stylesheet" href="../css/layer.css">
+  <link rel="stylesheet" href="../css/demo.css">
+  <script type="text/javascript" src="../js/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="../js/layer.js"></script>
+  <script src="../js/tracking-min.js"></script>
+  <script src="../js/face-min.js"></script>
+  <script src="../js/dat.gui.min.js"></script>
+  <script src="../js/stats.min.js"></script>
+</head>
+<body>
+	<div>
+		<p align="center">请确保面部完整,未检测到请靠近摄像头</p>
+	</div>
+  <div class="demo-frame">
+    <div class="demo-container">
+    	<div id="face1">
+    		 <video id="video" width="640" height="480" preload autoplay loop muted></video> 
+    		 <canvas id="canvas" width="640" height="480"></canvas>
+    	</div>
+      </div>
+  </div>
+     <div id="face2">
+     	   <canvas id="canvas1"></canvas>
+     </div>
+  <script  type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+     var ctx = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/     
+    window.onload = function() {
+      var video = document.getElementById('video');
+      var canvas = document.getElementById('canvas');
+      var canvas1 = document.getElementById('canvas1');
+      var context = canvas.getContext('2d');
+      var tracker = new tracking.ObjectTracker('face');
+      tracker.setInitialScale(4);
+      tracker.setStepSize(2);
+      tracker.setEdgesDensity(0.1);
+      tracking.track('#video', tracker, { camera: true });
+      tracker.on('track', function(event) {
+        if(event.data.length===0){
+            console.info('无人脸');
+        	context.clearRect(0, 0, canvas.width, canvas.height);
+        }else{
+          event.data.forEach(function(rect) {
+          context.strokeStyle = '#a64ceb';
+          context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+          context.font = '11px Helvetica';
+          context.fillStyle = "#fff";
+          context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+          context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+          Shoot();
+        });
+        }
+      });
+      var gui = new dat.GUI();
+      gui.add(tracker, 'edgesDensity', 0.1, 0.5).step(0.01);
+      gui.add(tracker, 'initialScale', 1.0, 10.0).step(0.1);
+      gui.add(tracker, 'stepSize', 1, 5).step(0.1);
+
+	  function Shoot() {
+	  	var trackerTask = tracking.track(video, tracker);
+		var context = canvas1.getContext('2d');
+		//把当前视频帧内容渲染到画布上
+		context.drawImage(video, 0, 5, 320, 140);
+		var dom = document.createElement("a");
+		dom.href = this.canvas.toDataURL("image/png");
+		dom.download = new Date().getTime() + ".png";
+		dom.click();
+		//删除字符串前的提示信息 "data:image/png;base64,"
+		var data = canvas1.toDataURL();
+		var b64 = data.substring(22);
+		var path = ctx+"/facemanager/search";
+		$.ajax({
+			type : 'post',
+			dataType : 'json',
+			url : path,
+			data : {
+				imgdata:b64
+			},
+			success : function(result){
+			if(result.error_code=='0'){
+				trackerTask.stop();
+				layer.open({
+				  title: '温馨提示',
+				  content: '欢迎 '+result.user_info,
+				  yes: function(index, layero){
+				    trackerTask.run();
+				    layer.close(index); //如果设定了yes回调，需进行手工关闭
+				  }
+				});  
+			}else{
+				trackerTask.stop();
+				layer.open({
+				  title: '温馨提示',
+				  content: result.error_msg,
+				  yes: function(index, layero){
+				    trackerTask.run();
+				    layer.close(index); //如果设定了yes回调，需进行手工关闭
+				  }
+				});
+			 }
+			}
+		})
+		}
+	};
+</script>
+</body>
+</html>
