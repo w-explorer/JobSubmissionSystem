@@ -10,4 +10,20 @@ public interface StudentSignInMapper {
 	 * @author 李红兵
 	 */
 	public void insertAll(@Param("list") List<Map<String, Object>> list);
+
+	/**
+	 * @author 李红兵
+	 */
+	public boolean selectStatus(@Param("psId") String psId, @Param("sId") String sId);
+
+	/**
+	 * @author 李红兵
+	 */
+	public Map<String, Object> selectByPsIdAndSId(@Param("psId") String psId, @Param("sId") String sId);
+
+	/**
+	 * @author 李红兵
+	 */
+	public void updateStudentSignIn(@Param("psId") String psId, @Param("sId") String sId, @Param("time") String time,
+			@Param("mark") String mark);
 }

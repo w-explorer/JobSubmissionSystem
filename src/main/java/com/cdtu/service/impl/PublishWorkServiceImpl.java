@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cdtu.mapper.PublishWorkMapper;
 import com.cdtu.model.PublishWork;
 import com.cdtu.service.PublishWorkService;
-import com.cdtu.util.FormatDateToString;
+import com.cdtu.util.MyDateUtil;
 
 @Transactional
 @Service(value = "publishWorkService")
@@ -53,7 +53,7 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 	public List<Map<String, Object>> getPwDetails(String sId, String pwId) {
 		List<Map<String, Object>> pwDetails = publishWorkMapper.getPwDetails(sId, pwId);
 		for (Map<String, Object> map : pwDetails) {
-			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));
+			map.put("pwEnd", MyDateUtil.getFormattedTime(map.get("pwEnd"), "yyyy-MM-dd HH:mm"));
 		}
 		return pwDetails;
 	}
@@ -97,7 +97,7 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 	public List<Map<String, Object>> getTPwDetails(String pwId) {
 		List<Map<String, Object>> tPwDetails = publishWorkMapper.getTPwDetails(pwId);
 		for (Map<String, Object> map : tPwDetails) {
-			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));
+			map.put("pwEnd", MyDateUtil.getFormattedTime(map.get("pwEnd"), "yyyy-MM-dd HH:mm"));
 		}
 		return tPwDetails;
 	}

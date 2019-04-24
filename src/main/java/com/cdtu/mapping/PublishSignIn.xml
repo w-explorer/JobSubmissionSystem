@@ -13,4 +13,20 @@
 		UPDATE publish_sign_in SET s_status = 0
 		WHERE ps_id = #{psId}
 	</update>
+	
+	<select id="selectTimeCodeStatus" resultType="java.util.HashMap">
+		SELECT s_check_code AS checkCode, s_start_time AS startTime, s_status AS sStatus
+		FROM publish_sign_in
+		WHERE ps_id = #{psId}
+	</select>
+	
+	<select id="selectBySIdAndCId" resultType="java.util.HashMap">
+		SELECT publish_sign_in.ps_id AS psId, publish_sign_in.s_status AS psStatus
+		FROM student_select_course, teacher_select_course, publish_sign_in
+		WHERE student_select_course.s_id = #{sId}
+		AND teacher_select_course.c_id = #{cId}
+		AND teacher_select_course.tsc_id = student_select_course.tsc_id
+		AND publish_sign_in.tsc_id = teacher_select_course.tsc_id
+		AND s_start_time >= DATE_SUB(NOW(), INTERVAL 60 * 95 SECOND)
+	</select>
 </mapper>

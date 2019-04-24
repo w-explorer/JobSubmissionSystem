@@ -27,8 +27,8 @@ import com.cdtu.model.Role;
 import com.cdtu.model.StudentSelectCourse;
 import com.cdtu.model.Work;
 import com.cdtu.service.StudentService;
-import com.cdtu.util.FormatDateToString;
 import com.cdtu.util.MaxPage;
+import com.cdtu.util.MyDateUtil;
 import com.cdtu.util.OAUtil;
 
 @Transactional
@@ -210,10 +210,10 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public List<Map<String, Object>> selectCoursenoticeSrvice(String cId, String sId) {
-		List<Map<String,Object>> courseNotice=courseNoticeMapper.selectCourseNoticess(cId, sId);
+		List<Map<String, Object>> courseNotice = courseNoticeMapper.selectCourseNoticess(cId, sId);
 		for (Map<String, Object> map : courseNotice) {
-			String a=FormatDateToString.fromatData(map.get("cnPdate"));
-			map.put("cnPdate",a);
+			String a = MyDateUtil.getFormattedTime(map.get("cnPdate"), "yyyy-MM-dd HH:mm");
+			map.put("cnPdate", a);
 		}
 		return courseNotice;
 	}

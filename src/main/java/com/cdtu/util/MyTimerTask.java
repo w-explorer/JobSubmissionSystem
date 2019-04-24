@@ -17,12 +17,11 @@ public class MyTimerTask {
 		timerTask = new TimerTask() {
 			@Override
 			public void run() {
-				System.out.println("stop");
 				psService.stopSignIn(psId);
 				cancel();
 			}
 		};
-		new Timer().schedule(timerTask, 1 * 30 * 1000);
+		new Timer().schedule(timerTask, 5 * 60 * 1000);
 	}
 
 	/**
@@ -31,7 +30,9 @@ public class MyTimerTask {
 	 * @author 李红兵
 	 */
 	public static void cancel() {
-		timerTask.cancel();
-		timerTask = null;
+		if (timerTask != null) {
+			timerTask.cancel();
+			timerTask = null;
+		}
 	}
 }

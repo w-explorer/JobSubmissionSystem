@@ -2,7 +2,7 @@ package com.cdtu.util;
 
 import java.io.File;
 
-public class deleteFolder {
+public class DeleteFolder {
 	public static  boolean delAllFile(String path) {  
         boolean flag = false;  
         File file = new File(path);  

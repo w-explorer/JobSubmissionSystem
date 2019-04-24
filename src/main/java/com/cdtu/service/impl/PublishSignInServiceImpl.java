@@ -1,5 +1,7 @@
 package com.cdtu.service.impl;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -10,6 +12,26 @@ import com.cdtu.service.PublishSignInService;
 @Service(value = "psService")
 public class PublishSignInServiceImpl implements PublishSignInService {
 	private @Resource PublishSignInMapper psMapper;
+
+	/**
+	 * 获取签到验证码
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public Map<String, Object> getTimeCodeStatus(String psId, String sId) {
+		return psMapper.selectTimeCodeStatus(psId, sId);
+	}
+
+	/**
+	 * 获取发布的签到信息
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public Map<String, Object> getPublishSignIn(String sId, String cId) {
+		return psMapper.selectBySIdAndCId(sId, cId);
+	}
 
 	/**
 	 * 停止签到

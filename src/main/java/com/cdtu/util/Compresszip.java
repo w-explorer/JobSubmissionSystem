@@ -16,7 +16,7 @@ import java.util.zip.ZipOutputStream;
  *                         false:所有文件跑到压缩包根目录下(注意：不保留目录结构可能会出现同名文件,会压缩失败)
  * @throws Exception
  */
-public class compresszip {
+public class Compresszip {
 	public static void compress(File sourceFile, ZipOutputStream zos, String name, boolean KeepDirStructure)
 			throws Exception {
 		byte[] buf = new byte[1024];

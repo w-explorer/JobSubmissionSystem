@@ -3,7 +3,7 @@ package com.cdtu.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class cleanLable {
+public class CleanLable {
 	private static final String regEx_script = "<script[^>]*?>[\\s\\S]*?<\\/script>"; // 定义script的正则表达式
     private static final String regEx_style = "<style[^>]*?>[\\s\\S]*?<\\/style>"; // 定义style的正则表达式
     private static final String regEx_html = "<[^>]+>"; // 定义HTML标签的正则表达式

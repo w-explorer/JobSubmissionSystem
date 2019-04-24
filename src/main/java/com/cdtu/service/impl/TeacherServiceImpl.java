@@ -29,8 +29,8 @@ import com.cdtu.model.PublishWork;
 import com.cdtu.model.Role;
 import com.cdtu.model.Work;
 import com.cdtu.service.TeacherService;
-import com.cdtu.util.FormatDateToString;
 import com.cdtu.util.MaxPage;
+import com.cdtu.util.MyDateUtil;
 import com.cdtu.util.OAUtil;
 
 @Transactional
@@ -459,7 +459,7 @@ public class TeacherServiceImpl implements TeacherService {
 		List<String> map = estimateMapper.selecteSuggest(epId);
 		List<String> eSuggests = new ArrayList<>();
 		for (String eSuggest : map) {
-			eSuggests.add(com.cdtu.util.cleanLable.getTextFrom(eSuggest));
+			eSuggests.add(com.cdtu.util.CleanLable.getTextFrom(eSuggest));
 		}
 		return eSuggests;
 	}
@@ -469,7 +469,7 @@ public class TeacherServiceImpl implements TeacherService {
 		int tscId = teacherSelectCourseMapper.selecttscId(tId, cId);
 		List<Map<String, Object>> courseNotice = courseNoticeMapper.selectCourseNotices(tscId);
 		for (Map<String, Object> map : courseNotice) {
-			String a = FormatDateToString.fromatData(map.get("cnPdate"));
+			String a = MyDateUtil.getFormattedTime(map.get("cnPdate"), "yyyy-MM-dd HH:mm");
 			map.put("cnPdate", a);
 		}
 		return courseNotice;
@@ -485,7 +485,7 @@ public class TeacherServiceImpl implements TeacherService {
 	public void insertCoursenoticeSrvice(String cnTitle, String cnContent, String tId, String cId) {
 		int tscId = teacherSelectCourseMapper.selecttscId(tId, cId);
 		Date nowDate = new Date();
-		String fromatData = FormatDateToString.fromatData(nowDate);
+		String fromatData = MyDateUtil.getFormattedTime(nowDate, "yyyy-MM-dd HH:mm");
 		courseNoticeMapper.insertCourseNotice(cnTitle, cnContent, tscId, fromatData);
 
 	}

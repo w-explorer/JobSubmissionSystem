@@ -32,4 +32,33 @@ public class StudentSignInServiceImpl implements StudentSignInService {
 		ssMapper.insertAll(list);
 	}
 
+	/**
+	 * 获取学生是否已签到
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public boolean isSigned(String psId, String sId) {
+		return ssMapper.selectStatus(psId, sId);
+	}
+
+	/**
+	 * 进行签到
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public void signIn(String psId, String sId, String time, String mark) {
+		ssMapper.updateStudentSignIn(psId, sId, time, mark);
+	}
+
+	/**
+	 * 获取学生签到状态
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public Map<String, Object> getStudentSignIn(String psId, String sId) {
+		return ssMapper.selectByPsIdAndSId(psId, sId);
+	}
 }
