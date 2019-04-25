@@ -33,7 +33,7 @@
 	        <mvc:exclude-mapping path="/role/quit.do" />
 	        <mvc:exclude-mapping path="/role/forgetpassword.do" />
 	        <mvc:exclude-mapping path="/login.*" />
-	        <mvc:exclude-mapping path="/swagger/**" />
+	        <mvc:exclude-mapping path="/facemanager/**" />
 	        <bean class="com.cdtu.interceptor.TokenInterceptor"></bean>
 	            
 	    </mvc:interceptor> 
