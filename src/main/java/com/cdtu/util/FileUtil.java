@@ -58,7 +58,7 @@ public class FileUtil {
 	 * @return false 文件已存在
 	 * @author 李红兵
 	 */
-	public static boolean uploadFile(MultipartFile upFile, File newFile, HttpServletRequest request) throws Exception {
+	public static boolean uploadFile(MultipartFile upFile, File newFile) throws Exception {
 		if (!newFile.exists()) {
 			newFile.mkdirs();
 			upFile.transferTo(newFile);
@@ -103,11 +103,7 @@ public class FileUtil {
 	 * @author 李红兵
 	 */
 	public static boolean deleteFile(File file) throws Exception {
-		if (file.exists()) {
-			file.delete();
-			return true;
-		}
-		return false;
+		return file.delete();
 	}
 
 	/**

@@ -82,7 +82,7 @@ public class TeacherController {
 						String relativePath = "/uploadFile/resource/" + tId + "/" + cId;
 						String absolutePath = FileUtil.getAbsolutePath(request);
 						File file = new File(absolutePath + relativePath, fileName);
-						if (FileUtil.uploadFile(files[i], file, request)) {
+						if (FileUtil.uploadFile(files[i], file)) {
 							String fileType = FileUtil.getFileType(file);
 							boolean onlineReadAble = FileUtil.canOnlineRead(file);
 							tFileService.uploadFile(tId, cId, relativePath, fileName, onlineReadAble, fileType);
@@ -882,11 +882,12 @@ public class TeacherController {
 	 */
 	@RequestMapping(value = "downloadEstimate.do")
 	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
-	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps,HttpServletRequest request) {
+	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps,
+			HttpServletRequest request) {
 
 		Map<String, Object> map = teacherService.selectEstimate((String) maps.get("epId"));
 		map.put("eSuggests", teacherService.selectEsuggest((String) maps.get("epId")));
-		String moban = GetRootPath.getRootPath(request)+ File.separator+"uploadFile" + File.separator + "estimate";
+		String moban = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "estimate";
 		String filePaths = moban + File.separator + maps.get("epId");
 		String filePath = moban + File.separator + maps.get("epId") + File.separator + "评价详情" + ".docx";
 		File file = new File(filePaths);

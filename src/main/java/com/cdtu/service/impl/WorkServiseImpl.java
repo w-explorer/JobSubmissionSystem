@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cdtu.mapper.WorkMapper;
 import com.cdtu.service.WorkService;
-import com.cdtu.util.FormatDateToString;
+import com.cdtu.util.MyDateUtil;
 
 @Transactional
 @Service(value = "workService")
@@ -105,7 +105,7 @@ public class WorkServiseImpl implements WorkService {
 	public List<Map<String, Object>> SearchPwByPwName(String tId, String cId, String pwName) {
 		List<Map<String, Object>> maps = workMapper.SearchPwByPwName(tId, cId, pwName);
 		for (Map<String, Object> map : maps) {
-			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));// 将时间秒变成字符串形式
+			map.put("pwEnd", MyDateUtil.getFormattedTime(map.get("pwEnd"), "yyyy-MM-dd HH:mm"));// 将时间秒变成字符串形式
 			if ((Boolean) map.get("pwState") == false) {
 				map.put("pwStringState", "已结束");
 				map.put("pwBooleanState", false);
@@ -128,7 +128,7 @@ public class WorkServiseImpl implements WorkService {
 				map.put("wStringState", "未参与");
 				map.put("wBooleanState", false);
 			}
-			map.put("pwEnd", FormatDateToString.fromatData(map.get("pwEnd")));
+			map.put("pwEnd", MyDateUtil.getFormattedTime(map.get("pwEnd"), "yyyy-MM-dd HH:mm"));
 			if (!(boolean) map.get("pwState")) {
 				map.put("pwStringState", "已结束");
 				map.put("pwBooleanState", false);

@@ -279,7 +279,7 @@ public class FileController {
 					+ (String) name.get("pw_name") + ".zip";
 			String resourcesNames = File.separator + "workfile" + File.separator + "zip" + File.separator
 					+ (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
-			com.cdtu.util.deleteFolder.delFolder(workFile);
+			com.cdtu.util.DeleteFolder.delFolder(workFile);
 			File file = new File(workFile);
 			if (!file.exists()) {
 				file.mkdirs();// 创建目录
@@ -298,9 +298,9 @@ public class FileController {
 						+ "works";
 				String workpath = studentworkFile + File.separator + "作业详情" + ".docx";
 				if ((String) w.get("w_context") == null) {
-					w.put("w_context", com.cdtu.util.cleanLable.getTextFrom("未作答"));
+					w.put("w_context", com.cdtu.util.CleanLable.getTextFrom("未作答"));
 				}
-				w.put("w_context", com.cdtu.util.cleanLable.getTextFrom((String) w.get("w_context")));
+				w.put("w_context", com.cdtu.util.CleanLable.getTextFrom((String) w.get("w_context")));
 				ExportWord.createWord(w, moban, workpath);
 				for (Map<String, Object> Addr : Addrs) {
 					String ws = (String) Addr.get("w_id");
@@ -394,10 +394,10 @@ public class FileController {
 			String moban = GetRootPath.getRootPath(request) + "/uploadFile";
 			String filePath = workFile + File.separator + "任务详情" + File.separator + "作业详情" + ".docx";
 			ExportWord.createWord(publishwork, moban, filePath);
-			com.cdtu.util.compresszip.compress(file, zipOut, (String) name.get("c_name") + (String) name.get("pw_name"),
+			com.cdtu.util.Compresszip.compress(file, zipOut, (String) name.get("c_name") + (String) name.get("pw_name"),
 					true);
 			zipOut.close();
-			com.cdtu.util.deleteFolder.delFolder(workFile);
+			com.cdtu.util.DeleteFolder.delFolder(workFile);
 			map.put("status", 200);
 			map.put("Addr", resourcesNames);
 		} catch (Exception e) {
