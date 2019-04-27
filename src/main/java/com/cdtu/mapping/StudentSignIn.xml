@@ -10,11 +10,19 @@
 	</insert>
 
 	<update id="updateStudentSignIn">
-		UPDATE student_sign_in
-		SET ss_status = 1, ss_mark = #{mark}, ss_time = #{time}
+		UPDATE student_sign_in SET ss_status = 1,
+		ss_mark = IF(NOW() > (SELECT s_late_time FROM publish_sign_in
+		WHERE ps_id = #{psId}), '迟到', '已签'), ss_time = NOW()
 		WHERE ps_id = #{psId}
 		AND s_id = #{sId}
 	</update>
+	
+	<select id="selectByPsId" resultType="java.util.HashMap">
+		SELECT student.s_id, s_img_src, s_name, ss_status, ss_time
+		FROM student_sign_in, student
+		WHERE ps_id = #{psId}
+		AND student.s_id = student_sign_in.s_id
+	</select>
 
 	<select id="selectByPsIdAndSId" resultType="java.util.HashMap">
 		SELECT ss_status AS ssStatus, ss_mark AS mark

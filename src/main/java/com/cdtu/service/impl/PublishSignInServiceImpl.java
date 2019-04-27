@@ -1,6 +1,5 @@
 package com.cdtu.service.impl;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.cdtu.mapper.PublishSignInMapper;
 import com.cdtu.service.PublishSignInService;
-import com.cdtu.util.MyDateUtil;
 
 @Service(value = "psService")
 public class PublishSignInServiceImpl implements PublishSignInService {
@@ -24,23 +22,6 @@ public class PublishSignInServiceImpl implements PublishSignInService {
 	@Override
 	public boolean isSignIning(String tId, String cId) {
 		return psMapper.count(tId, cId) == 1;
-	}
-
-	/**
-	 * 老师获取签到情况
-	 *
-	 * @author 李红兵
-	 */
-	@Override
-	public List<Map<String, Object>> getSignInCondition(String tId, String cId) {
-		List<Map<String, Object>> maps = psMapper.selectByTIdAndCID(tId, cId);
-		maps.forEach(map -> {
-			Object timeStamp = map.get("ssTime");
-			if (timeStamp != null) {
-				map.put("ssTime", MyDateUtil.getFormattedTime(timeStamp, "HH:mm:ss"));
-			}
-		});
-		return maps;
 	}
 
 	/**
@@ -59,8 +40,8 @@ public class PublishSignInServiceImpl implements PublishSignInService {
 	 * @author 李红兵
 	 */
 	@Override
-	public Map<String, Object> getTimeCodeStatus(String psId, String sId) {
-		return psMapper.selectTimeCodeStatus(psId, sId);
+	public String getCheckCode(String psId, String sId) {
+		return psMapper.selectCheckCode(psId, sId);
 	}
 
 	/**
@@ -79,7 +60,8 @@ public class PublishSignInServiceImpl implements PublishSignInService {
 	 * @author 李红兵
 	 */
 	@Override
-	public void startSignIn(String psId, String tId, String cId, String time, String checkCode) {
-		psMapper.insert(psId, tId, cId, time, checkCode);
+	public void startSignIn(String psId, String tId, String cId, String startTime, String lateTime, String stopTime,
+			String checkCode) {
+		psMapper.insert(psId, tId, cId, startTime, lateTime, stopTime, checkCode);
 	}
 }

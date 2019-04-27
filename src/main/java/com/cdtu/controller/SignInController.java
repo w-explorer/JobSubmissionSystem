@@ -19,13 +19,54 @@ import com.cdtu.service.PublishSignInService;
 import com.cdtu.service.StudentSignInService;
 import com.cdtu.util.MyDateUtil;
 import com.cdtu.util.MyExceptionResolver;
-import com.cdtu.util.MyTimerTask;
 
 @Controller
 @RequestMapping(value = "signIn")
 public class SignInController {
 	private @Resource(name = "ssService") StudentSignInService ssService;
 	private @Resource(name = "psService") PublishSignInService psService;
+
+	/**
+	 * 老师开始签到
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequiresRoles(value = { "teacher" })
+	@RequestMapping(value = "startSignIn.do")
+	public Map<String, Object> doStartSignIn(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			String cId = (String) paramsMap.get("cId");
+			int timeToLate = (int) paramsMap.get("timeToLate");// 多少分钟后算迟到
+			int timeToStop = (int) paramsMap.get("timeToStop");// 多少分钟后结束签到
+			String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+			if (!psService.isSignIning(tId, cId)) {
+				String checkCode = "";
+				Random rander = new Random();
+				for (int i = 0; i < 4; i++) {
+					checkCode += rander.nextInt(10);
+				}
+				Date now = new Date();
+				String pattern = "yyyy-MM-dd HH:mm:ss";
+				String psId = MyDateUtil.getFormattedTime(now, "yyyyMMddHHmmss");
+				String startTime = MyDateUtil.getFormattedTime(now, pattern);// 签到开始时间
+				String lateTime = MyDateUtil.getIntervalTime(now, timeToLate, pattern);// 签到迟到时间
+				String stopTime = MyDateUtil.getIntervalTime(now, timeToStop, pattern);// 签到结束时间
+				psService.startSignIn(psId, tId, cId, startTime, lateTime, stopTime, checkCode);
+				ssService.initDatabase(psId, cId);
+				map.put("psId", psId);
+				map.put("checkCode", checkCode);
+				map.put("status", 200);
+			} else {
+				map.put("msg", "签到未结束，不能签到");
+				map.put("status", 400);
+			}
+		} catch (Exception e) {
+			MyExceptionResolver.handlException(map, e);
+		}
+		return map;
+	}
 
 	/**
 	 * 老师查看签到情况
@@ -38,48 +79,9 @@ public class SignInController {
 	public Map<String, Object> doQuerySignInCon(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			String cId = (String) paramsMap.get("cId");
-			String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
-			map.put("signInOfStudents", psService.getSignInCondition(tId, cId));
+			String psId = (String) paramsMap.get("psId");
+			map.put("signInOfStudents", ssService.getSignInCondition(psId));
 			map.put("status", 200);
-		} catch (Exception e) {
-			MyExceptionResolver.handlException(map, e);
-		}
-		return map;
-	}
-
-	/**
-	 * 老师开始签到，5分钟后停止签到
-	 *
-	 * @author 李红兵
-	 */
-	@ResponseBody
-	@RequiresRoles(value = { "teacher" })
-	@RequestMapping(value = "startSignIn.do")
-	public Map<String, Object> doStartSignIn(@RequestBody Map<String, Object> paramsMap) {
-		Map<String, Object> map = new HashMap<>();
-		try {
-			String cId = (String) paramsMap.get("cId");
-			String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
-			if (!psService.isSignIning(tId, cId)) {
-				String checkCode = "";
-				Random rander = new Random();
-				for (int i = 0; i < 4; i++) {
-					checkCode += rander.nextInt(10);
-				}
-				Date now = new Date();
-				String psId = MyDateUtil.getFormattedTime(now, "yyyyMMddHHmmss");
-				String time = MyDateUtil.getFormattedTime(now, "yyyy-MM-dd HH:mm:ss");
-				psService.startSignIn(psId, tId, cId, time, checkCode);
-				ssService.initDatabase(psId, cId);
-				MyTimerTask.start(psId, psService);
-				map.put("psId", psId);
-				map.put("checkCode", checkCode);
-				map.put("status", 200);
-			} else {
-				map.put("msg", "签到未结束，不能签到");
-				map.put("status", 400);
-			}
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
 		}
@@ -98,7 +100,6 @@ public class SignInController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			psService.stopSignIn((String) paramsMap.get("psId"));
-			MyTimerTask.cancel();
 			map.put("status", 200);
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
@@ -107,7 +108,7 @@ public class SignInController {
 	}
 
 	/**
-	 * 学生查看签到状态
+	 * 学生查看当前是否有签到
 	 *
 	 * @author 李红兵
 	 */
@@ -121,6 +122,7 @@ public class SignInController {
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			Map<String, Object> psMap = psService.getPublishSignIn(sId, cId);
 			if (psMap != null) {
+				psMap.put("isLate", "1".equals(psMap.get("isLate").toString()));
 				map.putAll(psMap);
 				map.putAll(ssService.getStudentSignIn((String) psMap.get("psId"), sId));
 				map.put("status", 200);
@@ -149,20 +151,8 @@ public class SignInController {
 			String code = (String) paramsMap.get("chekCode");
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			if (!ssService.isSigned(psId, sId)) {
-				String time = MyDateUtil.getFormattedTime(new Date(), "yyyy-MM-dd HH:mm:ss");
-				Map<String, Object> ssMap = psService.getTimeCodeStatus(psId, sId);
-				if (ssMap.get("checkCode").equals(code)) {
-					String mark = "";
-					String startTime = MyDateUtil.getFormattedTime(ssMap.get("startTime"), "yyyy-MM-dd HH:mm:ss");
-					int timeInterval = MyDateUtil.getTimeInterval(startTime, time);
-					if (timeInterval <= 5) {
-						mark = (boolean) ssMap.get("sStatus") ? "已签" : "迟到";
-					} else if (timeInterval <= 40) {
-						mark = "迟到";
-					} else {
-						mark = "旷课";
-					}
-					ssService.signIn(psId, sId, time, mark);
+				if (code.equals(psService.getCheckCode(psId, sId))) {
+					ssService.signIn(psId, sId);
 					map.put("status", 200);
 				} else {
 					map.put("msg", "验证码不正确");

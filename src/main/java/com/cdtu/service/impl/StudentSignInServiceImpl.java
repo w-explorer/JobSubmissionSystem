@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.cdtu.mapper.StudentSelectCourseMapper;
 import com.cdtu.mapper.StudentSignInMapper;
 import com.cdtu.service.StudentSignInService;
+import com.cdtu.util.MyDateUtil;
 import com.cdtu.util.OAUtil;
 
 @Service(value = "ssService")
@@ -48,8 +49,8 @@ public class StudentSignInServiceImpl implements StudentSignInService {
 	 * @author 李红兵
 	 */
 	@Override
-	public void signIn(String psId, String sId, String time, String mark) {
-		ssMapper.updateStudentSignIn(psId, sId, time, mark);
+	public void signIn(String psId, String sId) {
+		ssMapper.updateStudentSignIn(psId, sId);
 	}
 
 	/**
@@ -60,5 +61,22 @@ public class StudentSignInServiceImpl implements StudentSignInService {
 	@Override
 	public Map<String, Object> getStudentSignIn(String psId, String sId) {
 		return ssMapper.selectByPsIdAndSId(psId, sId);
+	}
+
+	/**
+	 * 老师获取签到情况
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public List<Map<String, Object>> getSignInCondition(String psId) {
+		List<Map<String, Object>> maps = ssMapper.selectByPsId(psId);
+		maps.forEach(map -> {
+			Object timeStamp = map.get("ssTime");
+			if (timeStamp != null) {
+				map.put("ssTime", MyDateUtil.getFormattedTime(timeStamp, "HH:mm:ss"));
+			}
+		});
+		return maps;
 	}
 }

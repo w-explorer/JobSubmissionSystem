@@ -14,6 +14,11 @@ public interface StudentSignInMapper {
 	/**
 	 * @author 李红兵
 	 */
+	public List<Map<String, Object>> selectByPsId(@Param("psId") String psId);
+
+	/**
+	 * @author 李红兵
+	 */
 	public boolean selectStatus(@Param("psId") String psId, @Param("sId") String sId);
 
 	/**
@@ -24,6 +29,5 @@ public interface StudentSignInMapper {
 	/**
 	 * @author 李红兵
 	 */
-	public void updateStudentSignIn(@Param("psId") String psId, @Param("sId") String sId, @Param("time") String time,
-			@Param("mark") String mark);
+	public void updateStudentSignIn(@Param("psId") String psId, @Param("sId") String sId);
 }

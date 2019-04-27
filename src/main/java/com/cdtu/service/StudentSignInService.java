@@ -1,5 +1,6 @@
 package com.cdtu.service;
 
+import java.util.List;
 import java.util.Map;
 
 public interface StudentSignInService {
@@ -7,7 +8,9 @@ public interface StudentSignInService {
 
 	public boolean isSigned(String psId, String sId);
 
-	public void signIn(String psId, String sId, String time, String mark);
+	public List<Map<String, Object>> getSignInCondition(String psId);
+
+	public void signIn(String psId, String sId);
 
 	public Map<String, Object> getStudentSignIn(String psId, String sId);
 }

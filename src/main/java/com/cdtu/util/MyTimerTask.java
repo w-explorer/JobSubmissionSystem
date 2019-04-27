@@ -13,7 +13,7 @@ public class MyTimerTask {
 	 *
 	 * @author 李红兵
 	 */
-	public static void start(String psId, PublishSignInService psService) {
+	public static void start(String psId, int signInTime, PublishSignInService psService) {
 		timerTask = new TimerTask() {
 			@Override
 			public void run() {
@@ -21,7 +21,7 @@ public class MyTimerTask {
 				cancel();
 			}
 		};
-		new Timer().schedule(timerTask, 5 * 60 * 1000);
+		new Timer().schedule(timerTask, signInTime * 60 * 1000);
 	}
 
 	/**
