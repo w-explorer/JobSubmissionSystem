@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baidu.aip.face.AipFace;
+import com.cdtu.common.AIConstant;
 import com.cdtu.common.FactoryUtil;
 import com.cdtu.model.Role;
 import com.cdtu.service.AdminstratorService;
@@ -53,28 +54,53 @@ public class FaceManagerController {
 	 */
 	@RequestMapping("/add")
 	@ResponseBody
-	public String addFace(@RequestBody Map<String,Object> paramMaps,HttpServletRequest request, HttpServletResponse response){
+	public  Map<String,Object> addFace(@RequestBody Map<String,Object> paramMaps,HttpServletRequest request, HttpServletResponse response){
 		log.info("发送过来的参数{}",JSONObject.toJSONString(paramMaps));
 		Subject subject = SecurityUtils.getSubject();
+		Map<String, Object> map = new HashMap<>();
 		Role role = (Role) subject.getPrincipal();
 		String username = role.getUsername();
 		String roleName = role.getRole();
 		String imgdata =(String) paramMaps.get("imgdata");
-//		FacePageResponse facePageResponse = new FacePageResponse();
-//		if(paramMaps.get("username").equals("")||null==paramMaps.get("username")){
-//			facePageResponse.setError_code("100");
-//			facePageResponse.setError_msg("用户名称为空 请填写后重试");
-//			return JSON.toJSONString(facePageResponse);
-//		}else{
-			String groupId = "xsdemo";//用户组id（由数字、字母、下划线组成），长度限制128B
-//			String userId = UUID.randomUUID().toString().replace("-", "").toUpperCase();//用户id（由数字、字母、下划线组成），长度限制128B
-			String userId = username+"x"+roleName;//用户id（由数字、字母、下划线组成），长度限制128B
-			HashMap<String, String> options = new HashMap<String, String>();
-			options.put("user_info","小帅丶");
-			org.json.JSONObject resultObject = aipFace.addUser(imgdata, "BASE64", groupId, userId, options);
-			log.info("注册返回的数据{}",resultObject.toString(2));
-			return resultObject.toString();	
-//		}
+		String userId = username+"x"+roleName;//用户id（由数字、字母、下划线组成），长度限制128B
+		HashMap<String, String> options = new HashMap<String, String>();
+		options.put("user_info","小帅丶");
+		org.json.JSONObject resultObject = aipFace.addUser(imgdata, "BASE64", AIConstant.GROUP_ID, userId, options);
+		FaceSerachResponse faceSerachResponse = JSON.parseObject(resultObject.toString(), FaceSerachResponse.class);
+		System.out.println(faceSerachResponse.toString());
+		if("0".equals(faceSerachResponse.getError_code())&&"SUCCESS".equals(faceSerachResponse.getError_msg())){
+			map.put("status", 200);
+			map.put("msg", "注册成功！");
+		}
+		else if("0".equals(faceSerachResponse.getError_code())&&"face is already exist".equals(faceSerachResponse.getError_msg())){
+			map.put("status", 222);
+			map.put("msg", "人脸信息已存在");
+		}else{
+			map.put("status", 500);
+			map.put("msg", "图片识别失败，请重新注册!");
+		}
+		log.info("注册返回的数据{}",resultObject.toString(2));
+		return map;	
+	}
+	/**
+	 * 人脸信息删除
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("/delete")
+	@ResponseBody
+	public void deleteFace(HttpServletRequest request, HttpServletResponse response){
+		 // 传入可选参数调用接口
+	    HashMap<String, String> options = new HashMap<String, String>();
+	    Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
+		String username = role.getUsername();
+		String roleName = role.getRole();
+		String uid  = username+"x"+roleName;//用户id（由数字、字母、下划线组成），长度限制128B
+	    options.put("group_id", AIConstant.GROUP_ID);
+	    // 人脸删除
+	    org.json.JSONObject res = aipFace.deleteUser(AIConstant.GROUP_ID, uid, options);
+	    System.out.println(res.toString(2));
 	}
 	/**
 	 * 人脸搜索
@@ -118,8 +144,6 @@ public class FaceManagerController {
 				UsernamePasswordToken token1 = new UsernamePasswordToken(userName, password,
 						roleName);
 				try {
-//					System.out.println(role.isRememberMe() + "///////////" + subject.isRemembered() + "登陆 记住密码");
-					// 提交认证
 					subject.login(token1);
 				} catch (Exception e) {
 					map.put("msg", "账号或密码错误！");
@@ -154,8 +178,6 @@ public class FaceManagerController {
 		}else{
 			map.put("code", "555");//facePageResponse.setError_code("555");
 			map.put("msg", "人脸搜索失败，请重试或请先注册");//facePageResponse.setError_msg("人脸搜索失败，请重试或请先注册");
-//			facePageResponse.setError_code("500");
-//			facePageResponse.setError_msg(faceSerachResponse.getError_msg());
 		}
 		log.info("搜索返回的数据{}",resultObject.toString(2));
 		return map;

@@ -9,5 +9,6 @@ public class AIConstant {
 	public static final String BD_FACE_APPID = "16086321";
 	public static final String BD_FACE_APPKEY = "uYwhRIHZUGItt3YZwChiimKC";
 	public static final String BD_FACE_SECRETKEY = "qu8kihmohy0gYUXf0mGewZur6yDzHpaG";
+	public static final String GROUP_ID = "xsdemo";
 
 }
