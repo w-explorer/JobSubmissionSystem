@@ -28,6 +28,27 @@ public class SignInController {
 	private @Resource(name = "psService") PublishSignInService psService;
 
 	/**
+	 * 老师查看签到情况
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequiresRoles(value = { "teacher" })
+	@RequestMapping(value = "querySignInCon.do")
+	public Map<String, Object> doQuerySignInCon(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			String cId = (String) paramsMap.get("cId");
+			String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+			map.put("signInOfStudents", psService.getSignInCondition(tId, cId));
+			map.put("status", 200);
+		} catch (Exception e) {
+			MyExceptionResolver.handlException(map, e);
+		}
+		return map;
+	}
+
+	/**
 	 * 老师开始签到，5分钟后停止签到
 	 *
 	 * @author 李红兵
@@ -38,22 +59,27 @@ public class SignInController {
 	public Map<String, Object> doStartSignIn(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			String checkCode = "";
-			Random rander = new Random();
-			for (int i = 0; i < 4; i++) {
-				checkCode += rander.nextInt(10);
-			}
-			Date now = new Date();
 			String cId = (String) paramsMap.get("cId");
-			String psId = MyDateUtil.getFormattedTime(now, "yyyyMMddHHmmss");
-			String time = MyDateUtil.getFormattedTime(now, "yyyy-MM-dd HH:mm:ss");
 			String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
-			psService.startSignIn(psId, tId, cId, time, checkCode);
-			ssService.initDatabase(psId, cId);
-			MyTimerTask.start(psId, psService);
-			map.put("psId", psId);
-			map.put("checkCode", checkCode);
-			map.put("status", 200);
+			if (!psService.isSignIning(tId, cId)) {
+				String checkCode = "";
+				Random rander = new Random();
+				for (int i = 0; i < 4; i++) {
+					checkCode += rander.nextInt(10);
+				}
+				Date now = new Date();
+				String psId = MyDateUtil.getFormattedTime(now, "yyyyMMddHHmmss");
+				String time = MyDateUtil.getFormattedTime(now, "yyyy-MM-dd HH:mm:ss");
+				psService.startSignIn(psId, tId, cId, time, checkCode);
+				ssService.initDatabase(psId, cId);
+				MyTimerTask.start(psId, psService);
+				map.put("psId", psId);
+				map.put("checkCode", checkCode);
+				map.put("status", 200);
+			} else {
+				map.put("msg", "签到未结束，不能签到");
+				map.put("status", 400);
+			}
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
 		}
@@ -146,7 +172,6 @@ public class SignInController {
 				map.put("msg", "请勿重复签到");
 				map.put("status", 400);
 			}
-			map.put("status", 200);
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
 		}

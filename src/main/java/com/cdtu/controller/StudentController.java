@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import com.cdtu.model.CourseStudent;
-import com.cdtu.model.CourseWapper;
 import com.cdtu.model.Estimate;
 import com.cdtu.model.Role;
 import com.cdtu.model.StudentSelectCourse;
@@ -429,6 +427,7 @@ public class StudentController {
 		// ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),
 		// headers, HttpStatus.CREATED);
 	}
+
 	/**
 	 * @author 文成 模糊查询作业
 	 * @param paramsMap
