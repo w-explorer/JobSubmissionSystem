@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdtu.mapper.SignInMapper">
+	<select id="selectDueNum" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM student_sign_in
+		WHERE ps_id = #{psId}
+	</select>
+
+	<select id="selectActualNum" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM student_sign_in
+		WHERE ps_id = #{psId}
+		AND ss_status = 1
+	</select>
+
+	<update id="updatePublishSignIn">
+		UPDATE publish_sign_in SET s_late_time = NOW(), s_stop_time = NOW()
+		WHERE ps_id = #{psId}
+	</update>
+
+	<delete id="deletePublishSignIn">
+		DELETE FROM publish_sign_in
+		WHERE ps_id = #{psId}
+	</delete>
+
+	<select id="selectPsId" resultType="java.lang.String">
+		SELECT ps_id AS psId
+		FROM publish_sign_in, teacher_select_course
+		WHERE c_id = #{cId}
+		AND t_id = #{tId}
+		AND publish_sign_in.tsc_id = teacher_select_course.tsc_id
+		AND s_stop_time >= NOW()
+	</select>
+
+	<insert id="insertAllToSignIn">
+		INSERT INTO student_sign_in (ss_id, ps_id, s_id)
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.ssId}, #{item.psId}, #{item.sId})
+		</foreach>
+	</insert>
+
+	<select id="countPublishSignIn" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM publish_sign_in, teacher_select_course
+		WHERE teacher_select_course.t_id = #{tId}
+		AND teacher_select_course.c_id = #{cId}
+		AND publish_sign_in.tsc_id = teacher_select_course.tsc_id
+		AND s_stop_time >= NOW()
+		LIMIT 1
+	</select>
+
+	<select id="selectSignInConditions" resultType="java.util.HashMap">
+		SELECT student.s_id AS sId, s_img_src AS sImgSrc,
+		s_name AS sName, ss_status AS ssStatus, ss_time AS ssTime
+		FROM student_sign_in, student
+		WHERE ps_id = #{psId}
+		AND student.s_id = student_sign_in.s_id
+		ORDER BY student.s_id
+	</select>
+
+	<select id="selectCheckCode" resultType="java.lang.String">
+		SELECT s_check_code AS checkCode
+		FROM publish_sign_in
+		WHERE ps_id = #{psId}
+	</select>
+
+	<update id="updateStudentSignIn">
+		UPDATE student_sign_in SET ss_status = 1,
+		ss_mark = IF(NOW() > (SELECT s_late_time FROM publish_sign_in
+		WHERE ps_id = #{psId}), "迟到", "已签到"), ss_time = NOW()
+		WHERE ps_id = #{psId}
+		AND s_id = #{sId}
+	</update>
+
+	<select id="selectSignInStatus" resultType="java.lang.Boolean">
+		SELECT ss_status
+		FROM student_sign_in
+		WHERE ps_id = #{psId}
+		AND s_id = #{sId}
+	</select>
+
+	<select id="selectPublishSignIn" resultType="java.util.HashMap">
+		SELECT ps_id AS psId, s_start_time AS startTime, s_late_time AS lateTime, s_stop_time AS stopTime
+		FROM student_select_course, publish_sign_in, teacher_select_course
+		WHERE student_select_course.s_id = #{sId}
+		AND teacher_select_course.c_id = #{cId}
+		AND student_select_course.tsc_id = teacher_select_course.tsc_id
+		AND publish_sign_in.tsc_id = teacher_select_course.tsc_id
+		AND s_stop_time >= NOW()
+	</select>
+
+	<select id="selectStudentSignIn" resultType="java.util.HashMap">
+		SELECT ss_time AS signTime, ss_mark AS signMark
+		FROM student_sign_in
+		WHERE ps_id = #{psId}
+		AND s_id = #{sId}
+		AND ss_status = 1
+	</select>
+
+	<select id="selectStudentSignIns" resultType="java.util.HashMap">
+		SELECT s_start_time AS startTime, ss_mark AS signMark
+		FROM teacher_select_course, publish_sign_in, student_sign_in
+		WHERE teacher_select_course.c_id = #{cId}
+		AND publish_sign_in.tsc_id = teacher_select_course.tsc_id
+		AND student_sign_in.ps_id = publish_sign_in.ps_id
+		AND student_sign_in.s_id = #{sId}
+		ORDER BY s_start_time DESC
+	</select>
+
+	<select id="selectPublishSignIns" resultType="java.util.HashMap">
+		SELECT ps_id AS psId, s_start_time AS startTime
+		FROM publish_sign_in, teacher_select_course
+		WHERE c_id = #{cId}
+		AND t_id = #{tId}
+		AND publish_sign_in.tsc_id = teacher_select_course.tsc_id
+		ORDER BY s_start_time DESC
+	</select>
+
+	<insert id="insertPublishSignIn">
+		INSERT publish_sign_in (ps_id, tsc_id, s_start_time, s_late_time, s_stop_time, s_check_code)
+		SELECT #{psId}, tsc_id, #{startTime}, #{lateTime}, #{stopTime}, #{checkCode}
+		FROM teacher_select_course
+		WHERE t_id = #{tId}
+		AND c_id = #{cId}
+	</insert>
+</mapper>
