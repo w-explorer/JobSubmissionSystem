@@ -2,6 +2,7 @@ package com.cdtu.controller;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -15,16 +16,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cdtu.model.Role;
-import com.cdtu.service.PublishSignInService;
-import com.cdtu.service.StudentSignInService;
+import com.cdtu.service.SignInService;
 import com.cdtu.util.MyDateUtil;
 import com.cdtu.util.MyExceptionResolver;
 
 @Controller
 @RequestMapping(value = "signIn")
 public class SignInController {
-	private @Resource(name = "ssService") StudentSignInService ssService;
-	private @Resource(name = "psService") PublishSignInService psService;
+	private @Resource(name = "signInService") SignInService signInService;
+
+	/**
+	 * 老师进入签到功能，查询签到信息。<br/>
+	 * 如果没有签到则返回签到历史记录，否则返回当前签到情况
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequiresRoles(value = { "teacher" })
+	@RequestMapping(value = "querySignInInfo.do")
+	public Map<String, Object> doQuerySignInInfo(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			String cId = (String) paramsMap.get("cId");
+			String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+			String currPsId = signInService.getCurrPsId(tId, cId);// 获取当前发布的签到id
+			if (currPsId == null) {
+				List<Map<String, Object>> signIns = signInService.getPublishSignIns(tId, cId);
+				signIns.forEach(signIn -> {
+					String psId = (String) signIn.get("psId");
+					formatMap(signIn, "startTime");
+					signIn.put("dueNum", signInService.getDueNum(psId));
+					signIn.put("actualNum", signInService.getActualNum(psId));
+				});
+				map.put("signIns", signIns);
+				map.put("isSignIning", false);
+			} else {
+				map.put("isSignIning", true);
+				map.put("signInConditions", signInService.getSignInConditions(currPsId));
+			}
+			map.put("status", 200);
+		} catch (Exception e) {
+			MyExceptionResolver.handlException(map, e);
+		}
+		return map;
+	}
 
 	/**
 	 * 老师开始签到
@@ -41,7 +76,7 @@ public class SignInController {
 			int timeToLate = (int) paramsMap.get("timeToLate");// 多少分钟后算迟到
 			int timeToStop = (int) paramsMap.get("timeToStop");// 多少分钟后结束签到
 			String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
-			if (!psService.isSignIning(tId, cId)) {
+			if (!signInService.isSignIning(tId, cId)) {
 				String checkCode = "";
 				Random rander = new Random();
 				for (int i = 0; i < 4; i++) {
@@ -53,13 +88,12 @@ public class SignInController {
 				String startTime = MyDateUtil.getFormattedTime(now, pattern);// 签到开始时间
 				String lateTime = MyDateUtil.getIntervalTime(now, timeToLate, pattern);// 签到迟到时间
 				String stopTime = MyDateUtil.getIntervalTime(now, timeToStop, pattern);// 签到结束时间
-				psService.startSignIn(psId, tId, cId, startTime, lateTime, stopTime, checkCode);
-				ssService.initDatabase(psId, cId);
+				signInService.startSignIn(psId, tId, cId, startTime, lateTime, stopTime, checkCode);
 				map.put("psId", psId);
 				map.put("checkCode", checkCode);
 				map.put("status", 200);
 			} else {
-				map.put("msg", "签到未结束，不能签到");
+				map.put("msg", "有一个签到活动正在进行中，请结束后再试");
 				map.put("status", 400);
 			}
 		} catch (Exception e) {
@@ -69,18 +103,17 @@ public class SignInController {
 	}
 
 	/**
-	 * 老师查看签到情况
+	 * 老师取消签到
 	 *
 	 * @author 李红兵
 	 */
 	@ResponseBody
 	@RequiresRoles(value = { "teacher" })
-	@RequestMapping(value = "querySignInCon.do")
-	public Map<String, Object> doQuerySignInCon(@RequestBody Map<String, Object> paramsMap) {
+	@RequestMapping(value = "cancelSignIn.do")
+	public Map<String, Object> doCancelSignIn(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			String psId = (String) paramsMap.get("psId");
-			map.put("signInOfStudents", ssService.getSignInCondition(psId));
+			signInService.cancelSignIn((String) paramsMap.get("psId"));
 			map.put("status", 200);
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
@@ -99,7 +132,7 @@ public class SignInController {
 	public Map<String, Object> doStopSignIn(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			psService.stopSignIn((String) paramsMap.get("psId"));
+			signInService.stopSignIn((String) paramsMap.get("psId"));
 			map.put("status", 200);
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
@@ -108,7 +141,10 @@ public class SignInController {
 	}
 
 	/**
-	 * 学生查看当前是否有签到
+	 * 学生进入签到功能，查询签到信息。<br/>
+	 * 如果当前没有签到活动，则返回该学生该门课的历史签到记录，<br/>
+	 * 否则，如果自己还未参与该签到活动，则返回该签到活动的详情信息，<br/>
+	 * 如果自己已参与该签到活动，则返回自己的本次签到信息。
 	 *
 	 * @author 李红兵
 	 */
@@ -120,14 +156,27 @@ public class SignInController {
 		try {
 			String cId = (String) paramsMap.get("cId");
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
-			Map<String, Object> psMap = psService.getPublishSignIn(sId, cId);
-			if (psMap != null) {
-				psMap.put("isLate", "1".equals(psMap.get("isLate").toString()));
-				map.putAll(psMap);
-				map.putAll(ssService.getStudentSignIn((String) psMap.get("psId"), sId));
+			Map<String, Object> publishSignIn = signInService.getPublishSignIn(sId, cId);
+			if (publishSignIn != null) {
+				String psId = (String) publishSignIn.get("psId");
+				Map<String, Object> studentSignIn = signInService.getStudentSignIn(psId, sId);
+				if (studentSignIn == null) {
+					formatMap(publishSignIn, "startTime");
+					formatMap(publishSignIn, "lateTime");
+					formatMap(publishSignIn, "stopTime");
+					map.put("publishSignIn", publishSignIn);
+				} else {
+					formatMap(studentSignIn, "signTime");
+					map.put("studentSignIn", studentSignIn);
+				}
 				map.put("status", 200);
 			} else {
-				map.put("msg", "老师暂未开始签到");
+				List<Map<String, Object>> signIns = signInService.getStudentSignIns(sId, cId);
+				signIns.forEach(signIn -> {
+					formatMap(signIn, "startTime");
+				});
+				map.put("signIns", signIns);
+				map.put("msg", "当前暂无签到活动");
 				map.put("status", 404);
 			}
 		} catch (Exception e) {
@@ -150,9 +199,9 @@ public class SignInController {
 			String psId = (String) paramsMap.get("psId");
 			String code = (String) paramsMap.get("chekCode");
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
-			if (!ssService.isSigned(psId, sId)) {
-				if (code.equals(psService.getCheckCode(psId, sId))) {
-					ssService.signIn(psId, sId);
+			if (!signInService.isSignIned(psId, sId)) {
+				if (code.equals(signInService.getCheckCode(psId, sId))) {
+					signInService.signIn(psId, sId);
 					map.put("status", 200);
 				} else {
 					map.put("msg", "验证码不正确");
@@ -166,5 +215,16 @@ public class SignInController {
 			MyExceptionResolver.handlException(map, e);
 		}
 		return map;
+	}
+
+	/**
+	 * 格式化map里面的时间
+	 *
+	 * @author 李红兵
+	 */
+	private void formatMap(Map<String, Object> map, String key) {
+		String pattern = "yyyy-MM-dd EEE HH:mm:ss";
+		String value = MyDateUtil.getFormattedTime(map.get(key), pattern);
+		map.put(key, value);
 	}
 }
