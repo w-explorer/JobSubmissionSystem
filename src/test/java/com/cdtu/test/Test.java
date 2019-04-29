@@ -6,7 +6,7 @@ import com.cdtu.util.MyDateUtil;
 
 public class Test {
 	public static void main(String[] args) {
-		long ms = Long.parseLong("1556209939000");
-		System.out.println(MyDateUtil.getFormattedTime(new Date(ms), "HH:mm:ss"));
+		Date date = new Date();
+		System.out.println(MyDateUtil.getFormattedTime(date, "yyyy-MM-dd EEE HH:mm:ss"));
 	}
 }

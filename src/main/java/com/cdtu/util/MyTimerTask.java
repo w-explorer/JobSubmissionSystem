@@ -3,7 +3,7 @@ package com.cdtu.util;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.cdtu.service.PublishSignInService;
+import com.cdtu.service.SignInService;
 
 public class MyTimerTask {
 	private static TimerTask timerTask = null;
@@ -13,15 +13,15 @@ public class MyTimerTask {
 	 *
 	 * @author 李红兵
 	 */
-	public static void start(String psId, PublishSignInService psService) {
+	public static void start(String psId, int signInTime, SignInService signInService) {
 		timerTask = new TimerTask() {
 			@Override
 			public void run() {
-				psService.stopSignIn(psId);
+				signInService.stopSignIn(psId);
 				cancel();
 			}
 		};
-		new Timer().schedule(timerTask, 5 * 60 * 1000);
+		new Timer().schedule(timerTask, signInTime * 60 * 1000);
 	}
 
 	/**

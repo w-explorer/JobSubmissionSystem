@@ -2,6 +2,7 @@ package com.cdtu.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MyDateUtil {
 	/**
@@ -25,5 +26,16 @@ public class MyDateUtil {
 		long time2 = dateFomatter.parse(date2).getTime();
 		int sInterval = Math.abs((int) (time2 - time1)) / 1000;// 间隔的秒数
 		return sInterval % 60 == 0 ? sInterval / 60 : sInterval / 60 + 1;
+	}
+
+	/**
+	 * 获取间隔几分钟的时间
+	 *
+	 * @author 李红兵
+	 */
+	public static String getIntervalTime(Date date, int interval, String pattern) {
+		SimpleDateFormat dateFomatter = new SimpleDateFormat(pattern);
+		Date newDate = new Date(date.getTime() + interval * 60 * 1000);
+		return dateFomatter.format(newDate);
 	}
 }
