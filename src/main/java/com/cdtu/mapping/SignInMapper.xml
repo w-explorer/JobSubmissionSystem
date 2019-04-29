@@ -14,6 +14,12 @@
 		AND ss_status = 1
 	</select>
 
+	<select id="selectCheckCode" resultType="java.lang.String">
+		SELECT s_check_code AS checkCode
+		FROM publish_sign_in
+		WHERE ps_id = #{psId}
+	</select>
+
 	<update id="updatePublishSignIn">
 		UPDATE publish_sign_in SET s_late_time = NOW(), s_stop_time = NOW()
 		WHERE ps_id = #{psId}
@@ -51,19 +57,18 @@
 		LIMIT 1
 	</select>
 
-	<select id="selectSignInConditions" resultType="java.util.HashMap">
+	<update id="updateSignMark">
+		UPDATE student_sign_in SET ss_mark = #{mark}
+		WHERE ss_id = #{ssId}
+	</update>
+
+	<select id="selectSignInCondition" resultType="java.util.HashMap">
 		SELECT student.s_id AS sId, s_img_src AS sImgSrc,
 		s_name AS sName, ss_status AS ssStatus, ss_time AS ssTime
 		FROM student_sign_in, student
 		WHERE ps_id = #{psId}
 		AND student.s_id = student_sign_in.s_id
 		ORDER BY student.s_id
-	</select>
-
-	<select id="selectCheckCode" resultType="java.lang.String">
-		SELECT s_check_code AS checkCode
-		FROM publish_sign_in
-		WHERE ps_id = #{psId}
 	</select>
 
 	<update id="updateStudentSignIn">
@@ -125,4 +130,14 @@
 		WHERE t_id = #{tId}
 		AND c_id = #{cId}
 	</insert>
+
+	<select id="selectSignInByStatus" resultType="java.util.HashMap">
+		SELECT ss_id AS ssId, student.s_id AS sId, s_img_src AS sImgSrc,
+		s_name AS sName, ss_time AS signTime, ss_mark AS signMark
+		FROM student_sign_in, student
+		WHERE ps_id = #{psId}
+		AND student.s_id = student_sign_in.s_id
+		AND ss_status = #{status}
+		ORDER BY student.s_id
+	</select>
 </mapper>

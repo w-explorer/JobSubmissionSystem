@@ -52,7 +52,7 @@ public class SignInController {
 				map.put("isSignIning", false);
 			} else {
 				map.put("isSignIning", true);
-				map.put("signInConditions", signInService.getSignInConditions(currPsId));
+				map.put("signInConditions", signInService.getSignInCondition(currPsId));
 			}
 			map.put("status", 200);
 		} catch (Exception e) {
@@ -96,6 +96,50 @@ public class SignInController {
 				map.put("msg", "有一个签到活动正在进行中，请结束后再试");
 				map.put("status", 400);
 			}
+		} catch (Exception e) {
+			MyExceptionResolver.handlException(map, e);
+		}
+		return map;
+	}
+
+	/**
+	 * 老师进入历史签到记录详情，查看签到情况
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequiresRoles(value = { "teacher" })
+	@RequestMapping(value = "querySignInCondition.do")
+	public Map<String, Object> doQuerySignInCondition(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			String psId = (String) paramsMap.get("psId");
+			List<Map<String, Object>> signIned = signInService.getSignInByStatus(psId, true);
+			formatMaps(signIned, "signTime");// 未签到的时间为null，不用格式化
+			map.put("signIned", signIned);
+			map.put("unsignIned", signInService.getSignInByStatus(psId, false));
+			map.put("status", 200);
+		} catch (Exception e) {
+			MyExceptionResolver.handlException(map, e);
+		}
+		return map;
+	}
+
+	/**
+	 * 老师修改学生的签到标记
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequiresRoles(value = { "teacher" })
+	@RequestMapping(value = "editSignMark.do")
+	public Map<String, Object> doEditSignMark(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			String ssId = (String) paramsMap.get("ssId");
+			String mark = (String) paramsMap.get("mark");
+			signInService.editSignMark(ssId, mark);
+			map.put("status", 200);
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
 		}
@@ -200,7 +244,7 @@ public class SignInController {
 			String code = (String) paramsMap.get("chekCode");
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			if (!signInService.isSignIned(psId, sId)) {
-				if (code.equals(signInService.getCheckCode(psId, sId))) {
+				if (code.equals(signInService.getCheckCode(psId))) {
 					signInService.signIn(psId, sId);
 					map.put("status", 200);
 				} else {
@@ -226,5 +270,16 @@ public class SignInController {
 		String pattern = "yyyy-MM-dd EEE HH:mm:ss";
 		String value = MyDateUtil.getFormattedTime(map.get(key), pattern);
 		map.put(key, value);
+	}
+
+	/**
+	 * 批量格式化map里面的时间
+	 *
+	 * @author 李红兵
+	 */
+	private void formatMaps(List<Map<String, Object>> maps, String key) {
+		maps.forEach(map -> {
+			formatMap(map, key);
+		});
 	}
 }

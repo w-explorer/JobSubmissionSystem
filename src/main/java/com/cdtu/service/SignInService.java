@@ -12,6 +12,8 @@ public interface SignInService {
 
 	public void cancelSignIn(String string);
 
+	public String getCheckCode(String psId);
+
 	public void signIn(String psId, String sId);
 
 	public String getCurrPsId(String tId, String cId);
@@ -20,9 +22,9 @@ public interface SignInService {
 
 	public boolean isSignIning(String tId, String cId);
 
-	public String getCheckCode(String psId, String sId);
+	public void editSignMark(String ssId, String mark);
 
-	public List<Map<String, Object>> getSignInConditions(String psId);
+	public List<Map<String, Object>> getSignInCondition(String psId);
 
 	public Map<String, Object> getPublishSignIn(String sId, String cId);
 
@@ -32,7 +34,8 @@ public interface SignInService {
 
 	public List<Map<String, Object>> getPublishSignIns(String tId, String cId);
 
+	public List<Map<String, Object>> getSignInByStatus(String psId, boolean status);
+
 	public void startSignIn(String psId, String tId, String cId, String startTime, String lateTime, String stopTime,
 			String checkCode);
-
 }

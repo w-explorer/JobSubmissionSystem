@@ -16,6 +16,8 @@ public interface SignInMapper {
 
 	public int selectActualNum(@Param("psId") String psId);
 
+	public String selectCheckCode(@Param("psId") String psId);
+
 	public void updatePublishSignIn(@Param("psId") String psId);
 
 	public void deletePublishSignIn(@Param("psId") String psId);
@@ -26,9 +28,9 @@ public interface SignInMapper {
 
 	public int countPublishSignIn(@Param("tId") String tId, @Param("cId") String cId);
 
-	public List<Map<String, Object>> selectSignInConditions(@Param("psId") String psId);
+	public void updateSignMark(@Param("ssId") String ssId, @Param("mark") String mark);
 
-	public String selectCheckCode(@Param("psId") String psId, @Param("sId") String sId);
+	public List<Map<String, Object>> selectSignInCondition(@Param("psId") String psId);
 
 	public void updateStudentSignIn(@Param("psId") String psId, @Param("sId") String sId);
 
@@ -45,4 +47,7 @@ public interface SignInMapper {
 	public void insertPublishSignIn(@Param("psId") String psId, @Param("tId") String tId, @Param("cId") String cId,
 			@Param("startTime") String startTime, @Param("lateTime") String lateTime,
 			@Param("stopTime") String stopTime, @Param("checkCode") String checkCode);
+
+	public List<Map<String, Object>> selectSignInByStatus(@Param("psId") String psId, @Param("status") boolean status);
+
 }

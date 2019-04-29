@@ -59,6 +59,16 @@ public class SignInServiceImpl implements SignInService {
 	}
 
 	/**
+	 * 获取签到验证码
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public String getCheckCode(String psId) {
+		return signInMapper.selectCheckCode(psId);
+	}
+
+	/**
 	 * 进行签到
 	 *
 	 * @author 李红兵
@@ -99,13 +109,13 @@ public class SignInServiceImpl implements SignInService {
 	}
 
 	/**
-	 * 获取签到验证码
+	 * 修改该学生该签到记录的签到标记
 	 *
 	 * @author 李红兵
 	 */
 	@Override
-	public String getCheckCode(String psId, String sId) {
-		return signInMapper.selectCheckCode(psId, sId);
+	public void editSignMark(String ssId, String mark) {
+		signInMapper.updateSignMark(ssId, mark);
 	}
 
 	/**
@@ -114,8 +124,8 @@ public class SignInServiceImpl implements SignInService {
 	 * @author 李红兵
 	 */
 	@Override
-	public List<Map<String, Object>> getSignInConditions(String psId) {
-		List<Map<String, Object>> maps = signInMapper.selectSignInConditions(psId);
+	public List<Map<String, Object>> getSignInCondition(String psId) {
+		List<Map<String, Object>> maps = signInMapper.selectSignInCondition(psId);
 		maps.forEach(map -> {
 			Object timeStamp = map.get("ssTime");
 			if (timeStamp != null) {
@@ -163,6 +173,16 @@ public class SignInServiceImpl implements SignInService {
 	@Override
 	public List<Map<String, Object>> getPublishSignIns(String tId, String cId) {
 		return signInMapper.selectPublishSignIns(tId, cId);
+	}
+
+	/**
+	 * 根据签到状态获取学生的签到记录列表
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public List<Map<String, Object>> getSignInByStatus(String psId, boolean status) {
+		return signInMapper.selectSignInByStatus(psId, status);
 	}
 
 	/**
