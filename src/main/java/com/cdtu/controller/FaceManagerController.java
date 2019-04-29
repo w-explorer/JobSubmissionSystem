@@ -132,10 +132,13 @@ public class FaceManagerController {
 				String password =null;
 				if ("teacher".equals(roleName)) {
 					password = teacherService.getPasswordById(userName);
+					map.put("role", 2);
 				} else if ("student".equals(roleName)) {
 					password = studentService.getPasswordById(userName);
+					map.put("role", 1);
 				} else if ("admin".equals(roleName)) {
 					password = adminService.getPasswordById(userName);
+					map.put("role", 3);
 				}
 				
 				// 获得当前用户对象
@@ -165,16 +168,6 @@ public class FaceManagerController {
 					if (role.isRememberMe() != false) {
 						timeOut = 30;
 					}
-					if("student".equals(roleName)){
-						roleName = "1";
-					}
-					else if("teacher".equals(roleName)){
-						roleName = "2";
-					}
-					else if("admin".equals(roleName)){
-						roleName = "3";
-					}
-					map.put("role", roleName);
 					map.put("token", token);
 					map.put("status", 200);
 					map.put("timeOut", timeOut);
