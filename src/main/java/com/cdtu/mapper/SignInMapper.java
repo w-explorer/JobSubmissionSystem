@@ -26,7 +26,7 @@ public interface SignInMapper {
 
 	public void insertAllToSignIn(@Param("list") List<Map<String, Object>> list);
 
-	public int countPublishSignIn(@Param("tId") String tId, @Param("cId") String cId);
+	public int countPublishSignIn(@Param("sId") String sId, @Param("cId") String cId);
 
 	public void updateSignMark(@Param("ssId") String ssId, @Param("mark") String mark);
 
@@ -36,13 +36,17 @@ public interface SignInMapper {
 
 	public boolean selectSignInStatus(@Param("psId") String psId, @Param("sId") String sId);
 
+	public boolean selectPublishSignInStatus(@Param("tId") String tId, @Param("cId") String cId);
+
 	public Map<String, Object> selectPublishSignIn(@Param("sId") String sId, @Param("cId") String cId);
 
 	public Map<String, Object> selectStudentSignIn(@Param("psId") String psId, @Param("sId") String sId);
 
+	public List<Map<String, Object>> selectStudentSignIns(@Param("sId") String sId, @Param("cId") String cId);
+
 	public List<Map<String, Object>> selectPublishSignIns(@Param("tId") String tId, @Param("cId") String cId);
 
-	public List<Map<String, Object>> selectStudentSignIns(@Param("sId") String sId, @Param("cId") String cId);
+	public int countSignInByMark(@Param("sId") String sId, @Param("cId") String cId, @Param("mark") String mark);
 
 	public void insertPublishSignIn(@Param("psId") String psId, @Param("tId") String tId, @Param("cId") String cId,
 			@Param("startTime") String startTime, @Param("lateTime") String lateTime,

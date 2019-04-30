@@ -49,12 +49,11 @@
 
 	<select id="countPublishSignIn" resultType="java.lang.Integer">
 		SELECT COUNT(*)
-		FROM publish_sign_in, teacher_select_course
-		WHERE teacher_select_course.t_id = #{tId}
+		FROM student_select_course, teacher_select_course, publish_sign_in
+		WHERE student_select_course.s_id = #{sId}
 		AND teacher_select_course.c_id = #{cId}
+		AND student_select_course.tsc_id = teacher_select_course.tsc_id
 		AND publish_sign_in.tsc_id = teacher_select_course.tsc_id
-		AND s_stop_time >= NOW()
-		LIMIT 1
 	</select>
 
 	<update id="updateSignMark">
@@ -84,6 +83,16 @@
 		FROM student_sign_in
 		WHERE ps_id = #{psId}
 		AND s_id = #{sId}
+	</select>
+
+	<select id="selectPublishSignInStatus" resultType="java.lang.Boolean">
+		SELECT COUNT(*) = 1
+		FROM publish_sign_in, teacher_select_course
+		WHERE teacher_select_course.t_id = #{tId}
+		AND teacher_select_course.c_id = #{cId}
+		AND publish_sign_in.tsc_id = teacher_select_course.tsc_id
+		AND s_stop_time >= NOW()
+		LIMIT 1
 	</select>
 
 	<select id="selectPublishSignIn" resultType="java.util.HashMap">
@@ -121,6 +130,18 @@
 		AND t_id = #{tId}
 		AND publish_sign_in.tsc_id = teacher_select_course.tsc_id
 		ORDER BY s_start_time DESC
+	</select>
+
+	<select id="countSignInByMark" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM student_select_course, teacher_select_course, publish_sign_in, student_sign_in
+		WHERE student_select_course.s_id = #{sId}
+		AND teacher_select_course.c_id = #{cId}
+		AND student_select_course.tsc_id = teacher_select_course.tsc_id
+		AND publish_sign_in.tsc_id = student_select_course.tsc_id
+		AND student_sign_in.ps_id = publish_sign_in.ps_id
+		AND student_sign_in.s_id = #{sId}
+		AND student_sign_in.ss_mark = #{mark}
 	</select>
 
 	<insert id="insertPublishSignIn">
