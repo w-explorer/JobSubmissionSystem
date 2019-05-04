@@ -209,19 +209,21 @@ public class SignInController {
 					formatMap(publishSignIn, "lateTime");
 					formatMap(publishSignIn, "stopTime");
 					map.put("publishSignIn", publishSignIn);
+					map.put("isSignIned", false);
 				} else {
 					formatMap(studentSignIn, "signTime");
 					map.put("studentSignIn", studentSignIn);
+					map.put("isSignIned", true);
 				}
-				map.put("status", 200);
+				map.put("isSignIning", true);
 			} else {
 				List<Map<String, Object>> signIns = signInService.getStudentSignIns(sId, cId);
 				signIns.forEach(signIn -> {
 					formatMap(signIn, "startTime");
 				});
 				map.put("signIns", signIns);
-				map.put("msg", "当前暂无签到活动");
-				map.put("status", 404);
+				map.put("isSignIning", false);
+				map.put("status", 200);
 			}
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
@@ -255,6 +257,31 @@ public class SignInController {
 				map.put("msg", "请勿重复签到");
 				map.put("status", 400);
 			}
+		} catch (Exception e) {
+			MyExceptionResolver.handlException(map, e);
+		}
+		return map;
+	}
+
+	/**
+	 * 学生统计自己的签到数据
+	 *
+	 * @author 李红兵
+	 */
+	@ResponseBody
+	@RequiresRoles(value = { "student" })
+	@RequestMapping(value = "staSignInfo.do")
+	public Map<String, Object> doStaSignInfo(@RequestBody Map<String, Object> paramsMap) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			String cId = (String) paramsMap.get("cId");
+			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+			map.put("signInedNum", signInService.getSignInNumByMark(sId, cId, "已签到"));
+			map.put("absentNum", signInService.getSignInNumByMark(sId, cId, "缺勤"));
+			map.put("leaveNum", signInService.getSignInNumByMark(sId, cId, "请假"));
+			map.put("lateNum", signInService.getSignInNumByMark(sId, cId, "迟到"));
+			map.put("totalNum", signInService.getPublishSignInNum(sId, cId));
+			map.put("status", 200);
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
 		}

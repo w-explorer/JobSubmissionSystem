@@ -24,7 +24,11 @@ public interface SignInService {
 
 	public void editSignMark(String ssId, String mark);
 
+	public int getPublishSignInNum(String sId, String cId);
+
 	public List<Map<String, Object>> getSignInCondition(String psId);
+
+	public int getSignInNumByMark(String sId, String cId, String mark);
 
 	public Map<String, Object> getPublishSignIn(String sId, String cId);
 

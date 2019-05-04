@@ -105,7 +105,7 @@ public class SignInServiceImpl implements SignInService {
 	 */
 	@Override
 	public boolean isSignIning(String tId, String cId) {
-		return signInMapper.countPublishSignIn(tId, cId) == 1;
+		return signInMapper.selectPublishSignInStatus(tId, cId);
 	}
 
 	/**
@@ -116,6 +116,11 @@ public class SignInServiceImpl implements SignInService {
 	@Override
 	public void editSignMark(String ssId, String mark) {
 		signInMapper.updateSignMark(ssId, mark);
+	}
+
+	@Override
+	public int getPublishSignInNum(String sId, String cId) {
+		return signInMapper.countPublishSignIn(sId, cId);
 	}
 
 	/**
@@ -133,6 +138,16 @@ public class SignInServiceImpl implements SignInService {
 			}
 		});
 		return maps;
+	}
+
+	/**
+	 * 统计各种签到的数量
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public int getSignInNumByMark(String sId, String cId, String mark) {
+		return signInMapper.countSignInByMark(sId, cId, mark);
 	}
 
 	/**
