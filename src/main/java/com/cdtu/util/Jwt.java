@@ -7,6 +7,7 @@ import java.util.Map;
 import com.auth0.jwt.JWTSigner;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.internal.com.fasterxml.jackson.databind.ObjectMapper;
+import com.cdtu.model.Role;
 /**
  * 
  * ClassName:token加密/解密
@@ -62,10 +63,10 @@ public class Jwt {
 ////		role.setRole("1");
 ////		System.out.println(role.toString());
 ////		System.out.println("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDY4NzAxNzQyNTEsInBheWxvYWQiOiJ7XCJ1c2VybmFtZVwiOlwiMVwiLFwibmFtZVwiOm51bGwsXCJwYXNzd29yZFwiOlwiMVwiLFwicm9sZVwiOlwic3R1ZGVudFwiLFwiY2FwdGNoYVwiOlwiYmg1blwiLFwib2xkUGFzc3dvcmRcIjpudWxsLFwibmV3UGFzc3dvcmRcIjpudWxsLFwiZGV0ZXJtaU5lbmV3UGFzc3dvcmRcIjpudWxsLFwicmVtZW1iZXJNZVwiOnRydWUsXCJtc2dcIjpudWxsfSJ9.9BDs4Wu_w9ga206KdrmBg2ztFEOGkjo8KvI0-WohyEs");
-//		String string = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDY4NzUxMDA1NDAsInBheWxvYWQiOiJ7XCJ1c2VybmFtZVwiOlwiMVwiLFwibmFtZVwiOm51bGwsXCJwYXNzd29yZFwiOlwiMVwiLFwicm9sZVwiOlwic3R1ZGVudFwiLFwiY2FwdGNoYVwiOlwiejczalwiLFwib2xkUGFzc3dvcmRcIjpudWxsLFwibmV3UGFzc3dvcmRcIjpudWxsLFwiZGV0ZXJtaU5lbmV3UGFzc3dvcmRcIjpudWxsLFwicmVtZW1iZXJNZVwiOnRydWUsXCJtc2dcIjpudWxsfSJ9.g-P4FRWQWVMW4I9vtFkYGbsTqc1WKcRtZhNG36njiZo";
-//		Role unsign = unsign(string, role.getClass());
-//		System.out.println(unsign.toString());
-//		String string1 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDY4NzQ5OTc0MjgsInBheWxvYWQiOiJ7XCJ1c2VybmFtZVwiOlwiMVwiLFwibmFtZVwiOm51bGwsXCJwYXNzd29yZFwiOlwiMVwiLFwicm9sZVwiOlwic3R1ZGVudFwiLFwiY2FwdGNoYVwiOlwibHBzcFwiLFwib2xkUGFzc3dvcmRcIjpudWxsLFwibmV3UGFzc3dvcmRcIjpudWxsLFwiZGV0ZXJtaU5lbmV3UGFzc3dvcmRcIjpudWxsLFwicmVtZW1iZXJNZVwiOnRydWUsXCJtc2dcIjpudWxsfSJ9.2XihkLK2MveFe-WhNwGX63wiYb_kEUkYr5iaCKshZyU";
+////		String string = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDY4NzUxMDA1NDAsInBheWxvYWQiOiJ7XCJ1c2VybmFtZVwiOlwiMVwiLFwibmFtZVwiOm51bGwsXCJwYXNzd29yZFwiOlwiMVwiLFwicm9sZVwiOlwic3R1ZGVudFwiLFwiY2FwdGNoYVwiOlwiejczalwiLFwib2xkUGFzc3dvcmRcIjpudWxsLFwibmV3UGFzc3dvcmRcIjpudWxsLFwiZGV0ZXJtaU5lbmV3UGFzc3dvcmRcIjpudWxsLFwicmVtZW1iZXJNZVwiOnRydWUsXCJtc2dcIjpudWxsfSJ9.g-P4FRWQWVMW4I9vtFkYGbsTqc1WKcRtZhNG36njiZo";
+////		Role unsign = unsign(string, role.getClass());
+////		System.out.println(unsign.toString());
+//		String string1 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTY2MzQ5ODE1ODMsInBheWxvYWQiOiJ7XCJ1c2VybmFtZVwiOlwiMVwiLFwibmFtZVwiOm51bGwsXCJwYXNzd29yZFwiOlwiMVwiLFwicm9sZVwiOlwic3R1ZGVudFwiLFwiY2FwdGNoYVwiOlwiemQyaFwiLFwib2xkUGFzc3dvcmRcIjpudWxsLFwibmV3UGFzc3dvcmRcIjpudWxsLFwiZGV0ZXJtaU5lbmV3UGFzc3dvcmRcIjpudWxsLFwicmVtZW1iZXJNZVwiOnRydWUsXCJtc2dcIjpudWxsfSJ9.maeAcQC4Io8ZrwTRsh-MAr_lX25NN5CZnHWykxROFgo";
 //		Role unsign1 = unsign(string1, role.getClass());
 //		System.out.println(unsign1.toString());
 //	}

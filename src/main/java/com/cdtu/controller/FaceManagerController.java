@@ -1,6 +1,5 @@
 package com.cdtu.controller;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -124,6 +123,8 @@ public class FaceManagerController {
 			HttpServletResponse response) {
 		FacePageResponse facePageResponse = new FacePageResponse();
 		Role role = new Role();
+		role.setCaptcha("xxxx");
+		role.setRememberMe(true);
 		Map<String, Object> map = new HashMap<>();
 		log.info("发送过来的参数{}", JSONObject.toJSONString(facePageBean));
 		String groupIdList = "xsdemo";// 用户组id（由数字、字母、下划线组成），长度限制128B
@@ -138,7 +139,9 @@ public class FaceManagerController {
 				String userInfo = faceSerachResponse.getResult().getUser_list().get(0).getUser_id();// 获取用户账号#用户角色信息
 				String[] strings = userInfo.split("x");
 				String userName = strings[0];
+				role.setUsername(userName);
 				String roleName = strings[1];
+				role.setRole(roleName);
 				String password = null;
 				if ("teacher".equals(roleName)) {
 					password = teacherService.getPasswordById(userName);
@@ -150,6 +153,7 @@ public class FaceManagerController {
 					password = adminService.getPasswordById(userName);
 					map.put("role", 3);
 				}
+				role.setPassword(password);
 
 				// 获得当前用户对象
 				Subject subject = SecurityUtils.getSubject();// 状态为“未认证”
@@ -163,20 +167,14 @@ public class FaceManagerController {
 				}
 				if (subject.isAuthenticated()) {
 					System.out.println("认证成功");
-					String checkcodePath = (String) request.getSession().getAttribute("checkcodePath");
-					try {
-						request.getSession().removeAttribute("checkcodePath");
-						File file = new File(checkcodePath);
-						file.delete();
-					} catch (Exception e) {
-					}
-					request.getSession().setAttribute("role", role);
 					// 给用户jwt加密生成token
+					System.out.println(role.toString());
 					String token = Jwt.sign(role, 60L * 1000L * 30L);
-					int timeOut = 1;
-					if (role.isRememberMe() != false) {
-						timeOut = 30;
-					}
+					System.out.println(token);
+					int timeOut = 30;
+//					if (role.isRememberMe() != false) {
+//						timeOut = 30;
+//					}
 					map.put("token", token);
 					map.put("status", 200);
 					map.put("timeOut", timeOut);
