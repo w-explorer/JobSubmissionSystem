@@ -43,8 +43,8 @@ public class FileUtil {
 	 * @author 李红兵
 	 */
 	public static boolean canOnlineRead(File file) {
-		String[] onlineReadTypes = { "jpg", "png", "gif", "psd", "webp", "txt", "doc", "docx", "XLS", "XLSX", "ppt",
-				"pptx", "pdf" };
+		String[] onlineReadTypes = { "jpg", "png", "gif", "psd", "webp", "docx","docm","dotm","dotx","xlsx","xlsb","xls","xlsm"
+				,"pptx","ppsx","ppt","pps","pptm","potm","ppam","potx","ppsm"};
 		return Arrays.asList(onlineReadTypes).contains(getFileType(file));
 	}
 

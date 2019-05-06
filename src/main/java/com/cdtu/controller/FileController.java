@@ -95,9 +95,9 @@ public class FileController {
 					// 保存文件s
 					if (!file1.isEmpty()) { // w.txt 5 3
 
-						String savePath = GetRootPath.getRootPath(request) + File.separator + "uploadFile"
-								+ File.separator + "works" + File.separator + pwId + File.separator + role.getRole()
-								+ File.separator + role.getUsername();
+						String savePath = GetRootPath.getRootPath(request) + "/" + "uploadFile"
+								+ "/" + "works" + "/" + pwId + "/" + role.getRole()
+								+ "/" + role.getUsername();
 						String filename = file1.getOriginalFilename();
 						String type = filename.substring(filename.lastIndexOf(".") + 1);
 						Boolean state = false;
@@ -109,7 +109,7 @@ public class FileController {
 						filename = filename.substring(filename.lastIndexOf("\\") + 1);
 						String files = OAUtil.getId() + "." + type;
 						// 得到上传文件的扩展名
-						String filePath = savePath + File.separator + files;
+						String filePath = savePath + "/" + files;
 //						System.out.println("uploadFiles-filePath:" + filePath);
 						// 转存文件
 						File storeDirectory = new File(filePath);// 即代表文件又代表目录
@@ -118,8 +118,8 @@ public class FileController {
 						}
 						file1.transferTo(new File(filePath));
 //						System.out.println(pwId);
-						String wAddr = File.separator + "workfile" + File.separator + pwId + File.separator
-								+ role.getRole() + File.separator + role.getUsername() + File.separator + files;
+						String wAddr = "/" + "workfile" + "/" + pwId + "/"
+								+ role.getRole() + "/" + role.getUsername() + "/" + files;
 //						System.out.println(wAddr);
 						if (role.getRole() == "teacher") {
 							workService.insertTeacherFilewAddr(pwId, wAddr, filename, type, state);
@@ -153,7 +153,7 @@ public class FileController {
 		if (role.getRole() == "teacher") {
 			Integer tfId = (Integer) paramsMap.get("tfId");
 			String tfAdd = (String) paramsMap.get("tfAdd");
-			String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+			String workFile = GetRootPath.getRootPath(request) + "/" + "uploadFile" + "/"
 					+ "works";
 			String filePath = workFile + tfAdd.substring(9);
 			File file = new File(filePath);
@@ -162,7 +162,7 @@ public class FileController {
 		} else {
 			Integer sfId = (Integer) paramsMap.get("tfId");
 			String sfAdd = (String) paramsMap.get("tfAdd");
-			String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+			String workFile = GetRootPath.getRootPath(request) + "/" + "uploadFile" + "/"
 					+ "works";
 			String filePath = workFile + sfAdd.substring(9);
 			File file = new File(filePath);
@@ -183,7 +183,7 @@ public class FileController {
 		try {
 			String fileName = workService.selecttfNameService(Addr);
 
-			String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+			String workFile = GetRootPath.getRootPath(request) + "/" + "uploadFile" + "/"
 					+ "works";
 			String filePath = workFile + Addr.substring(9);
 			File file = new File(filePath);
@@ -214,15 +214,15 @@ public class FileController {
 		Role role = (Role) subject.getPrincipal();
 		@SuppressWarnings("unchecked")
 		List<String> Addrs = (List<String>) maps.get("Addrs");
-		String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works"
-				+ File.separator + role.getUsername();
+		String workFile = GetRootPath.getRootPath(request) + "/" + "uploadFile" + "/" + "works"
+				+ "/" + role.getUsername();
 		String resourcesName = workFile + ".zip";
 		String zipname = role.getUsername() + ".zip";
 		try {
 			ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(resourcesName));
 			InputStream input = null;
 			for (String Addr : Addrs) {
-				String works = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+				String works = GetRootPath.getRootPath(request) + "/" + "uploadFile" + "/"
 						+ "works";
 				String filePath = works + Addr.substring(9);
 				File file = new File(filePath);
@@ -254,7 +254,7 @@ public class FileController {
 			HttpServletRequest request) throws IOException {
 		String Addr = (String) maps.get("tfAdd");
 		String fileName = workService.selecttfNameService(Addr);
-		String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "works";
+		String workFile = GetRootPath.getRootPath(request) + "/" + "uploadFile" + "/" + "works";
 		String filePath = workFile + Addr.substring(9);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -272,13 +272,13 @@ public class FileController {
 			List<Map<String, Object>> Addrs = workService.selectWorkAllAddr(pwId);
 			List<Map<String, Object>> wId = workService.selectWorkId(pwId);
 			Map<String, Object> name = workService.selectcName(pwId);
-			String workFile = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
-					+ "works" + File.separator + "zip" + File.separator + (String) name.get("c_name")
+			String workFile = GetRootPath.getRootPath(request) + "/" + "uploadFile" + "/"
+					+ "works" + "/" + "zip" + "/" + (String) name.get("c_name")
 					+ (String) name.get("pw_name");
-			String resourcesName = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
-					+ "works" + File.separator + "zip" + File.separator + (String) name.get("c_name")
+			String resourcesName = GetRootPath.getRootPath(request) + "/" + "uploadFile" + "/"
+					+ "works" + "/" + "zip" + "/" + (String) name.get("c_name")
 					+ (String) name.get("pw_name") + ".zip";
-			String resourcesNames = File.separator + "workfile" + File.separator + "zip" + File.separator
+			String resourcesNames = "/" + "workfile" + "/" + "zip" + "/"
 					+ (String) name.get("c_name") + (String) name.get("pw_name") + ".zip";
 			com.cdtu.util.DeleteFolder.delFolder(workFile);
 			File file = new File(workFile);
@@ -290,14 +290,14 @@ public class FileController {
 			BufferedInputStream binput = null;
 			BufferedOutputStream boutput = null;
 			for (Map<String, Object> w : wId) {
-				String studentworkFile = workFile + File.separator + (String) w.get("s_id") + (String) w.get("s_name");
+				String studentworkFile = workFile + "/" + (String) w.get("s_id") + (String) w.get("s_name");
 				File studentfile = new File(studentworkFile);
 				if (!studentfile.exists()) {
 					studentfile.mkdirs();// 创建目录
 				}
-				String moban = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+				String moban = GetRootPath.getRootPath(request) + "/" + "uploadFile" + "/"
 						+ "works";
-				String workpath = studentworkFile + File.separator + "作业详情" + ".docx";
+				String workpath = studentworkFile + "/" + "作业详情" + ".docx";
 				if ((String) w.get("w_context") == null) {
 					w.put("w_context", com.cdtu.util.CleanLable.getTextFrom("未作答"));
 				}
@@ -306,14 +306,14 @@ public class FileController {
 				for (Map<String, Object> Addr : Addrs) {
 					String ws = (String) Addr.get("w_id");
 					if (w.get("w_id").equals(ws)) {
-						String works = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+						String works = GetRootPath.getRootPath(request) + "/" + "uploadFile" + "/"
 								+ "works";
 						String Addra = (String) Addr.get("s_f_add");
 						String filename = (String) Addr.get("s_f_add");
 						String filen = filename.substring(filename.lastIndexOf("\\") + 1);
 						String filenames = filen.substring(0, 5) + Addr.get("s_f_name");
 						String filePath = works + Addra.substring(9);
-						String filePaths = studentworkFile + File.separator + filenames;
+						String filePaths = studentworkFile + "/" + filenames;
 						File files = new File(filePath);
 						input = new FileInputStream(files);
 						FileOutputStream output = new FileOutputStream(filePaths);
@@ -332,21 +332,21 @@ public class FileController {
 					}
 				}
 			}
-			File filed = new File(workFile + File.separator + "任务详情");
+			File filed = new File(workFile + "/" + "任务详情");
 			if (!filed.exists()) {
 				filed.mkdirs();// 创建目录
 			}
-			String teacherworkfile = workFile + File.separator + "任务详情";
+			String teacherworkfile = workFile + "/" + "任务详情";
 			List<Map<String, Object>> teacherFile = publishWorkService.selectTeacherFile(pwId);
 			for (Map<String, Object> teacherfile : teacherFile) {
 				String teacherfilename = (String) teacherfile.get("tfName");
 				String teacherfileAddr = (String) teacherfile.get("tfAdd");
 				String Addr = teacherfileAddr.substring(teacherfileAddr.lastIndexOf("\\") + 1);
-				String works = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator
+				String works = GetRootPath.getRootPath(request) + "/" + "uploadFile" + "/"
 						+ "works";
 				FileInputStream inputs = new FileInputStream(works + teacherfileAddr.substring(9));
 				FileOutputStream outputn = new FileOutputStream(
-						teacherworkfile + File.separator + Addr.substring(0, 5) + teacherfilename);
+						teacherworkfile + "/" + Addr.substring(0, 5) + teacherfilename);
 				binput = new BufferedInputStream(inputs);
 				boutput = new BufferedOutputStream(outputn);
 				byte[] b = new byte[1024];
@@ -381,7 +381,7 @@ public class FileController {
 				}
 			}
 			HSSFWorkbook wb = ExportExcel.getHSSFWorkbook(sheetName, title, content, null);
-			FileOutputStream output = new FileOutputStream(workFile + File.separator + fileName);
+			FileOutputStream output = new FileOutputStream(workFile + "/" + fileName);
 			wb.write(output);
 
 			output.close();
@@ -393,7 +393,7 @@ public class FileController {
 				publishwork.put("pwContent", "null");
 			}
 			String moban = GetRootPath.getRootPath(request) + "/uploadFile";
-			String filePath = workFile + File.separator + "任务详情" + File.separator + "作业详情" + ".docx";
+			String filePath = workFile + "/" + "任务详情" + "/" + "作业详情" + ".docx";
 			ExportWord.createWord(publishwork, moban, filePath);
 			com.cdtu.util.Compresszip.compress(file, zipOut, (String) name.get("c_name") + (String) name.get("pw_name"),
 					true);
