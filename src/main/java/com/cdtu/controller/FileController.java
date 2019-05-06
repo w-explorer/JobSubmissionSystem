@@ -50,8 +50,9 @@ import com.cdtu.util.OAUtil;
 @Controller
 @RequestMapping(value = { "work", "file" })
 public class FileController {
-	private static String[] fileType = { "jpg", "png", "gif", "psd", "webp", "txt", "doc", "docx", "XLS", "XLSX", "ppt",
-			"pptx", "pdf" };
+	//可预览的office文件类型
+	private static String[] fileType = { "jpg", "png", "gif", "psd", "webp", "docx","docm","dotm","dotx","xlsx","xlsb","xls","xlsm"
+			,"pptx","ppsx","ppt","pps","pptm","potm","ppam","potx","ppsm"};
 	private @Resource(name = "workService") WorkService workService;
 	private @Resource(name = "tFileService") TeacherFileService tFileService;
 	private @Resource(name = "teacherService") TeacherService teacherservice;
