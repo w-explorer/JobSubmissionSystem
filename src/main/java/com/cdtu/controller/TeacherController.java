@@ -20,6 +20,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +38,9 @@ import com.cdtu.model.PublishWork;
 import com.cdtu.model.Role;
 import com.cdtu.model.Work;
 import com.cdtu.service.AdminstratorService;
+import com.cdtu.service.CourseService;
 import com.cdtu.service.PublishWorkService;
+import com.cdtu.service.SendEmailService;
 import com.cdtu.service.StudentSelectCourseService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherFileService;
@@ -61,6 +64,9 @@ public class TeacherController {
 	private @Resource(name = "publishWorkMapper") PublishWorkMapper publishWorkMapper;
 	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 	private @Resource(name = "adminstratorService") AdminstratorService adminstratorService;
+	private @Resource(name = "courseService") CourseService courseService;
+	@Autowired
+	SendEmailService sendEmailService;
 
 	/**
 	 * 老师上传资源
@@ -293,19 +299,21 @@ public class TeacherController {
 	@RequestMapping(value = "publishWork.do", method = RequestMethod.POST)
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> publishWork(@RequestBody PublishWork publishWork) {
-		Map<String, Object> msg = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		try {
 			Role role = (Role) subject.getPrincipal();
-			String ms = teacherService.publishWork(publishWork, role.getUsername());
-//			System.out.println(publishWork.getPwContent());
-			msg.put("status", 200);
-			msg.put("pwId", ms);
+			String tId = role.getUsername();
+			String ms = teacherService.publishWork(publishWork, tId);
+			List<String> EmailList = courseService.selectAllEmailInClass(tId, publishWork.getcId());
+			System.out.println(EmailList.toString());
+			sendEmailService.sendWorkInfoByEmail(EmailList, publishWork);
+			map.put("status", 200);
+			map.put("pwId", ms);
 		} catch (Exception e) {
-			msg.put("status", 0);
-			msg.put("msg", "错误信息");
+			MyExceptionResolver.handlException(map, e);
 		}
-		return msg;
+		return map;
 	}
 
 	/**

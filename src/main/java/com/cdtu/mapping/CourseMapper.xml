@@ -102,6 +102,16 @@
 			GROUP BY  s.s_id
 			LIMIT #{start}, #{end}
 	</select>
+	<select id="selectAllEmailInClass" resultType="java.lang.String">
+		SELECT  s.s_email 
+ 			FROM student s,teacher_select_course tsc,student_select_course ssc
+			WHERE
+			tsc.t_id=#{id}
+			AND tsc.c_id=#{cId}
+			AND ssc.tsc_id=tsc.tsc_id
+			AND s.s_id=ssc.s_id
+			GROUP BY  s.s_id
+	</select>
 	<!--文成end -->
 
 </mapper>

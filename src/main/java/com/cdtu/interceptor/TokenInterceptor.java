@@ -75,7 +75,6 @@ public class TokenInterceptor implements HandlerInterceptor {
 						role.getRole());
 				// 提交认证
 				subject.login(token1);
-				response.sendRedirect("http://localhost:8080/#/student-classList");
 				return true;
 			}
 		}

@@ -11,4 +11,6 @@ public interface CourseService {
 	public Map<String, Object> getCourseByCId(String cId, String sId);
 
 	public List<Map<String, Object>> selectStudents(int page,String cId,String id);
+	
+	List<String> selectAllEmailInClass (String id,String cId);
 }

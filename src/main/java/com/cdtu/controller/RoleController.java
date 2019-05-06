@@ -17,6 +17,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,7 @@ import com.cdtu.model.Menu;
 import com.cdtu.model.Role;
 import com.cdtu.service.AdminstratorService;
 import com.cdtu.service.MenuService;
+import com.cdtu.service.SendEmailService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.service.UserService;
@@ -36,7 +38,6 @@ import com.cdtu.util.GetRootPath;
 import com.cdtu.util.Jwt;
 import com.cdtu.util.MyExceptionResolver;
 import com.cdtu.util.RandomValidateCode;
-import com.cdtu.util.SendEmail;
 
 /**
  * @author wencheng
@@ -49,6 +50,8 @@ public class RoleController {
 	private @Resource(name = "studentService") StudentService studentService;
 	private @Resource(name = "teacherService") TeacherService teacherService;
 	private @Resource(name = "adminstratorService") AdminstratorService adminstratorService;
+	@Autowired
+	SendEmailService sendEmailService;
 
 	// 执行登陆方法
 	@RequestMapping(value = "/login.do", method = RequestMethod.POST)
@@ -284,7 +287,7 @@ public class RoleController {
 		for (Map<String, Object> map2 : user) {
 			password = (String) map2.get("password");
 		}
-		SendEmail.sendPasswordByEmail(email, password);
+		sendEmailService.sendPasswordByEmail(email, password);
 		map.put("status", 200);
 		map.put("msg", "请前往邮箱查看密码！");
 		return map;

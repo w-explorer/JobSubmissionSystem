@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -221,5 +222,15 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public void CreatStudentTableDescRankByStudent(String cId, String id) {
 		studentMapper.CreatStudentTableDescRankByStudent(cId, id);
+	}
+	@Async
+	public  void hello() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("数据出咯。。。");
 	}
 }
