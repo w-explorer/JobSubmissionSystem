@@ -13,4 +13,6 @@ public interface CourseService {
 	public List<Map<String, Object>> selectStudents(int page,String cId,String id);
 	
 	List<String> selectAllEmailInClass (String id,String cId);
+
+	public String selectCnameByCid(String cId);
 }

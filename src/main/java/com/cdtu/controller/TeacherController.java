@@ -298,16 +298,14 @@ public class TeacherController {
 	 */
 	@RequestMapping(value = "publishWork.do", method = RequestMethod.POST)
 	@RequiresRoles({ "teacher" })
-	public @ResponseBody Map<String, Object> publishWork(@RequestBody PublishWork publishWork) {
+	public @ResponseBody Map<String, Object> publishWork(@RequestBody PublishWork publishWork,HttpServletRequest request) {
+		request.getSession().setAttribute("cId", publishWork.getcId());
 		Map<String, Object> map = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		try {
 			Role role = (Role) subject.getPrincipal();
 			String tId = role.getUsername();
 			String ms = teacherService.publishWork(publishWork, tId);
-			List<String> EmailList = courseService.selectAllEmailInClass(tId, publishWork.getcId());
-			System.out.println(EmailList.toString());
-			sendEmailService.sendWorkInfoByEmail(EmailList, publishWork);
 			map.put("status", 200);
 			map.put("pwId", ms);
 		} catch (Exception e) {
@@ -617,15 +615,18 @@ public class TeacherController {
 	 */
 	@RequestMapping(value = "updatepublishWork.do", method = RequestMethod.POST)
 	@RequiresRoles({ "teacher" })
-	public @ResponseBody Map<String, Object> updatepublishWork(@RequestBody PublishWork publishWork) {
+	public @ResponseBody Map<String, Object> updatepublishWork(@RequestBody PublishWork publishWork,HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
-
+		Subject subject = SecurityUtils.getSubject();
+		Role role = (Role) subject.getPrincipal();
 		try {
-
 			teacherService.updatepublishWork(publishWork);
-//			System.out.println(publishWork.getPwContent());
+			String cId = (String) request.getSession().getAttribute("cId");
+			request.getSession().removeAttribute("cId");
+			List<String> EmailList = courseService.selectAllEmailInClass(role.getUsername(), cId);
+			publishWork.setcId(cId);
+			sendEmailService.sendWorkInfoByEmail(EmailList, publishWork);
 			map.put("status", 200);
-
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
 		}

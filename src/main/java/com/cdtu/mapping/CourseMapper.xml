@@ -112,6 +112,9 @@
 			AND s.s_id=ssc.s_id
 			GROUP BY  s.s_id
 	</select>
+	<select id="selectCnameByCid" resultType="java.lang.String">
+		SELECT  c.c_name FROM course c WHERE c.c_id=#{cId} 
+	</select>
 	<!--文成end -->
 
 </mapper>

@@ -60,4 +60,10 @@ public class CourseServiceImpl implements CourseService {
 		System.out.println(id + cId + "////");
 		return courseMapper.selectAllEmailInClass(id, cId);
 	}
+
+	@Override
+	public String selectCnameByCid(String cId) {
+		// TODO Auto-generated method stub
+		return courseMapper.selectCnameByCid(cId);
+	}
 }

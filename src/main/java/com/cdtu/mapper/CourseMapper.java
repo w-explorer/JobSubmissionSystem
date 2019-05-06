@@ -57,4 +57,6 @@ public interface CourseMapper {
 	public List<Map<String, Object>> selectStudents(@Param("start")int start,@Param("end")int end,@Param("id")String id,@Param("cId")String cId);
 
 	public List<String> selectAllEmailInClass(@Param("id")String id,@Param("cId")String cId);
+
+	public String selectCnameByCid(@Param("cId") String cId);
 }

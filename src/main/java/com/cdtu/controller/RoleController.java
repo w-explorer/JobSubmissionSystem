@@ -87,8 +87,8 @@ public class RoleController {
 			file.delete();
 			request.getSession().setAttribute("role", role);
 			// 给用户jwt加密生成token
-			String token = Jwt.sign(role, 60L * 1000L * 30L);
 			int timeOut = 1;
+			String token = Jwt.sign(role, 60L * 1000L * 30L);
 			if (role.isRememberMe() != false) {
 				timeOut = 30;
 			}
