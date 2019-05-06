@@ -44,7 +44,7 @@ public class SignInController {
 				List<Map<String, Object>> signIns = signInService.getPublishSignIns(tId, cId);
 				signIns.forEach(signIn -> {
 					String psId = (String) signIn.get("psId");
-					formatMap(signIn, "startTime");
+					mapTimeFormatter(signIn, "startTime");
 					signIn.put("dueNum", signInService.getDueNum(psId));
 					signIn.put("actualNum", signInService.getActualNum(psId));
 				});
@@ -115,7 +115,7 @@ public class SignInController {
 		try {
 			String psId = (String) paramsMap.get("psId");
 			List<Map<String, Object>> signIned = signInService.getSignInByStatus(psId, true);
-			formatMaps(signIned, "signTime");// 未签到的时间为null，不用格式化
+			mapsTimeFormatter(signIned, "signTime");// 未签到的时间为null，不用格式化
 			map.put("signIned", signIned);
 			map.put("unsignIned", signInService.getSignInByStatus(psId, false));
 			map.put("status", 200);
@@ -203,28 +203,22 @@ public class SignInController {
 			Map<String, Object> publishSignIn = signInService.getPublishSignIn(sId, cId);
 			if (publishSignIn != null) {
 				String psId = (String) publishSignIn.get("psId");
-				Map<String, Object> studentSignIn = signInService.getStudentSignIn(psId, sId);
-				if (studentSignIn == null) {
-					formatMap(publishSignIn, "startTime");
-					formatMap(publishSignIn, "lateTime");
-					formatMap(publishSignIn, "stopTime");
-					map.put("publishSignIn", publishSignIn);
-					map.put("isSignIned", false);
-				} else {
-					formatMap(studentSignIn, "signTime");
-					map.put("studentSignIn", studentSignIn);
-					map.put("isSignIned", true);
-				}
+				mapTimeFormatter(publishSignIn, "startTime");
+				mapTimeFormatter(publishSignIn, "lateTime");
+				mapTimeFormatter(publishSignIn, "stopTime");
+				map.put("isSignIned", signInService.isSignIned(psId, sId));
+				map.put("publishSignIn", publishSignIn);
 				map.put("isSignIning", true);
 			} else {
-				List<Map<String, Object>> signIns = signInService.getStudentSignIns(sId, cId);
-				signIns.forEach(signIn -> {
-					formatMap(signIn, "startTime");
-				});
-				map.put("signIns", signIns);
 				map.put("isSignIning", false);
-				map.put("status", 200);
 			}
+			List<Map<String, Object>> signIns = signInService.getStudentSignIns(sId, cId);
+			signIns.forEach(signIn -> {
+				mapTimeFormatter(signIn, "startTime");
+			});
+			map.put("signIns", signIns);
+			map.put("status", 200);
+
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
 		}
@@ -294,8 +288,8 @@ public class SignInController {
 	 *
 	 * @author 李红兵
 	 */
-	private void formatMap(Map<String, Object> map, String key) {
-		String pattern = "yyyy-MM-dd EEE HH:mm:ss";
+	private void mapTimeFormatter(Map<String, Object> map, String key) {
+		String pattern = "yyyy-MM-dd HH:mm:ss";
 		String value = MyDateUtil.getFormattedTime(map.get(key), pattern);
 		map.put(key, value);
 	}
@@ -305,9 +299,9 @@ public class SignInController {
 	 *
 	 * @author 李红兵
 	 */
-	private void formatMaps(List<Map<String, Object>> maps, String key) {
+	private void mapsTimeFormatter(List<Map<String, Object>> maps, String key) {
 		maps.forEach(map -> {
-			formatMap(map, key);
+			mapTimeFormatter(map, key);
 		});
 	}
 }
