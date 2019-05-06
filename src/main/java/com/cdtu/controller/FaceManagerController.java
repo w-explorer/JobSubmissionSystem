@@ -24,7 +24,6 @@ import com.cdtu.common.AIConstant;
 import com.cdtu.common.FactoryUtil;
 import com.cdtu.model.Role;
 import com.cdtu.service.AdminstratorService;
-import com.cdtu.service.SendEmailService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.util.Jwt;

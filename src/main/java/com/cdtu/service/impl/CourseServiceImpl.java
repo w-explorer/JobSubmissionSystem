@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,5 +59,11 @@ public class CourseServiceImpl implements CourseService {
 		// TODO Auto-generated method stub
 		System.out.println(id +  cId +"////");
 		return courseMapper.selectAllEmailInClass(id,cId);
+	}
+
+	@Override
+	public String selectCnameByCid(String cId) {
+		// TODO Auto-generated method stub
+		return courseMapper.selectCnameByCid(cId);
 	}
 }

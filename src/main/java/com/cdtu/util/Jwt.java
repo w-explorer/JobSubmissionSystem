@@ -43,13 +43,13 @@ public class Jwt {
         try {
             final Map<String,Object> claims= verifier.verify(jwt);
             if (claims.containsKey(EXP) && claims.containsKey(PAYLOAD)) {
-                long exp = (Long)claims.get(EXP);
-                long currentTimeMillis = System.currentTimeMillis();
-                if (exp > currentTimeMillis) {
+//                long exp = (Long)claims.get(EXP);
+//                long currentTimeMillis = System.currentTimeMillis();
+//                if (exp > currentTimeMillis) {
                     String json = (String)claims.get(PAYLOAD);
                     ObjectMapper objectMapper = new ObjectMapper();
                     return objectMapper.readValue(json, classT);
-                }
+//                }
             }
             return null;
         } catch (Exception e) {
@@ -66,7 +66,7 @@ public class Jwt {
 ////		String string = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDY4NzUxMDA1NDAsInBheWxvYWQiOiJ7XCJ1c2VybmFtZVwiOlwiMVwiLFwibmFtZVwiOm51bGwsXCJwYXNzd29yZFwiOlwiMVwiLFwicm9sZVwiOlwic3R1ZGVudFwiLFwiY2FwdGNoYVwiOlwiejczalwiLFwib2xkUGFzc3dvcmRcIjpudWxsLFwibmV3UGFzc3dvcmRcIjpudWxsLFwiZGV0ZXJtaU5lbmV3UGFzc3dvcmRcIjpudWxsLFwicmVtZW1iZXJNZVwiOnRydWUsXCJtc2dcIjpudWxsfSJ9.g-P4FRWQWVMW4I9vtFkYGbsTqc1WKcRtZhNG36njiZo";
 ////		Role unsign = unsign(string, role.getClass());
 ////		System.out.println(unsign.toString());
-//		String string1 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTY2MzQ5ODE1ODMsInBheWxvYWQiOiJ7XCJ1c2VybmFtZVwiOlwiMVwiLFwibmFtZVwiOm51bGwsXCJwYXNzd29yZFwiOlwiMVwiLFwicm9sZVwiOlwic3R1ZGVudFwiLFwiY2FwdGNoYVwiOlwiemQyaFwiLFwib2xkUGFzc3dvcmRcIjpudWxsLFwibmV3UGFzc3dvcmRcIjpudWxsLFwiZGV0ZXJtaU5lbmV3UGFzc3dvcmRcIjpudWxsLFwicmVtZW1iZXJNZVwiOnRydWUsXCJtc2dcIjpudWxsfSJ9.maeAcQC4Io8ZrwTRsh-MAr_lX25NN5CZnHWykxROFgo";
+//		String string1 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTcxMDk3MDc3MTUsInBheWxvYWQiOiJ7XCJ1c2VybmFtZVwiOlwiMVwiLFwibmFtZVwiOm51bGwsXCJwYXNzd29yZFwiOlwiMVwiLFwicm9sZVwiOlwic3R1ZGVudFwiLFwiY2FwdGNoYVwiOlwiZjVoM1wiLFwib2xkUGFzc3dvcmRcIjpudWxsLFwibmV3UGFzc3dvcmRcIjpudWxsLFwiZGV0ZXJtaU5lbmV3UGFzc3dvcmRcIjpudWxsLFwicmVtZW1iZXJNZVwiOnRydWUsXCJtc2dcIjpudWxsfSJ9.0R8JKhWOxJc6ElV_vbec_ZeX27sr8CEZ_BBW0IX--j0    ";
 //		Role unsign1 = unsign(string1, role.getClass());
 //		System.out.println(unsign1.toString());
 //	}
