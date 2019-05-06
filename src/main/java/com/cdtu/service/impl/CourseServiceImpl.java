@@ -49,16 +49,16 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectStudents(int page,String id,String cId) {
-		System.out.println(page+" /////"+id+cId);
-		return courseMapper.selectStudents((page - 1) * 30, page * 30,id,cId);
+	public List<Map<String, Object>> selectStudents(int page, String id, String cId) {
+		System.out.println(page + " /////" + id + cId);
+		return courseMapper.selectStudents((page - 1) * 30, page * 30, id, cId);
 	}
 
 	@Override
 	public List<String> selectAllEmailInClass(String id, String cId) {
 		// TODO Auto-generated method stub
-		System.out.println(id +  cId +"////");
-		return courseMapper.selectAllEmailInClass(id,cId);
+		System.out.println(id + cId + "////");
+		return courseMapper.selectAllEmailInClass(id, cId);
 	}
 
 	@Override

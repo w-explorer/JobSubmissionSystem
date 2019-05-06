@@ -54,7 +54,7 @@ public class CourseController {
 			int stusNum = sscService.countStudents(cId);
 			map.put("stusNum", stusNum);// 学生数量
 			int pubWNum = publishWorkService.countPublishWorks(cId);
-			//将作业数量 放入session 用于解决  班级排名
+			// 将作业数量 放入session 用于解决 班级排名
 			if ("teacher".equals(role.getRole())) {
 				pubENum = publishWorkService.countPublishEstimates(cId);
 			} else if ("student".equals(role.getRole())) {
@@ -129,6 +129,7 @@ public class CourseController {
 			return map;
 		}
 	}
+
 	/**
 	 * 通过建立一张临时表 存储班级成绩排名 每个同学的总分(sql 高级排名 开启mybatis 一次执行多条SQL )
 	 * 怎么开启呢？在拼装mysql链接的url时，为其加上allowMultiQueries参数，设置为true，如下：
@@ -147,17 +148,16 @@ public class CourseController {
 		String id = role.getUsername();
 		String roleName = role.getRole();
 		String cId = (String) paramsMap.get("cId");
-		int pubWNum = publishWorkService.countPublishWorks(cId);//用于解决  班级排名
+		int pubWNum = publishWorkService.countPublishWorks(cId);// 用于解决 班级排名
 		int page = (int) paramsMap.get("page");
 		int stusNum = sscService.countStudents(cId);
-		if(pubWNum==0){
-			map.put("students", courseService.selectStudents(page,cId,id));
-		}
-		else{
+		if (pubWNum == 0) {
+			map.put("students", courseService.selectStudents(page, cId, id));
+		} else {
 			try {
-				if("teacher".equals(roleName)){
+				if ("teacher".equals(roleName)) {
 					studentService.CreatStudentTableDescRank(cId, id);
-				}else{
+				} else {
 					studentService.CreatStudentTableDescRankByStudent(cId, id);
 				}
 				map.put("students", studentService.selectStudents(page));
