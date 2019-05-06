@@ -276,6 +276,7 @@ public class SignInController {
 		try {
 			String cId = (String) paramsMap.get("cId");
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
+			map.put("leaveEarlyNum", signInService.getSignInNumByMark(sId, cId, "早退"));
 			map.put("signInedNum", signInService.getSignInNumByMark(sId, cId, "已签到"));
 			map.put("absentNum", signInService.getSignInNumByMark(sId, cId, "缺勤"));
 			map.put("leaveNum", signInService.getSignInNumByMark(sId, cId, "请假"));
