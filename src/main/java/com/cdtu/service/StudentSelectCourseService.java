@@ -8,7 +8,7 @@ public interface StudentSelectCourseService {
 
 	public void joinCourse(String cId, String sId);
 
-	public int countStudents(String cId);
+	public int countStudents(String rId, String cId);
 
 	public List<Map<String, Object>> getJoinedCourses(String sId);
 

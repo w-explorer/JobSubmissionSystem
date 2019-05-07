@@ -33,7 +33,7 @@ public interface StudentSelectCourseMapper {
 	/**
 	 * @author 李红兵
 	 */
-	public int countStudents(@Param("cId") String cId);
+	public int countStudents(@Param("rId") String rId, @Param("cId") String cId);
 
 	/**
 	 * @author 李红兵

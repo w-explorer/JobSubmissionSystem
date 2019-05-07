@@ -1,585 +1,435 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version = "1.0" encoding = "UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.cdtu.mapper.PublishWorkMapper" >
-  <resultMap id="BaseResultMap" type="com.cdtu.model.PublishWork" >
-    <id column="pw_id" property="pwId" jdbcType="CHAR" />
-    <result column="tsc_id" property="tscId" jdbcType="INTEGER" />
-    <result column="ct_id" property="ctId" jdbcType="INTEGER" />
-    <result column="pw_score" property="pwScore" jdbcType="INTEGER" />
-    <result column="pw_end" property="pwEnd" jdbcType="DATE" />
-    <result column="pw_state" property="pwState" jdbcType="BIT" />
-    <result column="pw_name" property="pwName" jdbcType="LONGVARCHAR" />
-    <result column="pw_content" property="pwContent" jdbcType="CHAR" />
-    <result column="activityImgSrc" property="activityImgSrc" jdbcType="CHAR" />
-    <result column="wScore" property="wScore" jdbcType="INTEGER" />
-    <result column="wState" property="wState" />
-    <result column="finishedNum" property="finishedNum" />
-  </resultMap>
-
-  
-  
-  <!-- 添加含有tscid的发布作业 by:黎睿-->
+<mapper namespace="com.cdtu.mapper.PublishWorkMapper">
+	<resultMap id="BaseResultMap" type="com.cdtu.model.PublishWork">
+		<id column="pw_id" property="pwId" jdbcType="CHAR" />
+		<result column="tsc_id" property="tscId" jdbcType="INTEGER" />
+		<result column="ct_id" property="ctId" jdbcType="INTEGER" />
+		<result column="pw_score" property="pwScore" jdbcType="INTEGER" />
+		<result column="pw_end" property="pwEnd" jdbcType="DATE" />
+		<result column="pw_state" property="pwState" jdbcType="BIT" />
+		<result column="pw_name" property="pwName" jdbcType="LONGVARCHAR" />
+		<result column="pw_content" property="pwContent" jdbcType="CHAR" />
+		<result column="activityImgSrc" property="activityImgSrc" jdbcType="CHAR" />
+		<result column="wScore" property="wScore" jdbcType="INTEGER" />
+		<result column="wState" property="wState" />
+		<result column="finishedNum" property="finishedNum" />
+	</resultMap>
+	<!-- 添加含有tscid的发布作业 by:黎睿 -->
 	<insert id="insterBycId" parameterType="com.cdtu.model.PublishWork">
 		INSERT INTO
-		publish_work(pw_id,tsc_id)
-		VALUES(#{pwId},#{tscId})
+		publish_work(pw_id, tsc_id)
+		VALUES(#{pwId}, #{tscId})
 	</insert>
-  <!-- 教师查找tsc_id by:黎睿-->
+	<!-- 教师查找tsc_id by:黎睿 -->
 	<select id="selectTscid" parameterType="String" resultType="java.lang.Integer">
-		SELECT 
-		teacher_select_course.tsc_id
-		FROM teacher,teacher_select_course,course
-		WHERE
-		teacher.t_id=teacher_select_course.t_id
-		AND
-		teacher_select_course.c_id=course.c_id
-		AND
-		teacher.t_id=#{tId}
-		AND course.c_id=#{cId}
+		SELECT teacher_select_course.tsc_id
+		FROM teacher,
+		teacher_select_course, course
+		WHERE teacher.t_id = teacher_select_course.t_id
+		AND teacher_select_course.c_id =
+		course.c_id
+		AND teacher.t_id = #{tId}
+		AND course.c_id = #{cId}
 	</select>
-																														<!-- 添加含有ctid的发布作业 by:黎睿
-																														<insert id="insterByctId" parameterType="com.cdtu.model.PublishWork">
-																															INSERT INTO
-																															publish_work(pw_id,ct_id,pw_name,pw_end,pw_state)
-																															VALUES(#{pwId},#{ctId},#{pwName},#{pwEnd},#{pwState})
-																														</insert>-->
-																														<!-- 学生查询发布作业表通过课程号（cId） by:黎睿
-																														<select id="selectStudentPublishWorkBycId" resultMap="BaseResultMap">
-																														SELECT publishwork.*
-																														FROM
-																															(SELECT DISTINCT 
-																															publish_work.*,class_create.ct_img_src as activityImgSrc
-																															FROM student,student_select_course,publish_work,class_create
-																															WHERE
-																															student.s_id=student_select_course.s_id
-																															AND
-																															student_select_course.ct_id=class_create.ct_id
-																															AND
-																															student_select_course.ct_id=publish_work.ct_id	
-																															AND
-																															student.s_id=#{sId}
-																															AND class_create.ct_id=#{cId}
-																															UNION
-																															SELECT DISTINCT 
-																															publish_work.*,course.c_img_src as activityImgSrc
-																															FROM student,student_select_course,publish_work,teacher_select_course,course
-																															WHERE
-																															student.s_id=student_select_course.s_id
-																															AND
-																															student_select_course.tsc_id=publish_work.tsc_id
-																															AND
-																															student_select_course.tsc_id=teacher_select_course.tsc_id
-																															AND
-																															teacher_select_course.c_id=course.c_id
-																															AND
-																															student.s_id=#{sId}
-																															AND course.c_id=#{cId}
-																															) publishwork
-																															<if test="pwState!=null">
-																																WHERE publishwork.pw_state=#{pwState}
-																															</if>
-																															LIMIT #{start}, #{end}
-																														</select>-->
-	<!-- 学生查询发布作业表通过c_id和s_id by:黎睿-->
+	<!-- 学生查询发布作业表通过c_id和s_id by:黎睿 -->
 	<select id="selectStudentPublishWorkBycId" resultMap="BaseResultMap">
-		 SELECT SUM(CASE WHEN  w.s_w_state=1 THEN 1 ELSE 0 END) AS finishedNum ,pw.*,w.w_score AS wScore,w.s_w_state AS wState,pw.pw_img_src AS activityImgSrc
-        FROM WORK w,publish_work pw
-		WHERE
-		w.s_id IN(SELECT DISTINCT w.s_id
-				FROM student s,student_select_course ssc ,teacher_select_course tsc ,course c,publish_work pw,WORK w
-				WHERE 
-				ssc.tsc_id=tsc.tsc_id
-				AND tsc.c_id=c.c_id
-				AND pw.tsc_id=tsc.tsc_id
-				AND pw.pw_id=w.pw_id
-				AND s.s_id=#{sId}
-				AND c.c_id=#{cId}
-				<if test="pwState!=null">
-					AND pw.pw_state=#{pwState}
-				</if>)
-		AND pw.pw_id=w.pw_id
-		AND w.s_id=#{sId}
-		<if test="pwState!=null">
-			AND pw.pw_state=#{pwState}
+		SELECT SUM(CASE WHEN w.s_w_state = 1 THEN 1 ELSE 0 END) AS finishedNum ,pw.*,w.w_score AS wScore,w.s_w_state AS
+		wState,pw.pw_img_src AS activityImgSrc
+		FROM WORK w,publish_work pw
+		WHERE w.s_id IN(SELECT DISTINCT w.s_id
+		FROM student
+		s,student_select_course ssc ,teacher_select_course tsc ,course c,publish_work pw,WORK w
+		WHERE ssc.tsc_id = tsc.tsc_id
+		AND tsc.c_id = c.c_id
+		AND pw.tsc_id = tsc.tsc_id
+		AND pw.pw_id = w.pw_id
+		AND s.s_id = #{sId}
+		AND c.c_id = #{cId}
+		<if test="pwState! = null">
+			AND pw.pw_state = #{pwState}
+		</if>
+		)
+		AND pw.pw_id = w.pw_id
+		AND w.s_id = #{sId}
+		<if test="pwState! = null">
+			AND pw.pw_state = #{pwState}
 		</if>
 		GROUP BY w.pw_id
+		ORDER BY pw.pw_end DESC
 		LIMIT #{start}, #{end}
 	</select>
-	<!-- 学生查询发布作业表通过课程号（cId）数量 by:黎睿-->
+	<!-- 学生查询发布作业表通过课程号（cId）数量 by:黎睿 -->
 	<select id="selectStudentPublishWorkCount" resultType="java.lang.Integer">
 		SELECT COUNT(*)
 		FROM
-		(SELECT DISTINCT 
+		(SELECT DISTINCT
 		publish_work.*
-		FROM student,student_select_course,publish_work,teacher_select_course,course
+		FROM
+		student,student_select_course,publish_work,teacher_select_course,course
 		WHERE
-		student.s_id=student_select_course.s_id
+		student.s_id = student_select_course.s_id
 		AND
-		student_select_course.tsc_id=publish_work.tsc_id
+		student_select_course.tsc_id = publish_work.tsc_id
 		AND
-		student_select_course.tsc_id=teacher_select_course.tsc_id
+		student_select_course.tsc_id = teacher_select_course.tsc_id
 		AND
-		teacher_select_course.c_id=course.c_id
+		teacher_select_course.c_id = course.c_id
 		AND
-		student.s_id=#{sId}
-		AND course.c_id=#{cId}
+		student.s_id = #{sId}
+		AND course.c_id = #{cId}
 		) publishwork
-		<if test="pwState!=null">
-			WHERE publishwork.pw_state=#{pwState}
+		<if test="pwState! = null">
+			WHERE publishwork.pw_state = #{pwState}
 		</if>
 	</select>
-																														<!-- 学生查询发布作业表通过ct_id和s_id by:黎睿
-																														<select id="selectStudentPublishWorkByctId" resultMap="BaseResultMap">
-																															SELECT
-																															publish_work.*
-																															FROM student,student_select_course,publish_work
-																															WHERE
-																															student.s_id=student_select_course.s_id
-																															AND
-																															student_select_course.tsc_id=publish_work.tsc_id
-																															AND
-																															student.s_id=#{sId}
-																															AND student_select_course.tsc_id=#{ctId}
-																															<if test="pwState!=null">
-																																AND publish_work.pw_state=#{pwState}
-																															</if>
-																															LIMIT #{start}, #{end}
-																														</select>-->
-																														<!-- 学生查询发布作业表通过课程号（cId）数量 by:黎睿
-																														<select id="selectStudentPublishWorkCount" resultType="java.lang.Integer">
-																															SELECT COUNT(*)
-																															FROM
-																															(SELECT DISTINCT 
-																															publish_work.*
-																															FROM student,student_select_course,publish_work,class_create
-																															WHERE
-																															student.s_id=student_select_course.s_id
-																															AND
-																															student_select_course.ct_id=class_create.ct_id
-																															AND
-																															student_select_course.ct_id=publish_work.ct_id	
-																															AND
-																															student.s_id=#{sId}
-																															AND class_create.ct_id=#{cId}
-																															UNION
-																															SELECT DISTINCT 
-																															publish_work.*
-																															FROM student,student_select_course,publish_work,teacher_select_course,course
-																															WHERE
-																															student.s_id=student_select_course.s_id
-																															AND
-																															student_select_course.tsc_id=publish_work.tsc_id
-																															AND
-																															student_select_course.tsc_id=teacher_select_course.tsc_id
-																															AND
-																															teacher_select_course.c_id=course.c_id
-																															AND
-																															student.s_id=#{sId}
-																															AND course.c_id=#{cId}
-																															) publishwork
-																															<if test="pwState!=null">
-																																WHERE publishwork.pw_state=#{pwState}
-																															</if>
-																														</select>-->
-																														<!-- 教师查询发布作业表通过课程号（cId） by:黎睿
-																														<select id="selectTeacherPublishWorkBycId" resultMap="BaseResultMap">
-																															SELECT publishwork.*
-																															FROM
-																															(SELECT DISTINCT
-																															publish_work.*
-																															FROM teacher,publish_work,class_create
-																															WHERE
-																															teacher.t_id=class_create.t_id
-																															AND
-																															class_create.ct_id=publish_work.ct_id	
-																															AND
-																															teacher.t_id=#{tId}
-																															AND class_create.ct_id=#{cId}
-																															UNION
-																															SELECT DISTINCT 
-																															publish_work.*
-																															FROM teacher,publish_work,teacher_select_course,course
-																															WHERE
-																															teacher.t_id=teacher_select_course.t_id
-																															AND
-																															teacher_select_course.tsc_id=publish_work.tsc_id
-																															AND
-																															teacher_select_course.c_id=course.c_id
-																															AND
-																															teacher.t_id=#{tId}
-																															AND course.c_id=#{cId}
-																															) publishwork
-																															<if test="pwState!=null">
-																																WHERE publishwork.pw_state=#{pwState}
-																															</if>
-																															LIMIT #{start}, #{end}
-																														</select>-->
-																														<!-- 教师查询发布作业表通过c_id和t_id by:黎睿-->
 	<select id="selectTeacherPublishWorkBycId" resultMap="BaseResultMap">
-		SELECT SUM(CASE WHEN  w.s_w_state=1 THEN 1 ELSE 0 END) as finishedNum,pw.*,pw.pw_img_src AS activityImgSrc
-		FROM WORK w,publish_work pw
+		SELECT SUM(CASE WHEN w.s_w_state = 1 THEN 1 ELSE 0 END) as finishedNum,pw.*,pw.pw_img_src AS activityImgSrc
+		FROM WORK
+		w,publish_work pw
 		WHERE
 		w.s_id IN(SELECT DISTINCT w.s_id
-		FROM teacher t,student_select_course ssc ,teacher_select_course tsc ,course c,publish_work pw
-		WHERE 
-		ssc.tsc_id=tsc.tsc_id
-		AND tsc.c_id=c.c_id
-		AND pw.tsc_id=tsc.tsc_id
-		AND pw.pw_id=w.pw_id
-		AND tsc.t_id=#{tId}
-		AND c.c_id=#{cId}
-		<if test="pwState!=null">
-			AND pw.pw_state=#{pwState}
+		FROM teacher t,student_select_course ssc ,teacher_select_course
+		tsc ,course c,publish_work pw
+		WHERE
+		ssc.tsc_id = tsc.tsc_id
+		AND tsc.c_id = c.c_id
+		AND pw.tsc_id = tsc.tsc_id
+		AND pw.pw_id =
+		w.pw_id
+		AND tsc.t_id = #{tId}
+		AND c.c_id = #{cId}
+		<if test="pwState! = null">
+			AND pw.pw_state = #{pwState}
 		</if>
 		)
-		AND pw.pw_id=w.pw_id
-		<if test="pwState!=null">
-			AND pw.pw_state=#{pwState}
+		AND pw.pw_id = w.pw_id
+		<if test="pwState! = null">
+			AND pw.pw_state = #{pwState}
 		</if>
 		GROUP BY w.pw_id
+		ORDER BY pw.pw_end DESC
 		LIMIT #{start}, #{end}
 	</select>
-	<!-- 教师查询发布作业表通过课程号（cId）数量 by:黎睿-->
+	<!-- 教师查询发布作业表通过课程号（cId）数量 by:黎睿 -->
 	<select id="selectTeacherPublishWorkCount" resultType="java.lang.Integer">
 		SELECT COUNT(*)
 		FROM
 		(
-		SELECT DISTINCT 
+		SELECT DISTINCT
 		publish_work.*
 		FROM teacher,publish_work,teacher_select_course,course
 		WHERE
-		teacher.t_id=teacher_select_course.t_id
+		teacher.t_id = teacher_select_course.t_id
 		AND
-		teacher_select_course.tsc_id=publish_work.tsc_id
+		teacher_select_course.tsc_id = publish_work.tsc_id
 		AND
-		teacher_select_course.c_id=course.c_id
+		teacher_select_course.c_id = course.c_id
 		AND
-		teacher.t_id=#{tId}
-		AND course.c_id=#{cId}
+		teacher.t_id = #{tId}
+		AND
+		course.c_id = #{cId}
 		) publishwork
-		<if test="pwState!=null">
-			WHERE publishwork.pw_state=#{pwState}
+		<if test="pwState! = null">
+			WHERE publishwork.pw_state = #{pwState}
 		</if>
 	</select>
-																														<!-- 教师查询发布作业表通过ct_id和s_id by:黎睿
-																														<select id="selectTeacherPublishWorkByctId" resultMap="BaseResultMap">
-																															SELECT
-																															publish_work.*
-																															FROM teacher,class_create,publish_work
-																															WHERE
-																															teacher.t_id=class_create.t_id
-																															AND
-																															class_create.ct_id=publish_work.ct_id
-																															AND class_create.ct_id=#{ctId}
-																															<if test="pwState!=null">
-																																AND publish_work.pw_state=#{pwState}
-																															</if>
-																															LIMIT #{start}, #{end}
-																														</select>-->
-																														<!-- 教师查询发布作业表通过课程号（cId）数量 by:黎睿
-																														<select id="selectTeacherPublishWorkCount" resultType="java.lang.Integer">
-																															SELECT COUNT(*)
-																															FROM
-																															(SELECT DISTINCT
-																															publish_work.*
-																															FROM teacher,publish_work,class_create
-																															WHERE
-																															teacher.t_id=class_create.t_id
-																															AND
-																															class_create.ct_id=publish_work.ct_id	
-																															AND
-																															teacher.t_id=#{tId}
-																															AND class_create.ct_id=#{cId}
-																															UNION
-																															SELECT DISTINCT 
-																															publish_work.*
-																															FROM teacher,publish_work,teacher_select_course,course
-																															WHERE
-																															teacher.t_id=teacher_select_course.t_id
-																															AND
-																															teacher_select_course.tsc_id=publish_work.tsc_id
-																															AND
-																															teacher_select_course.c_id=course.c_id
-																															AND
-																															teacher.t_id=#{tId}
-																															AND course.c_id=#{cId}
-																															) publishwork
-																															<if test="pwState!=null">
-																																WHERE publishwork.pw_state=#{pwState}
-																															</if>
-																														</select>-->
-																														<!-- ct_id查询作业数量 by:黎睿
-																														<select id="selectCountBypwStateBytscId" resultType="java.lang.Integer">
-																															SELECT
-																															COUNT(*)
-																															FROM teacher,teacher_select_course,publish_work
-																															WHERE
-																															teacher.t_id=teacher_select_course.t_id
-																															AND
-																															teacher_select_course.tsc_id=publish_work.tsc_id
-																															AND
-																															teacher_select_course.tsc_id=#{tscId}
-																															<if test="pwState!=null">
-																																AND publish_work.pw_state=#{pwState}
-																															</if>
-																														</select>-->
-																														<!-- tsc_id查询作业数量 by:黎睿
-																														<select id="selectCountBypwStateByctId" resultType="java.lang.Integer">
-																															SELECT
-																															COUNT(*)
-																															FROM teacher,class_create,publish_work
-																															WHERE
-																															teacher.t_id=class_create.t_id
-																															AND
-																															class_create.ct_id=publish_work.ct_id
-																															AND class_create.ct_id=#{ctId}
-																															<if test="pwState!=null">
-																																AND publish_work.pw_state=#{pwState}
-																															</if>
-																														</select>-->
-	<!-- 查询作业名字 by:黎睿-->
+	<!-- 查询作业名字 by:黎睿 -->
 	<select id="selectPwIdname" parameterType="String" resultType="String">
-		select pw_name from publish_work where pw_id=#{pwId}
+		select pw_name from publish_work where
+		pw_id =
+		#{pwId}
 	</select>
-	<update id="changePublishWork" parameterType="com.cdtu.model.PublishWork" >
-	 update publish_work
-	 set
-	 pw_state = #{pwState}
-     where pw_id = #{pwId}
+	<update id="changePublishWork" parameterType="com.cdtu.model.PublishWork">
+		update publish_work
+		set
+		pw_state = #{pwState}
+		where pw_id = #{pwId}
 	</update>
 	<!-- 文成start -->
 	<select id="getAllPublishWorks" resultMap="BaseResultMap">
 		select * from publish_work
 	</select>
 	<update id="updatePublishWorkState">
-		UPDATE  publish_work SET pw_state =#{flag} WHERE pw_id=#{pwId}
+		UPDATE publish_work SET pw_state = #{flag} WHERE pw_id = #{pwId}
 	</update>
-	<select id="getPwDetails" resultType="java.util.HashMap" >
-		SELECT  DISTINCT pw.pw_name AS pwName,pw.pw_end as pwEnd ,c.c_img_src AS activityImgSrc,pw.pw_content AS pwContent,work.w_context AS wContent,work.w_problem AS wProblem,pw.pw_state AS sWState,work.w_remark as wRemark,work.w_score as wScore,pw.pw_score as pwScore
-		FROM publish_work pw,student_select_course ssc ,teacher_select_course tsc,course c ,WORK
+	<select id="getPwDetails" resultType="java.util.HashMap">
+		SELECT DISTINCT pw.pw_name AS pwName,pw.pw_end as pwEnd
+		,c.c_img_src AS
+		activityImgSrc,pw.pw_content AS pwContent,work.w_context AS wContent,work.w_problem AS
+		wProblem,pw.pw_state AS
+		sWState,work.w_remark as wRemark,work.w_score as wScore,pw.pw_score as pwScore
+		FROM
+		publish_work
+		pw,student_select_course ssc ,teacher_select_course tsc,course c ,WORK
 		WHERE
-		ssc.s_id=#{sId}
-		AND pw.pw_id = #{pwId}
-		AND ssc.tsc_id=tsc.tsc_id
-		AND tsc.tsc_id=pw.tsc_id
-		AND tsc.c_id=c.c_id
-		AND pw.pw_id=work.pw_id
-		AND work.s_id=ssc.s_id
+		ssc.s_id = #{sId}
+		AND pw.pw_id =
+		#{pwId}
+		AND ssc.tsc_id = tsc.tsc_id
+		AND tsc.tsc_id = pw.tsc_id
+		AND tsc.c_id = c.c_id
+		AND pw.pw_id = work.pw_id
+		AND
+		work.s_id =
+		ssc.s_id
 	</select>
 	<select id="getTFiles" resultType="java.util.HashMap">
-		SELECT DISTINCT  tf.t_f_add AS url,tf.t_f_name AS name ,tf.t_f_id AS tfId,tf.t_f_type AS TYPE,tf.t_f_state AS state
+		SELECT DISTINCT tf.t_f_add AS url,tf.t_f_name AS name ,tf.t_f_id AS
+		tfId,tf.t_f_type AS TYPE,tf.t_f_state AS state
 		FROM publish_work pw,student_select_course ssc,t_file tf,img_type it
 		WHERE
-		ssc.s_id=#{sId}
+		ssc.s_id = #{sId}
 		AND pw.pw_id = #{pwId}
-		AND ssc.tsc_id=pw.tsc_id
-		AND pw.pw_id=tf.pw_id
+		AND ssc.tsc_id = pw.tsc_id
+		AND pw.pw_id = tf.pw_id
 		AND tf.t_f_type NOT IN (
-			SELECT img_type.i_t_typt FROM img_type
+		SELECT img_type.i_t_typt FROM img_type
 		)
 	</select>
 	<select id="getSFiles" resultType="java.util.HashMap">
-		SELECT  DISTINCT sf.s_f_add AS url,sf.s_f_name AS name ,sf.s_f_id AS sfId,sf.s_f_type AS type,sf.s_f_state AS state
-		FROM publish_work pw,student_select_course ssc,WORK,s_file sf,img_type it
+		SELECT DISTINCT sf.s_f_add AS url,sf.s_f_name AS name ,sf.s_f_id AS
+		sfId,sf.s_f_type AS type,sf.s_f_state AS state
+		FROM publish_work pw,student_select_course ssc,WORK,s_file sf,img_type
+		it
 		WHERE
-		ssc.s_id=#{sId}
+		ssc.s_id = #{sId}
 		AND pw.pw_id = #{pwId}
-		AND ssc.tsc_id=pw.tsc_id
-		AND pw.pw_id=work.pw_id
-		AND work.w_id=sf.w_id
-		AND work.s_id=ssc.s_id
+		AND ssc.tsc_id = pw.tsc_id
+		AND pw.pw_id = work.pw_id
+		AND work.w_id =
+		sf.w_id
+		AND
+		work.s_id = ssc.s_id
 		AND sf.s_f_type NOT IN (
-			SELECT img_type.i_t_typt FROM img_type
+		SELECT img_type.i_t_typt FROM img_type
 		)
 	</select>
+
+	<!-- 李红兵start -->
 	<select id="countPublishWorks" resultType="java.lang.Integer">
-		SELECT COUNT(*) 
-		FROM course c,teacher_select_course tsc,publish_work pw
-		WHERE c.c_id=#{cId}
-		AND tsc.c_id=c.c_id
-		AND pw.tsc_id=tsc.tsc_id
+		SELECT COUNT(DISTINCT publish_work.pw_id)
+		FROM student_select_course, teacher_select_course, publish_work
+		WHERE teacher_select_course.c_id = #{cId}
+		AND ((teacher_select_course.t_id = #{rId}
+		AND publish_work.tsc_id = teacher_select_course.tsc_id)
+		OR (student_select_course.tsc_id = teacher_select_course.tsc_id
+		AND student_select_course.s_id = #{rId}
+		AND publish_work.tsc_id = student_select_course.tsc_id))
 	</select>
+
 	<select id="countPublishEstimates" resultType="java.lang.Integer">
-		SELECT COUNT(*) 
-		FROM course c,teacher_select_course tsc,publish_estimate pe
-		WHERE c.c_id=#{cId}
-		AND tsc.c_id=c.c_id
-		AND pe.tsc_id=tsc.tsc_id
+		SELECT COUNT(*)
+		FROM course,teacher_select_course, publish_estimate
+		WHERE course.c_id = #{cId}
+		AND teacher_select_course.c_id = course.c_id
+		AND publish_estimate.tsc_id = teacher_select_course.tsc_id
 	</select>
+	<!-- 李红兵end -->
+
 	<select id="getTFilesImages" resultType="java.util.HashMap">
-		SELECT DISTINCT  tf.t_f_add AS url,tf.t_f_name AS name ,tf.t_f_id AS tfId,tf.t_f_type AS type,tf.t_f_state AS state
+		SELECT DISTINCT tf.t_f_add AS url,tf.t_f_name AS name ,tf.t_f_id AS
+		tfId,tf.t_f_type AS type,tf.t_f_state AS state
 		FROM publish_work pw,student_select_course ssc,t_file tf,img_type it
 		WHERE
-		ssc.s_id=#{sId}
+		ssc.s_id = #{sId}
 		AND pw.pw_id = #{pwId}
-		AND ssc.tsc_id=pw.tsc_id
-		AND pw.pw_id=tf.pw_id
+		AND ssc.tsc_id = pw.tsc_id
+		AND pw.pw_id = tf.pw_id
 		AND tf.t_f_type IN (
-			SELECT img_type.i_t_typt FROM img_type
+		SELECT img_type.i_t_typt FROM img_type
 		)
 	</select>
 	<select id="getSFilesImages" resultType="java.util.HashMap">
-		SELECT  DISTINCT sf.s_f_add AS url,sf.s_f_name AS name ,sf.s_f_id AS sfId,sf.s_f_type AS type,sf.s_f_state AS state
-		FROM publish_work pw,student_select_course ssc,WORK,s_file sf,img_type it
+		SELECT DISTINCT sf.s_f_add AS url,sf.s_f_name AS name ,sf.s_f_id AS
+		sfId,sf.s_f_type AS type,sf.s_f_state AS state
+		FROM publish_work pw,student_select_course ssc,WORK,s_file sf,img_type
+		it
 		WHERE
-		ssc.s_id=#{sId}
+		ssc.s_id = #{sId}
 		AND pw.pw_id = #{pwId}
-		AND ssc.tsc_id=pw.tsc_id
-		AND pw.pw_id=work.pw_id
-		AND work.w_id=sf.w_id
-		AND work.s_id=ssc.s_id
+		AND ssc.tsc_id = pw.tsc_id
+		AND pw.pw_id = work.pw_id
+		AND work.w_id =
+		sf.w_id
+		AND
+		work.s_id = ssc.s_id
 		AND sf.s_f_type IN (
-			SELECT img_type.i_t_typt FROM img_type
+		SELECT img_type.i_t_typt FROM img_type
 		)
 	</select>
 	<select id="countSPublishEstimates" resultType="java.lang.Integer">
-		SELECT
-		COUNT(*)
+		SELECT COUNT(*)
 		FROM student,student_select_course,publish_estimate,course c,teacher_select_course tsc
-		WHERE student.s_id=student_select_course.s_id
-		AND student_select_course.tsc_id=publish_estimate.tsc_id
-		AND student.s_id=#{sId}
-		AND student_select_course.tsc_id=tsc.tsc_id
-		AND tsc.c_id=c.c_id
-		AND c.c_id=#{cId}
-		AND publish_estimate.ep_id NOT IN(SELECT estimate.ep_id
+		WHERE student.s_id = student_select_course.s_id
+		AND student_select_course.tsc_id = publish_estimate.tsc_id
+		AND student.s_id = #{sId}
+		AND student_select_course.tsc_id = tsc.tsc_id
+		AND tsc.c_id = c.c_id
+		AND c.c_id = #{cId}
+		AND publish_estimate.ep_id NOT IN(
+		SELECT estimate.ep_id
 		FROM student,student_select_course,publish_estimate,estimate,course c,teacher_select_course tsc
-		WHERE student.s_id=student_select_course.s_id
-		AND estimate.ep_id=publish_estimate.ep_id
-		AND student_select_course.tsc_id=publish_estimate.tsc_id
-		AND student.s_id=#{sId}
-		AND student_select_course.tsc_id=tsc.tsc_id
-		AND tsc.c_id=c.c_id
-		AND c.c_id=#{cId}
-		)
+		WHERE student.s_id = student_select_course.s_id
+		AND estimate.ep_id = publish_estimate.ep_id
+		AND student_select_course.tsc_id = publish_estimate.tsc_id
+		AND student.s_id = #{sId}
+		AND student_select_course.tsc_id = tsc.tsc_id
+		AND tsc.c_id = c.c_id
+		AND c.c_id = #{cId})
 	</select>
 	<select id="getTPwDetails" resultType="java.util.HashMap">
-		SELECT	pw.pw_img_src AS activityImgSrc,pw.pw_name AS pwName,pw.pw_content AS pwContent,pw.pw_end pwEnd,pw.pw_score pwScore,pw.pw_state as pwState
+		SELECT pw.pw_img_src AS activityImgSrc,pw.pw_name AS pwName,pw.pw_content
+		AS pwContent,pw.pw_end pwEnd,pw.pw_score pwScore,pw.pw_state as pwState
 		FROM publish_work pw
-		WHERE pw.pw_id=#{pwId}
+		WHERE pw.pw_id = #{pwId}
 	</select>
 	<select id="getTTFiles" resultType="java.util.HashMap">
-		SELECT	DISTINCT tf.t_f_name AS name, tf.t_f_add AS url,tf.t_f_state AS state,tf.t_f_type AS type,tf.t_f_id AS tfId
-		FROM publish_work pw,t_file tf,img_type 
-		WHERE pw.pw_id=#{pwId}
-		AND pw.pw_id=tf.pw_id
+		SELECT DISTINCT tf.t_f_name AS name, tf.t_f_add AS url,tf.t_f_state AS
+		state,tf.t_f_type AS type,tf.t_f_id AS tfId
+		FROM publish_work pw,t_file tf,img_type
+		WHERE pw.pw_id = #{pwId}
+		AND pw.pw_id
+		= tf.pw_id
 		AND tf.t_f_type NOT IN (SELECT img_type.i_t_typt FROM img_type)
 	</select>
 	<select id="getTTFilesImages" resultType="java.util.HashMap">
-		SELECT	DISTINCT tf.t_f_name AS name, tf.t_f_add AS url,tf.t_f_state AS state,tf.t_f_type AS type,tf.t_f_id AS tfId
-		FROM publish_work pw,t_file tf,img_type 
-		WHERE pw.pw_id=#{pwId}
-		AND pw.pw_id=tf.pw_id
+		SELECT DISTINCT tf.t_f_name AS name, tf.t_f_add AS url,tf.t_f_state AS
+		state,tf.t_f_type AS type,tf.t_f_id AS tfId
+		FROM publish_work pw,t_file tf,img_type
+		WHERE pw.pw_id = #{pwId}
+		AND pw.pw_id
+		= tf.pw_id
 		AND tf.t_f_type IN (SELECT img_type.i_t_typt FROM img_type)
 	</select>
 	<select id="getTStudentsByPwId" resultType="java.util.HashMap">
-		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId
+		SELECT s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId
 		FROM publish_work pw,WORK w,student s
-		WHERE pw.pw_id=#{pwId}
-		AND pw.pw_id=w.pw_id
-		AND w.s_id=s.s_id
-		ORDER  BY  sId 
+		WHERE pw.pw_id = #{pwId}
+		AND pw.pw_id = w.pw_id
+		AND w.s_id = s.s_id
+		ORDER BY sId
 	</select>
 	<select id="getWorkDetails" resultType="java.util.HashMap">
-		SELECT	w.w_context AS wContext,w.w_problem AS wProblem,w.w_score AS wScore,w.w_remark wRemark,w.s_w_state AS swState,w.t_w_state AS twState,w.w_time AS wTime,w.w_id AS wId
-		FROM publish_work pw,WORK w
-		WHERE pw.pw_id=#{pwId}
-		AND pw.pw_id=w.pw_id
-		AND w.s_id=#{sId}
+		SELECT w.w_context AS wContext,w.w_problem AS wProblem,w.w_score AS
+		wScore,w.w_remark wRemark,w.s_w_state AS swState,w.t_w_state AS twState,w.w_time AS wTime,w.w_id AS wId
+		FROM
+		publish_work pw,WORK w
+		WHERE pw.pw_id = #{pwId}
+		AND pw.pw_id = w.pw_id
+		AND w.s_id = #{sId}
 	</select>
 	<select id="getFinishStudents" resultType="java.util.HashMap">
-		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.t_w_state AS twState,w.w_score AS wScore, "已批改" AS checkStringState 
+		SELECT s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS
+		sId,w.t_w_state AS twState,w.w_score AS wScore, "已批改" AS checkStringState
 		FROM publish_work pw,WORK w,student s
-		WHERE pw.pw_id=#{pwId}
-		AND pw.pw_id=w.pw_id
-		AND w.s_id=s.s_id
-		AND w.s_w_state=1
-		AND w.t_w_state=1
-		ORDER  BY  sId
-	    LIMIT #{start},#{end};
+		WHERE
+		pw.pw_id = #{pwId}
+		AND pw.pw_id = w.pw_id
+		AND w.s_id = s.s_id
+		AND w.s_w_state = 1
+		AND
+		w.t_w_state = 1
+		ORDER BY sId
+		LIMIT
+		#{start},#{end};
 	</select>
 	<select id="getNotFinishStudents" resultType="java.util.HashMap">
-		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.t_w_state AS twState,w.w_score AS wScore,"未提交"  AS checkStringState 
+		SELECT s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS
+		sId,w.t_w_state AS twState,w.w_score AS wScore,"未提交" AS checkStringState
 		FROM publish_work pw,WORK w,student s
-		WHERE pw.pw_id=#{pwId}
-		AND pw.pw_id=w.pw_id
-		AND w.s_id=s.s_id
-		AND w.s_w_state=0
-		ORDER  BY  sId 
-	    LIMIT #{start},#{end};
+		WHERE
+		pw.pw_id = #{pwId}
+		AND pw.pw_id = w.pw_id
+		AND w.s_id = s.s_id
+		AND w.s_w_state = 0
+		ORDER BY
+		sId
+		LIMIT #{start},#{end};
 	</select>
 	<select id="getFinishsAndNotCheckStudent" resultType="java.util.HashMap">
-		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.t_w_state AS twState,w.w_score AS wScore, "待批改" AS checkStringState 
-		FROM publish_work pw,WORK w,student s
-		WHERE pw.pw_id=#{pwId}
-		AND pw.pw_id=w.pw_id
-		AND w.s_id=s.s_id
-		AND w.s_w_state=1
-		AND w.t_w_state=0
-		ORDER  BY  sId
-	    LIMIT #{start},#{end};
+		SELECT s.s_name AS sName,s.s_img_src AS
+		activityImgSrc,s.s_id AS sId,w.t_w_state AS twState,w.w_score AS wScore, "待批改" AS checkStringState
+		FROM publish_work
+		pw,WORK w,student s
+		WHERE pw.pw_id = #{pwId}
+		AND pw.pw_id = w.pw_id
+		AND w.s_id = s.s_id
+		AND w.s_w_state = 1
+		AND
+		w.t_w_state
+		= 0
+		ORDER BY sId
+		LIMIT #{start},#{end};
 	</select>
 	<select id="countFinishStudents" resultType="java.lang.Integer">
-		SELECT	COUNT(s.s_id)
+		SELECT COUNT(s.s_id)
 		FROM publish_work pw,WORK w,student s
-		WHERE pw.pw_id=#{pwId}
-		AND pw.pw_id=w.pw_id
-		AND w.s_id=s.s_id
-		AND w.s_w_state=1
-		AND w.t_w_state=1
+		WHERE
+		pw.pw_id = #{pwId}
+		AND pw.pw_id = w.pw_id
+		AND w.s_id = s.s_id
+		AND w.s_w_state = 1
+		AND w.t_w_state = 1
 	</select>
 	<select id="countNotFinishStudents" resultType="java.lang.Integer">
-		SELECT	COUNT(s.s_id)
+		SELECT COUNT(s.s_id)
 		FROM publish_work pw,WORK w,student s
-		WHERE pw.pw_id=#{pwId}
-		AND pw.pw_id=w.pw_id
-		AND w.s_id=s.s_id
-		AND w.s_w_state=0
+		WHERE
+		pw.pw_id = #{pwId}
+		AND pw.pw_id = w.pw_id
+		AND w.s_id = s.s_id
+		AND w.s_w_state = 0
 	</select>
 	<select id="countFinishsAndNotCheckStudent" resultType="java.lang.Integer">
-		SELECT	COUNT(s.s_id)
+		SELECT COUNT(s.s_id)
 		FROM publish_work pw,WORK w,student s
-		WHERE pw.pw_id=#{pwId}
-		AND pw.pw_id=w.pw_id
-		AND w.s_id=s.s_id
-		AND w.s_w_state=1
-		AND w.t_w_state=0
+		WHERE pw.pw_id = #{pwId}
+		AND pw.pw_id = w.pw_id
+		AND w.s_id = s.s_id
+		AND w.s_w_state = 1
+		AND w.t_w_state = 0
 	</select>
 	<select id="getWorkBySid" resultType="java.util.HashMap">
-		SELECT	s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS sId,w.t_w_state AS twState,w.w_score AS wScore,w.t_w_state AS twState,w.s_w_state AS swState
-		FROM publish_work pw,WORK w,student s
-		WHERE pw.pw_id=#{pwId}
-		AND pw.pw_id=w.pw_id
-		AND w.s_id=s.s_id
-		AND s.s_id=#{sId}
+		SELECT s.s_name AS sName,s.s_img_src AS activityImgSrc,s.s_id AS
+		sId,w.t_w_state AS twState,w.w_score AS wScore,w.t_w_state AS twState,w.s_w_state AS swState
+		FROM publish_work pw,WORK
+		w,student s
+		WHERE pw.pw_id = #{pwId}
+		AND pw.pw_id = w.pw_id
+		AND w.s_id = s.s_id
+		AND s.s_id = #{sId}
 	</select>
-	
+
 	<!-- 文成end -->
-	
+
 	<update id="updatePublishWork" parameterType="com.cdtu.model.PublishWork">
-	update publish_work set pw_name=#{pwName} , pw_end=#{pwEnd} , pw_state=#{pwState} , pw_content=#{pwContent}
-    where pw_id=#{pwId}
+		update publish_work set pw_name = #{pwName} , pw_end = #{pwEnd} ,
+		pw_state = #{pwState} , pw_content = #{pwContent}
+		where pw_id = #{pwId}
 	</update>
-	
+
 	<select id="selectpublishwork" resultType="java.util.HashMap">
-	SELECT course.`c_name` AS cName,
-publish_work.pw_id AS pwId,
-publish_work.`pw_name` AS pwName,
-publish_work.`pw_end`AS pwEnd,
-publish_work.`pw_score`AS pwScore,
-publish_work.pw_content AS pwContent
- FROM publish_work,course,teacher_select_course 
- WHERE publish_work.pw_id=#{pwId}
- AND  publish_work.`tsc_id`=teacher_select_course.`tsc_id`
- AND teacher_select_course.`c_id`=course.`c_id`
+		SELECT course.c_name AS cName,
+		publish_work.pw_id AS pwId,
+		publish_work.pw_name AS pwName,
+		publish_work.pw_endAS pwEnd,
+		publish_work.pw_scoreAS pwScore,
+		publish_work.pw_content AS
+		pwContent
+		FROM publish_work,course,teacher_select_course
+		WHERE publish_work.pw_id = #{pwId}
+		AND publish_work.tsc_id =
+		teacher_select_course.tsc_id
+		AND teacher_select_course.c_id = course.c_id
 	</select>
-<select id="selectTeacherFile" resultType="java.util.HashMap">
-SELECT t_file.t_f_add AS tfAdd ,t_file.`t_f_name` AS tfName FROM t_file 
-WHERE pw_id=#{pwId}
+	<select id="selectTeacherFile" resultType="java.util.HashMap">
+		SELECT t_file.t_f_add AS tfAdd ,t_file.t_f_name AS tfName FROM t_file
+		WHERE pw_id = #{pwId}
 
-</select>
+	</select>
 
-<delete id="deletePublishWork">
-delete from publish_work where pw_id=#{pwId}
-</delete>
+	<delete id="deletePublishWork">
+		delete from publish_work where pw_id = #{pwId}
+	</delete>
 </mapper>

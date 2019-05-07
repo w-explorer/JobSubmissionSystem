@@ -1,229 +1,175 @@
 package com.cdtu.mapper;
 
-import com.cdtu.model.PublishWork;
-import com.cdtu.model.PublishWorkExample;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.cdtu.model.PublishWork;
+import com.cdtu.model.PublishWorkExample;
+
 public interface PublishWorkMapper {
-    int countByExample(PublishWorkExample example);
+	public int countByExample(PublishWorkExample example);
 
-    int deleteByExample(PublishWorkExample example);
+	public int deleteByExample(PublishWorkExample example);
 
-    int deleteByPrimaryKey(String pwId);
+	public int deleteByPrimaryKey(String pwId);
 
-    int insert(PublishWork record);
+	public int insert(PublishWork record);
 
-    int insertSelective(PublishWork record);
+	public int insertSelective(PublishWork record);
 
-    List<PublishWork> selectByExampleWithBLOBs(PublishWorkExample example);
+	public List<PublishWork> selectByExampleWithBLOBs(PublishWorkExample example);
 
-    List<PublishWork> selectByExample(PublishWorkExample example);
+	public List<PublishWork> selectByExample(PublishWorkExample example);
 
-    PublishWork selectByPrimaryKey(String pwId);
+	public PublishWork selectByPrimaryKey(String pwId);
 
-    int updateByExampleSelective(@Param("record") PublishWork record, @Param("example") PublishWorkExample example);
+	public int updateByExampleSelective(@Param("record") PublishWork record,
+			@Param("example") PublishWorkExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") PublishWork record, @Param("example") PublishWorkExample example);
+	public int updateByExampleWithBLOBs(@Param("record") PublishWork record,
+			@Param("example") PublishWorkExample example);
 
-    int updateByExample(@Param("record") PublishWork record, @Param("example") PublishWorkExample example);
+	public int updateByExample(@Param("record") PublishWork record, @Param("example") PublishWorkExample example);
 
-    int updateByPrimaryKeySelective(PublishWork record);
+	public int updateByPrimaryKeySelective(PublishWork record);
 
-    int updateByPrimaryKeyWithBLOBs(PublishWork record);
+	public int updateByPrimaryKeyWithBLOBs(PublishWork record);
 
-    int updateByPrimaryKey(PublishWork record);
-    
-    /**
-     * 通过tscId添加发布作业
-     * @author LR
-     * @param publishWork
-     */
-    void insterBycId(PublishWork publishWork);
-    /**
-     * 教师查找cId
-     * @author LR
-     * @param cId
-     * @param tId
-     */
-    Integer selectTscid(@Param("cId")String cId,@Param("tId")String tId);
-																	    /*
-																	     * 通过ctId添加发布作业
-																	     * @author LR
-																	     * @param publishWork
-																	     */
-																	    //void insterByctId(PublishWork publishWork);
-																	    /*
-																	     * 通过cId添加发布作业
-																	     * @author weiyuhang
-																	     * @param publishWork
-																	     */
-																	    //void insterBycId(PublishWork publishWork);
-																																    /*
-																																     * 学生查询发布作业表通过cId
-																																     * @author LR
-																																     * @param sId
-																																     * @param cId
-																																     * @param pwState
-																																     * @param start
-																																     * @param end
-																																     * @return
-																																     */
-																																    //List<PublishWork> selectStudentPublishWorkBycId(@Param("sId") String sId,@Param("cId") String cId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
-																																   
-																																    /*
-																																     * * 学生查询发布作业表通过s_id和ct_id
-																																     * @author LR
-																																     * @param sId
-																																     * @param ctId
-																																     * @param pwState
-																																     * @param start
-																																     * @param end
-																																     * @return
-																																     */
-																																   // List<PublishWork> selectStudentPublishWorkByctId(@Param("sId") String sId,@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
-    /**
-     * 学生查询发布作业表通过s_id和tsc_id
-     * @author LR
-     * @param sId
-     * @param tscId
-     * @param pwState
-     * @param start
-     * @param end
-     * @return
-     */
-    List<PublishWork> selectStudentPublishWorkBycId(@Param("sId") String sId,@Param("cId") String cId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
-    /**
-     * 学生查询发布作业表通过cId数量
-     * @author LR
-     * @param sId
-     * @param cId
-     * @param pwState
-     * @return
-     */
-    Integer selectStudentPublishWorkCount(@Param("sId") String sId,@Param("cId") String cId,@Param("pwState") Boolean pwState);
-    /**
-     * 教师查询发布作业表通过cId
-     * @author LR
-     * @param tscId
-     * @param pwState
-     * @param start
-     * @param end
-     * @return
-     */
-    List<PublishWork> selectTeacherPublishWorkBycId(@Param("tId") String tId,@Param("cId") String cId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
-    /**
-     *  教师查询发布作业表通过cId数量
-     * @author LR
-     * @param tId
-     * @param cId
-     * @param pwState
-     * @return
-     */
-   Integer selectTeacherPublishWorkCount(@Param("tId") String tId,@Param("cId") String cId,@Param("pwState") Boolean pwState);
-																																    /*
-																																     * 教师查询发布作业表通过s_id和tsc_id
-																																     * @author LR
-																																     * @param tscId
-																																     * @param pwState
-																																     * @param start
-																																     * @param end
-																																     * @return
-																																     */
-																																    //List<PublishWork> selectTeacherPublishWorkBycId(@Param("cId") Integer cId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
-																																    /*
-																																     * 教师查询发布作业表通过s_id和ct_id
-																																     * @author LR
-																																     * @param ctId
-																																     * @param pwState
-																																     * @param start
-																																     * @param end
-																																     * @return
-																																     */
-																																    //List<PublishWork> selectTeacherPublishWorkByctId(@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState,@Param("start") Integer start,@Param("end") Integer end);
-																																    
-																																    /*
-																																     * 教师查询发布作业的数量通过tsc_id
-																																     * @author LR
-																																     * @param tId
-																																     * @param tscId
-																																     * @param pwState
-																																     * @return
-																																     */
-																																    //Integer selectCountBypwStateBytscId(@Param("tscId") Integer tscId,@Param("pwState") Boolean pwState);
-																																    /*
-																																     * 教师查询发布作业的数量通过ct_id（失效）
-																																     * @author LR
-																																     * @param tId
-																																     * @param ctId
-																																     * @param pwState
-																																     * @return
-																																     */
-																																    // Integer selectCountBypwStateByctId(@Param("ctId") Integer ctId,@Param("pwState") Boolean pwState);
-    /**
-     * 查询发布作业名
-     * @author weiyuhang
-     * @param pwId
-     * @return
-     */
-    String selectPwIdname(String pwId);
-    /**
-     * 改变作业状态
-     * @author weiyuhang
-     * @param pwId
-     * @return
-     */
-    void changePublishWork(PublishWork publishwork);
+	public int updateByPrimaryKey(PublishWork record);
 
-	List<PublishWork> getAllPublishWorks();
+	/**
+	 * 通过tscId添加发布作业
+	 *
+	 * @author LR
+	 * @param publishWork
+	 */
+	public void insterBycId(PublishWork publishWork);
 
-	void updatePublishWorkState(@Param("pwId")String pwId, @Param("flag")Boolean flag);
+	/**
+	 * 教师查找cId
+	 *
+	 * @author LR
+	 * @param cId
+	 * @param tId
+	 */
+	public int selectTscid(@Param("cId") String cId, @Param("tId") String tId);
 
-	List<Map<String, Object>> getPwDetails(@Param("sId")String sId, @Param("pwId")String pwId);
+	/**
+	 * 学生查询发布作业表通过s_id和tsc_id
+	 *
+	 * @author LR
+	 * @param sId
+	 * @param tscId
+	 * @param pwState
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public List<PublishWork> selectStudentPublishWorkBycId(@Param("sId") String sId, @Param("cId") String cId,
+			@Param("pwState") Boolean pwState, @Param("start") int start, @Param("end") int end);
 
-	List<Map<String, Object>> getTFiles(@Param("sId")String sId, @Param("pwId")String pwId);
+	/**
+	 * 学生查询发布作业表通过cId数量
+	 *
+	 * @author LR
+	 * @param sId
+	 * @param cId
+	 * @param pwState
+	 * @return
+	 */
+	public int selectStudentPublishWorkCount(@Param("sId") String sId, @Param("cId") String cId,
+			@Param("pwState") Boolean pwState);
 
-	List<Map<String, Object>> getSFiles(@Param("sId")String sId, @Param("pwId")String pwId);
+	/**
+	 * 教师查询发布作业表通过cId
+	 *
+	 * @author LR
+	 * @param tscId
+	 * @param pwState
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public List<PublishWork> selectTeacherPublishWorkBycId(@Param("tId") String tId, @Param("cId") String cId,
+			@Param("pwState") Boolean pwState, @Param("start") int start, @Param("end") int end);
 
-	int countPublishWorks(@Param("cId")String cId);
+	/**
+	 * 教师查询发布作业表通过cId数量
+	 *
+	 * @author LR
+	 * @param tId
+	 * @param cId
+	 * @param pwState
+	 * @return
+	 */
+	public int selectTeacherPublishWorkCount(@Param("tId") String tId, @Param("cId") String cId,
+			@Param("pwState") Boolean pwState);
 
-	int countPublishEstimates(@Param("cId")String cId);
-	 void  updatePublishWork(PublishWork publishwork);
+	public String selectPwIdname(String pwId);
 
-	List<Map<String, Object>> getTFilesImages(@Param("sId")String sId, @Param("pwId")String pwId);
+	/**
+	 * 改变作业状态
+	 *
+	 * @author weiyuhang
+	 * @param pwId
+	 * @return
+	 */
+	public void changePublishWork(PublishWork publishwork);
 
-	List<Map<String, Object>> getSFilesImages(@Param("sId")String sId, @Param("pwId")String pwId);
+	public List<PublishWork> getAllPublishWorks();
 
-	int countSPublishEstimates(@Param("cId")String cId, @Param("sId")String sId);
+	void updatePublishWorkState(@Param("pwId") String pwId, @Param("flag") Boolean flag);
 
-	List<Map<String, Object>> getTPwDetails(@Param("pwId")String pwId);
+	public List<Map<String, Object>> getPwDetails(@Param("sId") String sId, @Param("pwId") String pwId);
 
-	List<Map<String, Object>> getTTFiles(@Param("pwId")String pwId);
+	public List<Map<String, Object>> getTFiles(@Param("sId") String sId, @Param("pwId") String pwId);
 
-	List<Map<String, Object>> getTTFilesImages(@Param("pwId")String pwId);
+	public List<Map<String, Object>> getSFiles(@Param("sId") String sId, @Param("pwId") String pwId);
 
-	List<Map<String, Object>> getTStudentsByPwId(@Param("pwId")String pwId);
+	public int countPublishWorks(@Param("rId") String rId, @Param("cId") String cId);
 
-	List<Map<String, Object>> getWorkDetails(@Param("sId")String sId,@Param("pwId") String pwId);
+	public int countPublishEstimates(@Param("cId") String cId);
 
-	List<Map<String, Object>> getFinishStudents(@Param("pwId") String pwId,@Param("start") int start,@Param("end") int end);
+	public void updatePublishWork(PublishWork publishwork);
 
-	List<Map<String, Object>> getNotFinishStudents(@Param("pwId") String pwId,@Param("start") int start,@Param("end") int end);
+	public List<Map<String, Object>> getTFilesImages(@Param("sId") String sId, @Param("pwId") String pwId);
 
-	List<Map<String, Object>> getFinishsAndNotCheckStudent(@Param("pwId") String pwId,@Param("start") int start,@Param("end") int end);
+	public List<Map<String, Object>> getSFilesImages(@Param("sId") String sId, @Param("pwId") String pwId);
 
-	Integer countFinishStudents(@Param("pwId")String pwId);
+	public int countSPublishEstimates(@Param("cId") String cId, @Param("sId") String sId);
 
-	Integer countNotFinishStudents(@Param("pwId")String pwId);
+	public List<Map<String, Object>> getTPwDetails(@Param("pwId") String pwId);
 
-	Integer countFinishsAndNotCheckStudent(@Param("pwId")String pwId);
-	
-	Map<String,Object> selectpublishwork(@Param("pwId")String pwId);
-	List<Map<String,Object>> selectTeacherFile(@Param("pwId")String pwId);
+	public List<Map<String, Object>> getTTFiles(@Param("pwId") String pwId);
 
-	List<Map<String, Object>> getWorkBySid(@Param("pwId")String pwId, @Param("sId")String sId);
+	public List<Map<String, Object>> getTTFilesImages(@Param("pwId") String pwId);
 
-	void deletePublishWork(@Param("pwId")String pwId);
+	public List<Map<String, Object>> getTStudentsByPwId(@Param("pwId") String pwId);
+
+	public List<Map<String, Object>> getWorkDetails(@Param("sId") String sId, @Param("pwId") String pwId);
+
+	public List<Map<String, Object>> getFinishStudents(@Param("pwId") String pwId, @Param("start") int start,
+			@Param("end") int end);
+
+	public List<Map<String, Object>> getNotFinishStudents(@Param("pwId") String pwId, @Param("start") int start,
+			@Param("end") int end);
+
+	public List<Map<String, Object>> getFinishsAndNotCheckStudent(@Param("pwId") String pwId, @Param("start") int start,
+			@Param("end") int end);
+
+	public int countFinishStudents(@Param("pwId") String pwId);
+
+	public int countNotFinishStudents(@Param("pwId") String pwId);
+
+	public int countFinishsAndNotCheckStudent(@Param("pwId") String pwId);
+
+	public Map<String, Object> selectpublishwork(@Param("pwId") String pwId);
+
+	public List<Map<String, Object>> selectTeacherFile(@Param("pwId") String pwId);
+
+	public List<Map<String, Object>> getWorkBySid(@Param("pwId") String pwId, @Param("sId") String sId);
+
+	public void deletePublishWork(@Param("pwId") String pwId);
 }

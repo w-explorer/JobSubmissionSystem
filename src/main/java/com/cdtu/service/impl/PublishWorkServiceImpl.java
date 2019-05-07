@@ -69,8 +69,8 @@ public class PublishWorkServiceImpl implements PublishWorkService {
 	}
 
 	@Override
-	public int countPublishWorks(String cId) {
-		return publishWorkMapper.countPublishWorks(cId);
+	public int countPublishWorks(String rId, String cId) {
+		return publishWorkMapper.countPublishWorks(rId, cId);
 	}
 
 	@Override

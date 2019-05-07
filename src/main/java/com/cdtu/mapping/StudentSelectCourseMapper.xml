@@ -55,10 +55,17 @@
 	</select>
 
 	<select id="countStudents" resultType="java.lang.Integer">
-		SELECT COUNT(*)
+		SELECT COUNT(DISTINCT student_select_course.sst_id)
+		FROM student_select_course, teacher_select_course
+		WHERE (teacher_select_course.c_id = #{cId}
+		AND teacher_select_course.t_id = #{rId}
+		AND student_select_course.tsc_id = teacher_select_course.tsc_id)
+		OR (student_select_course.tsc_id = (
+		SELECT teacher_select_course.tsc_id
 		FROM student_select_course, teacher_select_course
 		WHERE teacher_select_course.c_id = #{cId}
-		AND student_select_course.tsc_id = teacher_select_course.tsc_id
+		AND student_select_course.s_id = #{rId}
+		AND student_select_course.tsc_id = teacher_select_course.tsc_id))
 	</select>
 
 	<select id="selectStudents" resultType="java.util.HashMap">
@@ -80,27 +87,13 @@
 	</select>
 	<!-- 李红兵end -->
 
-	<!-- <select id="selectCourseStudents" parameterType="java.util.HashMap" 
-		resultMap="studentlist"> SELECT student.*,student_select_course.* FROM student,student_select_course 
-		WHERE student_select_course.tsc_id=#{cId} AND student.s_id=student_select_course.s_id 
-		UNION SELECT student.*,student_select_course.* FROM student,student_select_course 
-		WHERE student_select_course.ct_id=#{cId} AND student.s_id=student_select_course.s_id 
-		limit #{start},#{end} </select> <select id="count" parameterType="com.cdtu.model.CourseWapper" 
-		resultType="Int"> SELECT COUNT(*) FROM student_select_course where <if test="tscId!=null"> 
-		student_select_course.tsc_id=#{tscId} </if> <if test="ctId!=null"> student_select_course.ct_id=#{ctId} 
-		</if> </select> -->
-		<!-- 查询班级内所有学生 -->
-	<select id="selectStudent" resultType="String">
-		SELECT 
-		 student.s_id AS sId
-		FROM student,
-		teacher_select_course, student_select_course
-		WHERE
-		teacher_select_course.c_id = #{cId}
-		AND student_select_course.tsc_id =
-		teacher_select_course.tsc_id
-		AND student_select_course.s_id =
-		student.s_id
+	<!-- 查询班级内所有学生 -->
+	<select id="selectStudent" resultType="java.lang.String">
+		SELECT student.s_id AS sId
+		FROM student, teacher_select_course, student_select_course
+		WHERE teacher_select_course.c_id = #{cId}
+		AND student_select_course.tsc_id = teacher_select_course.tsc_id
+		AND student_select_course.s_id = student.s_id
 		ORDER BY sId ASC
 	</select>	
 </mapper>

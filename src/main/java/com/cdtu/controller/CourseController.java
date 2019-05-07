@@ -45,24 +45,18 @@ public class CourseController {
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	public Map<String, Object> doDetails(@RequestBody Map<String, Object> paramsMap, HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
-		Subject subject = SecurityUtils.getSubject();
-		Role role = (Role) subject.getPrincipal();
-		int pubENum = 0;
 		try {
+			Role role = (Role) SecurityUtils.getSubject().getPrincipal();
 			String cId = (String) paramsMap.get("cId");
+			String rId = role.getUsername();
 			map.putAll(courseService.getDetails(cId));// 未进行空值校验，后期斟酌
-			int stusNum = sscService.countStudents(cId);
-			map.put("stusNum", stusNum);// 学生数量
-			int pubWNum = publishWorkService.countPublishWorks(cId);
-			// 将作业数量 放入session 用于解决 班级排名
+			map.put("stusNum", sscService.countStudents(rId, cId));// 学生数量
+			map.put("pubWNum", publishWorkService.countPublishWorks(rId, cId));// 活动数量
 			if ("teacher".equals(role.getRole())) {
-				pubENum = publishWorkService.countPublishEstimates(cId);
-			} else if ("student".equals(role.getRole())) {
-				String sId = role.getUsername();
-				pubENum = publishWorkService.countSPublishEstimates(cId, sId);
+				map.put("pubENum", publishWorkService.countPublishEstimates(cId));// 评价数量（？）
+			} else {
+				map.put("pubENum", publishWorkService.countSPublishEstimates(cId, rId));// 评价数量（？）
 			}
-			map.put("pubWNum", pubWNum);// 活动数量
-			map.put("pubENum", pubENum);// 活动数量
 			map.put("status", 200);
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
@@ -83,7 +77,7 @@ public class CourseController {
 		try {
 			String cId = (String) paramsMap.get("cId");
 			int page = (int) paramsMap.get("page");
-			int stusNum = sscService.countStudents(cId);
+			int stusNum = sscService.countStudents(null, cId);
 			map.put("stusNum", stusNum);
 			map.put("students", sscService.getStudents(cId, page));
 			map.put("pageNum", MaxPage.getMaxPage(stusNum, 30));
@@ -103,7 +97,6 @@ public class CourseController {
 	@RequiresRoles(value = { "student", "teacher" }, logical = Logical.OR)
 	@RequestMapping(value = "/queryJoinedCourses.do")
 	public Map<String, Object> doQueryJoinedCourses() {
-
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		String roleName = role.getRole();
@@ -148,9 +141,9 @@ public class CourseController {
 		String id = role.getUsername();
 		String roleName = role.getRole();
 		String cId = (String) paramsMap.get("cId");
-		int pubWNum = publishWorkService.countPublishWorks(cId);// 用于解决 班级排名
+		int pubWNum = publishWorkService.countPublishWorks(null, cId);// 用于解决 班级排名
 		int page = (int) paramsMap.get("page");
-		int stusNum = sscService.countStudents(cId);
+		int stusNum = sscService.countStudents(null, cId);
 		if (pubWNum == 0) {
 			map.put("students", courseService.selectStudents(page, cId, id));
 		} else {

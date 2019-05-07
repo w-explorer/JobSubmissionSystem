@@ -62,7 +62,7 @@ public class StudentSelectCourseServiceImpl implements StudentSelectCourseServic
 	 * @author 李红兵
 	 */
 	@Override
-	public int countStudents(String cId) {
-		return sscMapper.countStudents(cId);
+	public int countStudents(String rId, String cId) {
+		return sscMapper.countStudents(rId, cId);
 	}
 }
