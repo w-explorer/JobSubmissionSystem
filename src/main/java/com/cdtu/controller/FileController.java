@@ -302,6 +302,8 @@ public class FileController {
 					w.put("w_context", com.cdtu.util.CleanLable.getTextFrom("未作答"));
 				}
 				w.put("w_context", com.cdtu.util.CleanLable.getTextFrom((String) w.get("w_context")));
+				w.put("pw_content", com.cdtu.util.CleanLable.getTextFrom((String) w.get("pw_content")));
+				
 				ExportWord.createWord(w, moban, workpath);
 				for (Map<String, Object> Addr : Addrs) {
 					String ws = (String) Addr.get("w_id");

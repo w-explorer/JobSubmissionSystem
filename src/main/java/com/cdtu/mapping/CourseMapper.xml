@@ -78,7 +78,7 @@
 	</select>
 	<!--文成start -->
 	<select id="selectStudents" resultType="java.util.HashMap">
-				SELECT  s.s_id AS sId,s.s_name AS sName,s.s_img_src AS sImgSrc ,0 AS sumScore,1 AS rank
+				(SELECT  s.s_id AS sId,s.s_name AS sName,s.s_img_src AS sImgSrc ,0 AS sumScore,1 AS rank
 			FROM student s,teacher_select_course tsc,student_select_course ssc
 			WHERE
 			tsc.t_id=#{id}
@@ -86,9 +86,9 @@
 			AND ssc.tsc_id=tsc.tsc_id
 			AND s.s_id=ssc.s_id
 			GROUP BY  s.s_id
-			LIMIT #{start}, #{end}
+			LIMIT #{start}, #{end})
 		UNION
-		SELECT  s.s_id AS sId,s.s_name AS sName,s.s_img_src AS sImgSrc ,0 AS sumScore,1 AS rank
+		(SELECT  s.s_id AS sId,s.s_name AS sName,s.s_img_src AS sImgSrc ,0 AS sumScore,1 AS rank
 			FROM student s,teacher_select_course tsc,student_select_course ssc
 			WHERE
 			tsc.tsc_id=(SELECT DISTINCT tsc.tsc_id FROM student s,course c,teacher_select_course tsc,student_select_course ssc
@@ -99,7 +99,7 @@
 			AND tsc.c_id=#{cId}
 			AND ssc.tsc_id=tsc.tsc_id
 			AND s.s_id=ssc.s_id
-			GROUP BY  s.s_id
+			GROUP BY  s.s_id)
 			LIMIT #{start}, #{end}
 	</select>
 	<select id="selectAllEmailInClass" resultType="java.lang.String">
