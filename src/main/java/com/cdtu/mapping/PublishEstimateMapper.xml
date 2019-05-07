@@ -30,15 +30,16 @@
 		AND student_select_course.tsc_id=tsc.tsc_id
 		AND tsc.c_id=c.c_id
 		AND c.c_id=#{cId}
-		AND publish_estimate.ep_id NOT IN(SELECT estimate.ep_id
-		FROM student,student_select_course,publish_estimate,estimate,course c,teacher_select_course tsc
-		WHERE student.s_id=student_select_course.s_id
-		AND estimate.ep_id=publish_estimate.ep_id
-		AND student_select_course.tsc_id=publish_estimate.tsc_id
-		AND student.s_id=#{sId}
-		AND student_select_course.tsc_id=tsc.tsc_id
-		AND tsc.c_id=c.c_id
-		AND c.c_id=#{cId}
+		AND publish_estimate.ep_id NOT IN(SELECT DISTINCT e.ep_id 
+		FROM student s,student_select_course ssc,publish_estimate pe,estimate e,teacher_select_course tsc
+		WHERE
+		ssc.s_id=#{sId}
+		AND ssc.tsc_id=tsc.tsc_id
+		AND tsc.c_id=#{cId}
+		AND pe.tsc_id=tsc.tsc_id
+		AND pe.ep_id=e.ep_id
+		AND e.s_id=#{sId}
+		
 		)
 		limit #{start},#{end};
 	</select>
