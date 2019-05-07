@@ -875,6 +875,7 @@ public class TeacherController {
 
 	/**
 	 * @author weiyuhang
+	 * @author 李红兵（修改）
 	 */
 	@RequiresRoles(value = { "teacher" })
 	@RequestMapping(value = "downloadEstimate.do")
@@ -882,15 +883,14 @@ public class TeacherController {
 			HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			Map<String, Object> estimate = teacherService.getEstimate((String) paramsMap.get("epId"));
-			estimate.put("eSuggests", teacherService.getESuggest((String) paramsMap.get("epId")));
-			String path = FileUtil.getRootAbsolutePath(request) + "/uploadFile/estimate/" + paramsMap.get("epId");
-//			String filePaths = path + File.separator + paramsMap.get("epId");
-//			String filePath = path + File.separator + paramsMap.get("epId") + File.separator + "评价详情" + ".docx";
-//			ExportWord.createWord(estimate, path, filePath);
-//			filePath = File.separator + "estimatefile" + File.separator + paramsMap.get("epId") + File.separator + "评价详情"
-//					+ ".docx";
-			map.put("Addr", FileUtil.createFile(path, "评价详情.doc"));
+			String epId = (String) paramsMap.get("epId");
+			Map<String, Object> dataMap = teacherService.getEstimate(epId);
+			dataMap.put("eSuggests", teacherService.getESuggest(epId));
+			String estimatePath = FileUtil.getRootAbsolutePath(request) + "/uploadFile/estimate/";
+			File file = FileUtil.createFile(estimatePath + epId, "评价详情.doc");
+			File templateDir = new File(estimatePath);// 读取评价的模板目录
+			FileUtil.expordToDoc(dataMap, templateDir, file);
+			map.put("Addr", file.getPath().replace("\\\\", "/"));
 			map.put("status", 200);
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);

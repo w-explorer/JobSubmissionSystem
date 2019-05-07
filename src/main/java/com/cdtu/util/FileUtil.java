@@ -2,17 +2,25 @@ package com.cdtu.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 public class FileUtil {
 	/**
@@ -53,12 +61,27 @@ public class FileUtil {
 	 *
 	 * @author 李红兵
 	 */
-	public static String createFile(String path, String name) throws Exception {
+	public static File createFile(String path, String name) throws Exception {
 		File file = new File(path, name);
 		if (!file.exists()) {
-			file.mkdirs();
+			file.getParentFile().mkdirs();
 		}
-		return file.getAbsolutePath();
+		return file;
+	}
+
+	/**
+	 * 将数据对象按指定模板格式导出到doc中
+	 *
+	 * @author weiyuhang
+	 */
+	public static void expordToDoc(Map<String, Object> dataMap, File templateDir, File file) throws Exception {
+		Configuration configuration = new Configuration(Configuration.VERSION_2_3_21);
+		configuration.setDefaultEncoding("utf-8");// 设置编码
+		configuration.setDirectoryForTemplateLoading(templateDir);// 设置模板目录（不包括模板名称）
+		Template template = configuration.getTemplate("moban.ftl", "utf-8");// 读取模板
+		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"), 10240);
+		template.process(dataMap, writer);
+		writer.close();
 	}
 
 	/**
@@ -159,14 +182,14 @@ public class FileUtil {
 					+ File.separator;
 			if (type.equals("png") || type.equals("jpg") || type.equals("gif") || type.equals("jpeg")) {
 				String path = realPath + "image" + File.separator + fileName;
-				file.transferTo(createFile(path));
+				file.transferTo(createDir(path));
 				path = File.separator + "workfile" + File.separator + pwId + File.separator + id + File.separator
 						+ "image" + File.separator + fileName;
 				return path;
 			}
 			if (type.equals("rar") || type.equals("zip") || type.equals("7z")) {
 				String path = realPath + "package" + File.separator + fileName;
-				file.transferTo(createFile(path));
+				file.transferTo(createDir(path));
 				path = File.separator + "workfile" + File.separator + pwId + File.separator + id + File.separator
 						+ "package" + File.separator + fileName;
 				return path;
@@ -174,7 +197,7 @@ public class FileUtil {
 			}
 			if (type.equals("doc") || type.equals("docx") || type.equals("txt")) {
 				String path = realPath + "file" + File.separator + fileName;
-				file.transferTo(createFile(path));
+				file.transferTo(createDir(path));
 				path = File.separator + "workfile" + File.separator + pwId + File.separator + id + File.separator
 						+ "file" + File.separator + fileName;
 				return path;
@@ -193,13 +216,12 @@ public class FileUtil {
 	 * @param fileName
 	 * @return
 	 */
-	public static File createFile(String path) throws IOException {
-		File newfile = new File(path);
-		if (!newfile.exists()) {
-			newfile.getParentFile().mkdirs();
+	public static File createDir(String path) throws IOException {
+		File dir = new File(path);
+		if (!dir.exists()) {
+			dir.mkdirs();
 		}
-		return newfile;
-
+		return dir;
 	}
 
 	public static String updateFile(CommonsMultipartFile file) {
