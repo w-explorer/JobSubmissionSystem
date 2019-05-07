@@ -272,7 +272,7 @@
 	<select  id="selecteSuggest" resultType="String">
 		SELECT e_suggest AS eSuggest
 		FROM estimate
-		WHERE ep_id = 1
+		WHERE ep_id = #{epId}
 		AND e_suggest IS NOT NULL
 	</select>
 	
