@@ -1,9 +1,10 @@
 package com.cdtu.mapper;
 
-import com.cdtu.model.School;
-import com.cdtu.model.SchoolExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import com.cdtu.model.School;
+import com.cdtu.model.SchoolExample;
 
 public interface SchoolMapper {
     int countByExample(SchoolExample example);

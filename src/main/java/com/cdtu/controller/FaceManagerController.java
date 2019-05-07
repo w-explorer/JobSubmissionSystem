@@ -20,16 +20,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baidu.aip.face.AipFace;
-import com.cdtu.common.AIConstant;
-import com.cdtu.common.FactoryUtil;
+import com.cdtu.ai.model.FacePageBean;
+import com.cdtu.ai.model.FacePageResponse;
+import com.cdtu.ai.response.FaceSerachResponse;
+import com.cdtu.ai.util.AIConstant;
+import com.cdtu.ai.util.FactoryUtil;
 import com.cdtu.model.Role;
 import com.cdtu.service.AdminstratorService;
 import com.cdtu.service.StudentService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.util.Jwt;
-import com.cdtu.vo.FacePageBean;
-import com.cdtu.vo.FacePageResponse;
-import com.cdtu.vo.response.FaceSerachResponse;
 
 /**
  * 人脸照片注册方法

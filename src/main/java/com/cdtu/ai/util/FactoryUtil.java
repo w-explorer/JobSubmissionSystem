@@ -1,4 +1,4 @@
-package com.cdtu.common;
+package com.cdtu.ai.util;
 
 import com.baidu.aip.face.AipFace;
 

@@ -130,7 +130,7 @@ public interface PublishWorkMapper {
 
 	public int countPublishWorks(@Param("rId") String rId, @Param("cId") String cId);
 
-	public int countPublishEstimates(@Param("cId") String cId);
+	public int countPublishEstimates(@Param("tId") String tId, @Param("cId") String cId);
 
 	public void updatePublishWork(PublishWork publishwork);
 

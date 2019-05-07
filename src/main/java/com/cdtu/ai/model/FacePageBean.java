@@ -1,4 +1,4 @@
-package com.cdtu.vo;
+package com.cdtu.ai.model;
 
 /**
  * @author 小帅丶

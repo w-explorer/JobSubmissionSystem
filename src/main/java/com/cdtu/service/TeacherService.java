@@ -166,11 +166,11 @@ public interface TeacherService {
      * @param epId
      * @return
      */
-	public Map<String,Object> selectEstimate(String epId);
+	public Map<String,Object> getEstimate(String epId);
 	public void updateRoleInfo(String email, String phone, String username);
 	public int countSelectPublishEstimateCount(String tId,String cId);
 	public List<Map<String,Object>> selectPublishEstimate(String tId,String cId,int start,int end);
-	public List<String> selectEsuggest(String epId);
+	public List<String> getESuggest(String epId);
 	/**
 	 * 对公告进行增删改
 	 */

@@ -17,7 +17,7 @@ public interface PublishWorkService {
 
 	int countPublishWorks(String rId, String cId);
 
-	int countPublishEstimates(String string);
+	int countPublishEstimates(String tId, String cId);
 
 	List<Map<String, Object>> getTFilesImages(String sId, String pwId);
 

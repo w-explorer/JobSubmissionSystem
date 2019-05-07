@@ -1,4 +1,4 @@
-package com.cdtu.common;
+package com.cdtu.ai.util;
 /**
  * 百度AI应用的3个值
  * @author 小帅丶

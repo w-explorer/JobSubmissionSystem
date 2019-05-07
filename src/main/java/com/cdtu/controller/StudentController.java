@@ -218,7 +218,7 @@ public class StudentController {
 		try {
 			String fileName = (String) paramsMap.get("name");
 			String relativePath = (String) paramsMap.get("path");
-			String absolutePath = FileUtil.getAbsolutePath(request);
+			String absolutePath = FileUtil.getRootAbsolutePath(request);
 			File file = new File(absolutePath + relativePath, fileName);
 			if (FileUtil.downloadFile(file, response)) {
 				map.put("status", 200);

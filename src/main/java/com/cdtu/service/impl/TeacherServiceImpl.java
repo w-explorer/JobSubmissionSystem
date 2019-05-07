@@ -388,7 +388,7 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public Map<String, Object> selectEstimate(String epId) {
+	public Map<String, Object> getEstimate(String epId) {
 		List<Map<String, Object>> eSpeed = estimateMapper.selecteSpeed(epId);
 		List<Map<String, Object>> eSpeeds = new ArrayList<>();
 		int[] a = new int[5];
@@ -455,7 +455,7 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public List<String> selectEsuggest(String epId) {
+	public List<String> getESuggest(String epId) {
 		List<String> map = estimateMapper.selecteSuggest(epId);
 		List<String> eSuggests = new ArrayList<>();
 		for (String eSuggest : map) {

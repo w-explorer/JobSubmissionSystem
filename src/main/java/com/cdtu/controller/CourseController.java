@@ -53,7 +53,7 @@ public class CourseController {
 			map.put("stusNum", sscService.countStudents(rId, cId));// 学生数量
 			map.put("pubWNum", publishWorkService.countPublishWorks(rId, cId));// 活动数量
 			if ("teacher".equals(role.getRole())) {
-				map.put("pubENum", publishWorkService.countPublishEstimates(cId));// 评价数量（？）
+				map.put("pubENum", publishWorkService.countPublishEstimates(cId, null));// 评价数量（？）
 			} else {
 				map.put("pubENum", publishWorkService.countSPublishEstimates(cId, rId));// 评价数量（？）
 			}

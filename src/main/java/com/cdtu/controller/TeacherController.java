@@ -47,9 +47,7 @@ import com.cdtu.service.TeacherFileService;
 import com.cdtu.service.TeacherService;
 import com.cdtu.service.WorkService;
 import com.cdtu.util.DownloadFile;
-import com.cdtu.util.ExportWord;
 import com.cdtu.util.FileUtil;
-import com.cdtu.util.GetRootPath;
 import com.cdtu.util.MaxPage;
 import com.cdtu.util.MyExceptionResolver;
 
@@ -86,7 +84,7 @@ public class TeacherController {
 					if (!files[i].isEmpty()) {
 						String fileName = files[i].getOriginalFilename();
 						String relativePath = "/uploadFile/resource/" + tId + "/" + cId;
-						String absolutePath = FileUtil.getAbsolutePath(request);
+						String absolutePath = FileUtil.getRootAbsolutePath(request);
 						File file = new File(absolutePath + relativePath, fileName);
 						if (FileUtil.uploadFile(files[i], file)) {
 							String fileType = FileUtil.getFileType(file);
@@ -120,7 +118,7 @@ public class TeacherController {
 		try {
 			String fileName = (String) paramsMap.get("fileName");
 			String relativePath = (String) paramsMap.get("path");
-			String absolutePath = FileUtil.getAbsolutePath(request);
+			String absolutePath = FileUtil.getRootAbsolutePath(request);
 			File file = new File(absolutePath + relativePath, fileName);
 			if (FileUtil.deleteFile(file)) {
 				tFileService.deleteFile(relativePath, fileName);
@@ -736,7 +734,7 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> selectEstimate(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			map.put("Estimate", teacherService.selectEstimate((String) paramsMap.get("epId")));
+			map.put("Estimate", teacherService.getEstimate((String) paramsMap.get("epId")));
 			map.put("status", 200);
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
@@ -877,30 +875,27 @@ public class TeacherController {
 
 	/**
 	 * @author weiyuhang
-	 * @param work
-	 * @param response
-	 * @throws IOException
 	 */
+	@RequiresRoles(value = { "teacher" })
 	@RequestMapping(value = "downloadEstimate.do")
-	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
-	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps,
+	public @ResponseBody Map<String, Object> doExportEstimate(@RequestBody Map<String, Object> paramsMap,
 			HttpServletRequest request) {
-		Map<String, Object> map = teacherService.selectEstimate((String) maps.get("epId"));
-		map.put("eSuggests", teacherService.selectEsuggest((String) maps.get("epId")));
-		String moban = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "estimate";
-		String filePaths = moban + File.separator + maps.get("epId");
-		String filePath = moban + File.separator + maps.get("epId") + File.separator + "评价详情" + ".docx";
-		File file = new File(filePaths);
-		if (!file.exists()) {
-			file.mkdir();
+		Map<String, Object> map = new HashMap<>();
+		try {
+			Map<String, Object> estimate = teacherService.getEstimate((String) paramsMap.get("epId"));
+			estimate.put("eSuggests", teacherService.getESuggest((String) paramsMap.get("epId")));
+			String path = FileUtil.getRootAbsolutePath(request) + "/uploadFile/estimate/" + paramsMap.get("epId");
+//			String filePaths = path + File.separator + paramsMap.get("epId");
+//			String filePath = path + File.separator + paramsMap.get("epId") + File.separator + "评价详情" + ".docx";
+//			ExportWord.createWord(estimate, path, filePath);
+//			filePath = File.separator + "estimatefile" + File.separator + paramsMap.get("epId") + File.separator + "评价详情"
+//					+ ".docx";
+			map.put("Addr", FileUtil.createFile(path, "评价详情.doc"));
+			map.put("status", 200);
+		} catch (Exception e) {
+			MyExceptionResolver.handlException(map, e);
 		}
-		ExportWord.createWord(map, moban, filePath);
-		Map<String, Object> mapd = new HashMap<>();
-		filePath = File.separator + "estimatefile" + File.separator + maps.get("epId") + File.separator + "评价详情"
-				+ ".docx";
-		mapd.put("Addr", filePath);
-		mapd.put("status", 200);
-		return mapd;
+		return map;
 	}
 
 	/**

@@ -20,7 +20,7 @@ public class FileUtil {
 	 *
 	 * @author 李红兵
 	 */
-	public static String getAbsolutePath(HttpServletRequest request) {
+	public static String getRootAbsolutePath(HttpServletRequest request) {
 		String absolutePath = (String) request.getSession().getServletContext().getAttribute("path");// ROOT绝对路径
 		absolutePath = absolutePath.substring(absolutePath.indexOf(':') + 1).replace('\\', '/');// Windows去掉盘符，替换\
 		return absolutePath;
@@ -43,9 +43,22 @@ public class FileUtil {
 	 * @author 李红兵
 	 */
 	public static boolean canOnlineRead(File file) {
-		String[] onlineReadTypes = { "jpg", "png", "gif", "psd", "webp", "docx","docm","dotm","dotx","xlsx","xlsb","xls","xlsm"
-				,"pptx","ppsx","ppt","pps","pptm","potm","ppam","potx","ppsm"};
+		String[] onlineReadTypes = { "jpg", "png", "gif", "psd", "webp", "docx", "docm", "dotm", "dotx", "xlsx", "xlsb",
+				"xls", "xlsm", "pptx", "ppsx", "ppt", "pps", "pptm", "potm", "ppam", "potx", "ppsm" };
 		return Arrays.asList(onlineReadTypes).contains(getFileType(file));
+	}
+
+	/**
+	 * 创建文件
+	 *
+	 * @author 李红兵
+	 */
+	public static String createFile(String path, String name) throws Exception {
+		File file = new File(path, name);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		return file.getAbsolutePath();
 	}
 
 	/**

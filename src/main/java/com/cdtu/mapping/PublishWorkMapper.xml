@@ -220,8 +220,9 @@
 
 	<select id="countPublishEstimates" resultType="java.lang.Integer">
 		SELECT COUNT(*)
-		FROM course,teacher_select_course, publish_estimate
+		FROM course, teacher_select_course, publish_estimate
 		WHERE course.c_id = #{cId}
+		AND teacher_select_course.t_id = #{tId}
 		AND teacher_select_course.c_id = course.c_id
 		AND publish_estimate.tsc_id = teacher_select_course.tsc_id
 	</select>

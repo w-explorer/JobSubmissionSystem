@@ -1,4 +1,4 @@
-package com.cdtu.vo;
+package com.cdtu.ai.model;
 
 public class FacePageResponse {
 	private String error_code;
