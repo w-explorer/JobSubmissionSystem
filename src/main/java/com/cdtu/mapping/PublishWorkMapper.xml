@@ -51,7 +51,6 @@
 		</if>
 		)
 		AND pw.pw_id = w.pw_id
-		AND w.s_id = #{sId}
 		<if test="pwState! = null">
 			AND pw.pw_state = #{pwState}
 		</if>
