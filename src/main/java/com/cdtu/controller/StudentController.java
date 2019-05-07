@@ -92,7 +92,6 @@ public class StudentController {
 				} else {
 					sscService.joinCourse(cId, sId);
 					map.put("status", 200);
-					map.put("msg", "成功加入该课程");
 				}
 			} else {
 				map.put("status", 404);
@@ -115,7 +114,6 @@ public class StudentController {
 	public Map<String, Object> doQueryWorks(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			System.out.println("进来");
 			String cId = (String) paramsMap.get("cId");
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			map.put("allWorks", workService.getAllWorks(sId, cId));

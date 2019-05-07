@@ -95,7 +95,6 @@ public class TeacherController {
 						}
 					}
 				}
-				map.put("msg", "资源上传成功！");
 				map.put("status", 200);
 			} else {
 				map.put("msg", "请选择要上传的文件！");
@@ -125,7 +124,6 @@ public class TeacherController {
 			File file = new File(absolutePath + relativePath, fileName);
 			if (FileUtil.deleteFile(file)) {
 				tFileService.deleteFile(relativePath, fileName);
-				map.put("msg", "删除资源成功！");
 				map.put("status", 200);
 			} else {
 				map.put("msg", "资源不存在！");
@@ -298,7 +296,8 @@ public class TeacherController {
 	 */
 	@RequestMapping(value = "publishWork.do", method = RequestMethod.POST)
 	@RequiresRoles({ "teacher" })
-	public @ResponseBody Map<String, Object> publishWork(@RequestBody PublishWork publishWork,HttpServletRequest request) {
+	public @ResponseBody Map<String, Object> publishWork(@RequestBody PublishWork publishWork,
+			HttpServletRequest request) {
 		request.getSession().setAttribute("cId", publishWork.getcId());
 		Map<String, Object> map = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
@@ -500,16 +499,15 @@ public class TeacherController {
 	 */
 	@RequestMapping(value = "changePublishWork.do", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> changePublishWork(@RequestBody PublishWork publishwork) {
-		Map<String, Object> msg = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		try {
 			teacherService.updatePublishwork(publishwork);
-			msg.put("status", 200);
+			map.put("status", 200);
 		} catch (Exception e) {
-			msg.put("status", 0);
-			msg.put("msg", "服务器异常");
+			map.put("status", 0);
+			map.put("msg", "服务器异常");
 		}
-
-		return msg;
+		return map;
 	}
 
 	/**
@@ -570,11 +568,9 @@ public class TeacherController {
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> deleteCourseStudent(@RequestBody CourseStudent courseStudent) {
 		Map<String, Object> map = new HashMap<>();
-
 		try {
 			teacherService.deleteCourseStudent(courseStudent);
 			map.put("status", 200);
-			map.put("msg", "删除成功");
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
 			map.put("status", 0);
@@ -615,7 +611,8 @@ public class TeacherController {
 	 */
 	@RequestMapping(value = "updatepublishWork.do", method = RequestMethod.POST)
 	@RequiresRoles({ "teacher" })
-	public @ResponseBody Map<String, Object> updatepublishWork(@RequestBody PublishWork publishWork,HttpServletRequest request) {
+	public @ResponseBody Map<String, Object> updatepublishWork(@RequestBody PublishWork publishWork,
+			HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
@@ -718,13 +715,11 @@ public class TeacherController {
 		return map;
 	}
 
-	
 	@RequestMapping(value = "TeacherUpadte.do")
 	@RequiresRoles({ "teacher" })
 	public @ResponseBody Map<String, Object> teacherupadtework(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-
 			workService.teacherupdatework((String) paramsMap.get("sId"), (String) paramsMap.get("pwId"),
 					(Integer) paramsMap.get("wScore"), (String) paramsMap.get("wRemark"));
 			map.put("status", 200);
@@ -732,7 +727,6 @@ public class TeacherController {
 			MyExceptionResolver.handlException(map, e);
 			map.put("status", 0);
 			map.put("msg", "批阅失败");
-
 		}
 		return map;
 	}
@@ -742,7 +736,6 @@ public class TeacherController {
 	public @ResponseBody Map<String, Object> selectEstimate(@RequestBody Map<String, Object> paramsMap) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-
 			map.put("Estimate", teacherService.selectEstimate((String) paramsMap.get("epId")));
 			map.put("status", 200);
 		} catch (Exception e) {
@@ -846,7 +839,6 @@ public class TeacherController {
 		try {
 			publishWorkService.deletePublishWorkService(pwId);
 			map.put("status", 200);
-			map.put("msg", "删除成功");
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
 		}
@@ -893,7 +885,6 @@ public class TeacherController {
 	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> download(@RequestBody Map<String, Object> maps,
 			HttpServletRequest request) {
-
 		Map<String, Object> map = teacherService.selectEstimate((String) maps.get("epId"));
 		map.put("eSuggests", teacherService.selectEsuggest((String) maps.get("epId")));
 		String moban = GetRootPath.getRootPath(request) + File.separator + "uploadFile" + File.separator + "estimate";
@@ -919,7 +910,6 @@ public class TeacherController {
 	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> createcoursenotice(@RequestBody Map<String, Object> maps) {
 		Map<String, Object> map = new HashMap<>();
-
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		String tId = role.getUsername();
@@ -936,12 +926,11 @@ public class TeacherController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			teacherService.deleteCoursenoticeSrvice((int) maps.get("cnId"));
+			map.put("status", 200);
 		} catch (Exception e) {
 			map.put("status", 0);
 			map.put("msg", "服务器异常");
-			return map;
 		}
-		map.put("status", 200);
 		return map;
 	}
 
@@ -949,12 +938,10 @@ public class TeacherController {
 	@RequiresRoles(value = { "teacher" }, logical = Logical.OR)
 	public @ResponseBody Map<String, Object> selectcoursenotice(@RequestBody Map<String, Object> maps) {
 		Map<String, Object> map = new HashMap<>();
-
 		Subject subject = SecurityUtils.getSubject();
 		Role role = (Role) subject.getPrincipal();
 		String tId = role.getUsername();
 		map.put("CourseNotices", teacherService.selectCoursenoticeSrvice(tId, (String) maps.get("cId")));
-
 		map.put("status", 200);
 		return map;
 	}
