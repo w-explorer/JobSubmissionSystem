@@ -7,6 +7,13 @@
 		WHERE ps_id = #{psId}
 	</select>
 
+	<select id="selectTId" resultType="java.lang.String">
+		SELECT teacher_select_course.t_id
+		FROM teacher_select_course, publish_sign_in
+		WHERE publish_sign_in.ps_id = #{psId}
+		AND teacher_select_course.tsc_id = publish_sign_in.tsc_id
+	</select>
+
 	<select id="selectActualNum" resultType="java.lang.Integer">
 		SELECT COUNT(*)
 		FROM student_sign_in
@@ -96,7 +103,8 @@
 	</select>
 
 	<select id="selectPublishSignIn" resultType="java.util.HashMap">
-		SELECT ps_id AS psId, s_start_time AS startTime, s_late_time AS lateTime, s_stop_time AS stopTime
+		SELECT ps_id AS psId, s_start_time AS startTime,
+		s_late_time AS lateTime, s_stop_time AS stopTime, s_way AS signWay
 		FROM student_select_course, publish_sign_in, teacher_select_course
 		WHERE student_select_course.s_id = #{sId}
 		AND teacher_select_course.c_id = #{cId}
@@ -144,14 +152,6 @@
 		AND student_sign_in.ss_mark = #{mark}
 	</select>
 
-	<insert id="insertPublishSignIn">
-		INSERT publish_sign_in (ps_id, tsc_id, s_start_time, s_late_time, s_stop_time, s_check_code)
-		SELECT #{psId}, tsc_id, #{startTime}, #{lateTime}, #{stopTime}, #{checkCode}
-		FROM teacher_select_course
-		WHERE t_id = #{tId}
-		AND c_id = #{cId}
-	</insert>
-
 	<select id="selectSignInByStatus" resultType="java.util.HashMap">
 		SELECT ss_id AS ssId, student.s_id AS sId, s_img_src AS sImgSrc,
 		s_name AS sName, ss_time AS signTime, ss_mark AS signMark
@@ -161,4 +161,12 @@
 		AND ss_status = #{status}
 		ORDER BY student.s_id
 	</select>
+
+	<insert id="insertPublishSignIn">
+		INSERT publish_sign_in (ps_id, tsc_id, s_start_time, s_late_time, s_stop_time, s_check_code, s_way)
+		SELECT #{psId}, tsc_id, #{startTime}, #{lateTime}, #{stopTime}, #{checkCode}, #{signWay}
+		FROM teacher_select_course
+		WHERE t_id = #{tId}
+		AND c_id = #{cId}
+	</insert>
 </mapper>

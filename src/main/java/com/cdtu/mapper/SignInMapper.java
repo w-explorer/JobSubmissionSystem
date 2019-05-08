@@ -13,6 +13,8 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface SignInMapper {
 	public int selectDueNum(@Param("psId") String psId);
+	
+	public String selectTId(@Param("psId") String psId);
 
 	public int selectActualNum(@Param("psId") String psId);
 
@@ -48,10 +50,9 @@ public interface SignInMapper {
 
 	public int countSignInByMark(@Param("sId") String sId, @Param("cId") String cId, @Param("mark") String mark);
 
-	public void insertPublishSignIn(@Param("psId") String psId, @Param("tId") String tId, @Param("cId") String cId,
-			@Param("startTime") String startTime, @Param("lateTime") String lateTime,
-			@Param("stopTime") String stopTime, @Param("checkCode") String checkCode);
-
 	public List<Map<String, Object>> selectSignInByStatus(@Param("psId") String psId, @Param("status") boolean status);
 
+	public void insertPublishSignIn(@Param("psId") String psId, @Param("tId") String tId, @Param("cId") String cId,
+			@Param("startTime") String startTime, @Param("lateTime") String lateTime,
+			@Param("stopTime") String stopTime, @Param("checkCode") String checkCode, @Param("signWay") int signWay);
 }

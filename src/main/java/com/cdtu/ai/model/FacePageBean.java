@@ -6,12 +6,22 @@ package com.cdtu.ai.model;
  */
 public class FacePageBean {
 	private String imgdata;
+	private String cId;
 	private String imgname;
 	private String password;
 	private String user_info;
 	public String getImgdata() {
 		return imgdata;
 	}
+	
+	public String getcId() {
+		return cId;
+	}
+
+	public void setcId(String cId) {
+		this.cId = cId;
+	}
+
 	public void setImgdata(String imgdata) {
 		this.imgdata = imgdata;
 	}

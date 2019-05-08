@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cdtu.ai.util.FaceUtil;
 import com.cdtu.model.Role;
 import com.cdtu.service.SignInService;
 import com.cdtu.util.MyDateUtil;
@@ -73,6 +74,7 @@ public class SignInController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			String cId = (String) paramsMap.get("cId");
+			int signWay = (int) paramsMap.get("signWay");
 			int timeToLate = (int) paramsMap.get("timeToLate");// 多少分钟后算迟到
 			int timeToStop = (int) paramsMap.get("timeToStop");// 多少分钟后结束签到
 			String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
@@ -88,7 +90,7 @@ public class SignInController {
 				String startTime = MyDateUtil.getFormattedTime(now, pattern);// 签到开始时间
 				String lateTime = MyDateUtil.getIntervalTime(now, timeToLate, pattern);// 签到迟到时间
 				String stopTime = MyDateUtil.getIntervalTime(now, timeToStop, pattern);// 签到结束时间
-				signInService.startSignIn(psId, tId, cId, startTime, lateTime, stopTime, checkCode);
+				signInService.startSignIn(psId, tId, cId, startTime, lateTime, stopTime, checkCode, signWay);
 				map.put("psId", psId);
 				map.put("checkCode", checkCode);
 				map.put("status", 200);
@@ -237,17 +239,30 @@ public class SignInController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			String psId = (String) paramsMap.get("psId");
-			String code = (String) paramsMap.get("chekCode");
+			String signWay = (String) paramsMap.get("signWay");
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			if (!signInService.isSignIned(psId, sId)) {
-				if (code.equals(signInService.getCheckCode(psId))) {
-					signInService.signIn(psId, sId);
-					map.put("status", 200);
-				} else {
-					map.put("msg", "验证码不正确");
-					map.put("status", 0);
-				}
-			} else {
+				if ("1".equals(signWay)) {
+					String code = (String) paramsMap.get("chekCode");
+					if (code.equals(signInService.getCheckCode(psId))) {
+						signInService.signIn(psId, sId);
+						map.put("status", 200);
+					} else {
+						map.put("msg", "验证码不正确");
+						map.put("status", 0);
+					}
+				} else if ("2".equals(signWay)) {
+					String tId = signInService.getTId(psId);
+					if(FaceUtil.validateFace((String)paramsMap.get("imgdata"), tId)){
+						signInService.signIn(psId, sId);
+						map.put("status", 200);
+					}else {
+						map.put("msg", "人脸信息不匹配");
+						map.put("status", 0);
+					}
+				} 
+			}
+			else {
 				map.put("msg", "请勿重复签到");
 				map.put("status", 400);
 			}

@@ -6,6 +6,8 @@ import java.util.Map;
 public interface SignInService {
 	public int getDueNum(String psId);
 
+	public String getTId(String psId);
+
 	public void stopSignIn(String psId);
 
 	public int getActualNum(String psId);
@@ -41,5 +43,6 @@ public interface SignInService {
 	public List<Map<String, Object>> getSignInByStatus(String psId, boolean status);
 
 	public void startSignIn(String psId, String tId, String cId, String startTime, String lateTime, String stopTime,
-			String checkCode);
+			String checkCode, int signWay);
+
 }

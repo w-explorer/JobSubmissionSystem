@@ -46,12 +46,12 @@
 		AND pw.pw_id = w.pw_id
 		AND s.s_id = #{sId}
 		AND c.c_id = #{cId}
-		<if test="pwState! = null">
+		<if test="pwState != null">
 			AND pw.pw_state = #{pwState}
 		</if>
 		)
 		AND pw.pw_id = w.pw_id
-		<if test="pwState! = null">
+		<if test="pwState != null">
 			AND pw.pw_state = #{pwState}
 		</if>
 		GROUP BY w.pw_id
@@ -78,7 +78,7 @@
 		student.s_id = #{sId}
 		AND course.c_id = #{cId}
 		) publishwork
-		<if test="pwState! = null">
+		<if test="pwState != null">
 			WHERE publishwork.pw_state = #{pwState}
 		</if>
 	</select>
@@ -98,12 +98,12 @@
 		w.pw_id
 		AND tsc.t_id = #{tId}
 		AND c.c_id = #{cId}
-		<if test="pwState! = null">
+		<if test="pwState != null">
 			AND pw.pw_state = #{pwState}
 		</if>
 		)
 		AND pw.pw_id = w.pw_id
-		<if test="pwState! = null">
+		<if test="pwState != null">
 			AND pw.pw_state = #{pwState}
 		</if>
 		GROUP BY w.pw_id
@@ -129,7 +129,7 @@
 		AND
 		course.c_id = #{cId}
 		) publishwork
-		<if test="pwState! = null">
+		<if test="pwState != null">
 			WHERE publishwork.pw_state = #{pwState}
 		</if>
 	</select>

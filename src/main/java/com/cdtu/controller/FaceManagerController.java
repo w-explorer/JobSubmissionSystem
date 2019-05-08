@@ -192,7 +192,6 @@ public class FaceManagerController {
 		log.info("搜索返回的数据{}", resultObject.toString(2));
 		return map;
 	}
-
 	@RequestMapping("/hello")
 	@ResponseBody
 	public String hello() {

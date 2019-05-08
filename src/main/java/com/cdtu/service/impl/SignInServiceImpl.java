@@ -27,6 +27,16 @@ public class SignInServiceImpl implements SignInService {
 	public int getDueNum(String psId) {
 		return signInMapper.selectDueNum(psId);
 	}
+	
+	/**
+	 * 获取老师id
+	 *
+	 * @author 李红兵
+	 */
+	@Override
+	public String getTId(String psId) {
+		return signInMapper.selectTId(psId);
+	}
 
 	/**
 	 * 停止签到
@@ -207,8 +217,8 @@ public class SignInServiceImpl implements SignInService {
 	 */
 	@Override
 	public void startSignIn(String psId, String tId, String cId, String startTime, String lateTime, String stopTime,
-			String checkCode) {
-		signInMapper.insertPublishSignIn(psId, tId, cId, startTime, lateTime, stopTime, checkCode);
+			String checkCode, int signWay) {
+		signInMapper.insertPublishSignIn(psId, tId, cId, startTime, lateTime, stopTime, checkCode, signWay);
 		List<Map<String, Object>> maps = sscMapper.selectSIds(cId);
 		maps.forEach(map -> {
 			map.put("ssId", OAUtil.getId());
