@@ -77,22 +77,24 @@ public class SignInController {
 			int signWay = (int) paramsMap.get("signWay");
 			int timeToLate = (int) paramsMap.get("timeToLate");// 多少分钟后算迟到
 			int timeToStop = (int) paramsMap.get("timeToStop");// 多少分钟后结束签到
+			String startTime = (String) paramsMap.get("startTime");// 签到开始时间
 			String tId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			if (!signInService.isSignIning(tId, cId)) {
-				String checkCode = "";
-				Random rander = new Random();
-				for (int i = 0; i < 4; i++) {
-					checkCode += rander.nextInt(10);
+				String checkCode = null;
+				if (signWay == 1) {
+					Random rander = new Random();
+					for (int i = 0; i < 4; i++) {
+						checkCode += rander.nextInt(10);
+					}
+					map.put("checkCode", checkCode);
 				}
-				Date now = new Date();
 				String pattern = "yyyy-MM-dd HH:mm:ss";
-				String psId = MyDateUtil.getFormattedTime(now, "yyyyMMddHHmmss");
-				String startTime = MyDateUtil.getFormattedTime(now, pattern);// 签到开始时间
-				String lateTime = MyDateUtil.getIntervalTime(now, timeToLate, pattern);// 签到迟到时间
-				String stopTime = MyDateUtil.getIntervalTime(now, timeToStop, pattern);// 签到结束时间
+				Date startDate = MyDateUtil.getFormattedDate(startTime, pattern);
+				String psId = MyDateUtil.getFormattedTime(startDate, "yyyyMMddHHmmss");
+				String lateTime = MyDateUtil.getIntervalTime(startDate, timeToLate, pattern);// 签到迟到时间
+				String stopTime = MyDateUtil.getIntervalTime(startDate, timeToStop, pattern);// 签到结束时间
 				signInService.startSignIn(psId, tId, cId, startTime, lateTime, stopTime, checkCode, signWay);
 				map.put("psId", psId);
-				map.put("checkCode", checkCode);
 				map.put("status", 200);
 			} else {
 				map.put("msg", "有一个签到活动正在进行中，请结束后再试");
@@ -240,12 +242,13 @@ public class SignInController {
 		try {
 			String psId = (String) paramsMap.get("psId");
 			String signWay = (String) paramsMap.get("signWay");
+			String nowTime = (String) paramsMap.get("nowTime");
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			if (!signInService.isSignIned(psId, sId)) {
 				if ("1".equals(signWay)) {
 					String code = (String) paramsMap.get("chekCode");
 					if (code.equals(signInService.getCheckCode(psId))) {
-						signInService.signIn(psId, sId);
+						signInService.signIn(psId, sId, nowTime);
 						map.put("status", 200);
 					} else {
 						map.put("msg", "验证码不正确");
@@ -253,16 +256,15 @@ public class SignInController {
 					}
 				} else if ("2".equals(signWay)) {
 					String tId = signInService.getTId(psId);
-					if(FaceUtil.validateFace((String)paramsMap.get("imgdata"), tId)){
-						signInService.signIn(psId, sId);
+					if (FaceUtil.validateFace((String) paramsMap.get("imgdata"), tId)) {
+						signInService.signIn(psId, sId, nowTime);
 						map.put("status", 200);
-					}else {
+					} else {
 						map.put("msg", "人脸信息不匹配");
 						map.put("status", 0);
 					}
-				} 
-			}
-			else {
+				}
+			} else {
 				map.put("msg", "请勿重复签到");
 				map.put("status", 400);
 			}
@@ -286,7 +288,7 @@ public class SignInController {
 			String cId = (String) paramsMap.get("cId");
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			map.put("leaveEarlyNum", signInService.getSignInNumByMark(sId, cId, "早退"));
-			map.put("signInedNum", signInService.getSignInNumByMark(sId, cId, "已签到"));
+			map.put("signInedNum", signInService.getSignInNumByMark(sId, cId, "出勤"));
 			map.put("absentNum", signInService.getSignInNumByMark(sId, cId, "缺勤"));
 			map.put("leaveNum", signInService.getSignInNumByMark(sId, cId, "请假"));
 			map.put("lateNum", signInService.getSignInNumByMark(sId, cId, "迟到"));

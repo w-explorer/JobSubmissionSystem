@@ -6,13 +6,23 @@ import java.util.Date;
 
 public class MyDateUtil {
 	/**
-	 * 获取格式化的时间
+	 * 将日期格式化为时间字符串
 	 *
 	 * @author 李红兵
 	 */
 	public static String getFormattedTime(Object date, String pattern) {
 		SimpleDateFormat dateFomatter = new SimpleDateFormat(pattern);
 		return dateFomatter.format(date);
+	}
+
+	/**
+	 * 将时间字符串格式化为日期
+	 *
+	 * @author 李红兵
+	 */
+	public static Date getFormattedDate(String timeStr, String pattern) throws Exception {
+		SimpleDateFormat dateFomatter = new SimpleDateFormat(pattern);
+		return dateFomatter.parse(timeStr);
 	}
 
 	/**

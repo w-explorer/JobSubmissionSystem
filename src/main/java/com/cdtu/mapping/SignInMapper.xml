@@ -80,7 +80,7 @@
 	<update id="updateStudentSignIn">
 		UPDATE student_sign_in SET ss_status = 1,
 		ss_mark = IF(NOW() > (SELECT s_late_time FROM publish_sign_in
-		WHERE ps_id = #{psId}), "迟到", "已签到"), ss_time = NOW()
+		WHERE ps_id = #{psId}), "迟到", "出勤"), ss_time = #{nowTime}
 		WHERE ps_id = #{psId}
 		AND s_id = #{sId}
 	</update>

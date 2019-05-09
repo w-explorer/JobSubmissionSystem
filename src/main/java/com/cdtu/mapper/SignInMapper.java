@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface SignInMapper {
 	public int selectDueNum(@Param("psId") String psId);
-	
+
 	public String selectTId(@Param("psId") String psId);
 
 	public int selectActualNum(@Param("psId") String psId);
@@ -34,7 +34,8 @@ public interface SignInMapper {
 
 	public List<Map<String, Object>> selectSignInCondition(@Param("psId") String psId);
 
-	public void updateStudentSignIn(@Param("psId") String psId, @Param("sId") String sId);
+	public void updateStudentSignIn(@Param("psId") String psId, @Param("sId") String sId,
+			@Param("nowTime") String nowTime);
 
 	public boolean selectSignInStatus(@Param("psId") String psId, @Param("sId") String sId);
 

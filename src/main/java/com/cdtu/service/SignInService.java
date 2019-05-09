@@ -16,7 +16,7 @@ public interface SignInService {
 
 	public String getCheckCode(String psId);
 
-	public void signIn(String psId, String sId);
+	public void signIn(String psId, String sId, String nowTime);
 
 	public String getCurrPsId(String tId, String cId);
 

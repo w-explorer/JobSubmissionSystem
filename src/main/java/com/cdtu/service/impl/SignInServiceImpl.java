@@ -27,7 +27,7 @@ public class SignInServiceImpl implements SignInService {
 	public int getDueNum(String psId) {
 		return signInMapper.selectDueNum(psId);
 	}
-	
+
 	/**
 	 * 获取老师id
 	 *
@@ -84,8 +84,8 @@ public class SignInServiceImpl implements SignInService {
 	 * @author 李红兵
 	 */
 	@Override
-	public void signIn(String psId, String sId) {
-		signInMapper.updateStudentSignIn(psId, sId);
+	public void signIn(String psId, String sId, String nowTime) {
+		signInMapper.updateStudentSignIn(psId, sId, nowTime);
 	}
 
 	/**
