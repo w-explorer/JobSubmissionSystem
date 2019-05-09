@@ -74,7 +74,7 @@ public class SignInController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			String cId = (String) paramsMap.get("cId");
-			int signWay = (int) paramsMap.get("signWay");
+			int signWay = Integer.parseInt((String) paramsMap.get("signWay"));
 			int timeToLate = (int) paramsMap.get("timeToLate");// 多少分钟后算迟到
 			int timeToStop = (int) paramsMap.get("timeToStop");// 多少分钟后结束签到
 			String startTime = (String) paramsMap.get("startTime");// 签到开始时间
@@ -241,11 +241,11 @@ public class SignInController {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			String psId = (String) paramsMap.get("psId");
-			String signWay = (String) paramsMap.get("signWay");
+			int signWay = Integer.parseInt((String) paramsMap.get("signWay"));
 			String nowTime = (String) paramsMap.get("nowTime");
 			String sId = ((Role) SecurityUtils.getSubject().getPrincipal()).getUsername();
 			if (!signInService.isSignIned(psId, sId)) {
-				if ("1".equals(signWay)) {
+				if (signWay == 1) {
 					String code = (String) paramsMap.get("chekCode");
 					if (code.equals(signInService.getCheckCode(psId))) {
 						signInService.signIn(psId, sId, nowTime);
@@ -254,7 +254,7 @@ public class SignInController {
 						map.put("msg", "验证码不正确");
 						map.put("status", 0);
 					}
-				} else if ("2".equals(signWay)) {
+				} else if (signWay == 2) {
 					String tId = signInService.getTId(psId);
 					if (FaceUtil.validateFace((String) paramsMap.get("imgdata"), tId)) {
 						signInService.signIn(psId, sId, nowTime);
