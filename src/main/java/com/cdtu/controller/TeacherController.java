@@ -54,7 +54,9 @@ import com.cdtu.util.MyExceptionResolver;
 @Controller
 @RequestMapping(value = "teacher")
 public class TeacherController {
+	private @Autowired SendEmailService sendEmailService;
 	private @Resource(name = "workService") WorkService workService;
+	private @Resource(name = "courseService") CourseService courseService;
 	private @Resource(name = "tFileService") TeacherFileService tFileService;
 	private @Resource(name = "studentService") StudentService studentService;
 	private @Resource(name = "teacherService") TeacherService teacherService;
@@ -62,9 +64,6 @@ public class TeacherController {
 	private @Resource(name = "publishWorkMapper") PublishWorkMapper publishWorkMapper;
 	private @Resource(name = "publishWorkService") PublishWorkService publishWorkService;
 	private @Resource(name = "adminstratorService") AdminstratorService adminstratorService;
-	private @Resource(name = "courseService") CourseService courseService;
-	@Autowired
-	SendEmailService sendEmailService;
 
 	/**
 	 * 老师上传资源
@@ -888,8 +887,7 @@ public class TeacherController {
 			dataMap.put("eSuggests", teacherService.getESuggest(epId));
 			String estimatePath = FileUtil.getRootAbsolutePath(request) + "/uploadFile/estimate/";
 			File file = FileUtil.createFile(estimatePath + epId, "评价详情.doc");
-			File templateDir = new File(estimatePath);// 读取评价的模板目录
-			FileUtil.expordToDoc(dataMap, templateDir, file);
+			FileUtil.expordToDoc(dataMap, estimatePath, file);
 			map.put("Addr", file.getPath().replace("\\\\", "/"));
 			map.put("status", 200);
 		} catch (Exception e) {

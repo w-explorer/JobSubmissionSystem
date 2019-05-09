@@ -26,6 +26,7 @@ public class FileUtil {
 	/**
 	 * 获取Tomcat的ROOT目录的绝对路径，将上传的文件都保存在ROOT目录下的uploadFile文件夹内
 	 *
+	 * @param request Http请求
 	 * @author 李红兵
 	 */
 	public static String getRootAbsolutePath(HttpServletRequest request) {
@@ -37,6 +38,7 @@ public class FileUtil {
 	/**
 	 * 获取文件类型
 	 *
+	 * @param file 要获取类型的文件
 	 * @author 李红兵
 	 */
 	public static String getFileType(File file) {
@@ -48,6 +50,7 @@ public class FileUtil {
 	/**
 	 * 获取文件是否能够在线阅读
 	 *
+	 * @param file 要识别的文件
 	 * @author 李红兵
 	 */
 	public static boolean canOnlineRead(File file) {
@@ -57,8 +60,10 @@ public class FileUtil {
 	}
 
 	/**
-	 * 创建文件
+	 * 按指定文件路径和文件名称创建文件
 	 *
+	 * @param path 文件路径
+	 * @param name 文件名称
 	 * @author 李红兵
 	 */
 	public static File createFile(String path, String name) throws Exception {
@@ -72,12 +77,16 @@ public class FileUtil {
 	/**
 	 * 将数据对象按指定模板格式导出到doc中
 	 *
-	 * @author weiyuhang
+	 * @param dataMap      需要导出的数据
+	 * @param templatePath 模板的路径
+	 * @param file         导出的目的文件
+	 * @author weiyuhang（李红兵修改）
 	 */
-	public static void expordToDoc(Map<String, Object> dataMap, File templateDir, File file) throws Exception {
+	public static void expordToDoc(Map<String, Object> dataMap, String templatePath, File file) throws Exception {
 		Configuration configuration = new Configuration(Configuration.VERSION_2_3_21);
 		configuration.setDefaultEncoding("utf-8");// 设置编码
-		configuration.setDirectoryForTemplateLoading(templateDir);// 设置模板目录（不包括模板名称）
+		File templateDir = new File(templatePath);// 读取模板目录（不包括模板名称）
+		configuration.setDirectoryForTemplateLoading(templateDir);// 设置模板目录
 		Template template = configuration.getTemplate("moban.ftl", "utf-8");// 读取模板
 		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"), 10240);
 		template.process(dataMap, writer);
@@ -89,7 +98,6 @@ public class FileUtil {
 	 *
 	 * @param upFile  上传的文件
 	 * @param newFile 新创建的文件（内存对象）
-	 * @param request Http请求
 	 * @return true 文件不存在，上传文件成功
 	 * @return false 文件已存在
 	 * @author 李红兵
@@ -104,7 +112,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * 下载文件
+	 * 下载文件（此方法暂停使用）
 	 *
 	 * @param file     读取到内存中的磁盘文件
 	 * @param response Http响应
@@ -145,12 +153,11 @@ public class FileUtil {
 	/**
 	 * 文件上传
 	 *
-	 * @author LR
 	 * @param file
 	 * @param path
 	 * @param id
-	 * @return
-	 * @throws IOException
+	 * @param pwId
+	 * @author LR
 	 */
 	public static String updateFile(CommonsMultipartFile file, String path, String id, String pwId) throws IOException {
 		if (path == null) {
@@ -166,11 +173,10 @@ public class FileUtil {
 	/**
 	 * 分文件类型上传
 	 *
-	 * @author LR
 	 * @param file
 	 * @param id
-	 * @return
-	 * @throws IOException
+	 * @param pwId
+	 * @author LR
 	 */
 	public static String addMutiparFile(CommonsMultipartFile file, String id, String pwId) throws IOException {
 		if (file.isEmpty()) {
@@ -211,10 +217,8 @@ public class FileUtil {
 	/**
 	 * 文件夹创建
 	 *
+	 * @param path 文件夹路径
 	 * @author LR
-	 * @param realPath
-	 * @param fileName
-	 * @return
 	 */
 	public static File createDir(String path) throws IOException {
 		File dir = new File(path);
@@ -222,9 +226,5 @@ public class FileUtil {
 			dir.mkdirs();
 		}
 		return dir;
-	}
-
-	public static String updateFile(CommonsMultipartFile file) {
-		return null;
 	}
 }
