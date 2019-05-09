@@ -888,7 +888,7 @@ public class TeacherController {
 			String estimatePath = FileUtil.getRootAbsolutePath(request) + "/uploadFile/estimate/";
 			File file = FileUtil.createFile(estimatePath + epId, "评价详情.doc");
 			FileUtil.expordToDoc(dataMap, estimatePath, file);
-			map.put("Addr", file.getPath().replace("\\\\", "/"));
+			map.put("Addr", "/estimatefile/" + epId + "/评价详情.doc");
 			map.put("status", 200);
 		} catch (Exception e) {
 			MyExceptionResolver.handlException(map, e);
