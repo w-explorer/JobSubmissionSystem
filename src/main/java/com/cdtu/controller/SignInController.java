@@ -82,6 +82,7 @@ public class SignInController {
 			if (!signInService.isSignIning(tId, cId)) {
 				String checkCode = null;
 				if (signWay == 1) {
+					checkCode = "";
 					Random rander = new Random();
 					for (int i = 0; i < 4; i++) {
 						checkCode += rander.nextInt(10);
@@ -190,9 +191,8 @@ public class SignInController {
 
 	/**
 	 * 学生进入签到功能，查询签到信息。<br/>
-	 * 如果当前没有签到活动，则返回该学生该门课的历史签到记录，<br/>
-	 * 否则，如果自己还未参与该签到活动，则返回该签到活动的详情信息，<br/>
-	 * 如果自己已参与该签到活动，则返回自己的本次签到信息。
+	 * 如果当前没有签到活动，则返回返回该学生该门课的历史签到记录，<br/>
+	 * 否则返回该签到活动的详情信息，和该学生该门课的历史签到记录。
 	 *
 	 * @author 李红兵
 	 */
