@@ -5,11 +5,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
 public class MyExceptionResolver implements HandlerExceptionResolver {
+	private static Logger logger = Logger.getRootLogger();
 
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
@@ -27,6 +29,8 @@ public class MyExceptionResolver implements HandlerExceptionResolver {
 	 * @author 李红兵
 	 */
 	public static void handlException(Map<String, Object> map, Exception e) {
+		map.clear();
+		logger.error(e);
 		e.printStackTrace();
 		map.put("status", 500);
 		map.put("msg", "抱歉，服务器开小差了");
