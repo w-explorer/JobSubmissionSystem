@@ -37,7 +37,7 @@ public class RandomValidateCode {
 	 */
 	public String getRandcode(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			String checkCodePath = (String) request.getSession().getAttribute("checkCodePath");
+			String checkCodePath = (String) request.getSession().getAttribute("checkcodePath");
 			File file = new File(checkCodePath);
 			file.delete();
 		} catch (Exception e1) {
@@ -67,7 +67,7 @@ public class RandomValidateCode {
 			imgPath = FileUtil.getRootAbsolutePath(request) + "/uploadFile/checkcode/";
 			String imgName = OAUtil.getId() + ".png";
 			File imgFile = FileUtil.createFile(imgPath, imgName);
-			request.getSession().setAttribute("checkCodePath", imgPath);
+			request.getSession().setAttribute("checkcodePath", imgPath);
 			ImageIO.write(image, "png", imgFile);
 			imgPath = "/uploadFile/checkcode/" + imgName;
 //			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
