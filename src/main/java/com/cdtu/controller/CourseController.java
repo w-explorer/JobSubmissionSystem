@@ -141,9 +141,9 @@ public class CourseController {
 		String id = role.getUsername();
 		String roleName = role.getRole();
 		String cId = (String) paramsMap.get("cId");
-		int pubWNum = publishWorkService.countPublishWorks(null, cId);// 用于解决 班级排名
+		int pubWNum = publishWorkService.countPublishWorks(id, cId);// 用于解决 班级排名
 		int page = (int) paramsMap.get("page");
-		int stusNum = sscService.countStudents(null, cId);
+		int stusNum = sscService.countStudents(id, cId);
 		if (pubWNum == 0) {
 			map.put("students", courseService.selectStudents(page, cId, id));
 		} else {
